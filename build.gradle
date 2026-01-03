@@ -1,0 +1,62 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '3.5.9'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.cnmci'
+version = '0.0.1-SNAPSHOT'
+description = 'Micro-Service to pick Statistics DATA'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set 'lombokVersion', '1.18.30'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation("io.jsonwebtoken:jjwt:0.12.6")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+	//implementation project(path: ':cnm-core-model')
+
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
+	implementation("org.postgresql:postgresql")
+	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation "org.projectlombok:lombok:${lombokVersion}"
+	implementation 'org.springframework.data:spring-data-jpa:3.0.6'
+	implementation 'org.apache.tomcat:tomcat-jdbc:9.0.80'
+
+	// JSON
+	implementation 'org.json:json:20240303'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// MAIL
+	implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.4'
+
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen:6.2.7.Final'
+
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
