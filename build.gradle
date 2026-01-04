@@ -1,8 +1,10 @@
 plugins {
 	id 'java'
 	id 'war'
-	id 'org.springframework.boot' version '3.5.9'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.2.4'
+	id 'io.spring.dependency-management' version '1.1.4'
+
+	id 'org.liquibase.gradle' version '2.2.0'
 }
 
 group = 'com.cnmci'
@@ -21,6 +23,11 @@ repositories {
 
 ext {
 	set 'lombokVersion', '1.18.30'
+	set 'liquibaseVersion', '4.27.0'
+}
+
+configurations {
+	liquibaseRuntime.extendsFrom runtime
 }
 
 dependencies {
@@ -30,7 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation("io.jsonwebtoken:jjwt:0.12.6")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-	//implementation project(path: ':cnm-core-model')
+	implementation project(path: ':cnm-core-model')
 
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
@@ -47,6 +54,9 @@ dependencies {
 	// MAIL
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.4'
 
+	implementation("org.liquibase:liquibase-core:4.27.0")
+	implementation "org.liquibase:liquibase-maven-plugin:${liquibaseVersion}"
+
 	compileOnly "org.projectlombok:lombok:${lombokVersion}"
 	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 	annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen:6.2.7.Final'
@@ -55,6 +65,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+
+	liquibaseRuntime("info.picocli:picocli:4.7.6")
+	liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseVersion}"
+	liquibaseRuntime("org.postgresql:postgresql")
+	liquibaseRuntime "org.liquibase.ext:liquibase-hibernate6:${liquibaseVersion}"
+	liquibaseRuntime 'org.springframework:spring-context:6.0.9'
+	liquibaseRuntime 'org.springframework:spring-orm:6.0.9'
+	liquibaseRuntime sourceSets.main.output
 }
 
 tasks.named('test') {

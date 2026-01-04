@@ -1,1 +1,3 @@
 rootProject.name = 'stats'
+
+include 'cnm-core-model'

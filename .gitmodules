@@ -1,0 +1,3 @@
+[submodule "cnm-core-model"]
+	path = cnm-core-model
+	url = https://github.com/bendressouarnaud/cnm-core-model
