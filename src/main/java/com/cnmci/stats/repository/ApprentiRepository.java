@@ -19,7 +19,7 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     List<Apprenti> findAllByOrderByNomAsc();
     Apprenti findByNumeroImmatriculation(String numero);
     Apprenti findByEmailIgnoreCaseOrContact1(String email, String contact);
-    List<Apprenti> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1(String nom, String prenom, String contact);
+    List<Apprenti> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 
     @Query(value = "select * from apprenti a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +
             "(a.statut_kyc = 1 and a.statut_paiement in (0,1))",

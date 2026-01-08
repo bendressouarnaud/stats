@@ -1,6 +1,7 @@
 package com.cnmci.stats.service;
 
 import com.cnmci.core.model.*;
+import com.cnmci.stats.beans.EntitySearchResponse;
 import com.cnmci.stats.beans.StatsBean;
 import com.cnmci.stats.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,13 @@ public class StatistiqueService {
         return valueRounded.doubleValue();
     }
 
+    private String getImageIfExists(String image){
+        return image != null ? image : "";
+    }
+
+    private double processGeoData(Double data){
+        return data != null ? data : 0.0;
+    }
 
     public List<StatsBean> getEntitiesStatistiques(){
         List<StatsBean> retour = new ArrayList<>();
@@ -97,6 +106,102 @@ public class StatistiqueService {
         double pourcentageEntreprise = (double) (encoursEntreprise * 100) / attenduEntreprise;
         retour.add(new StatsBean("Entreprises", populationEntreprise, attenduEntreprise, encoursEntreprise, roundValue(pourcentageEntreprise)));
 
+        return retour;
+    }
+
+    public List<EntitySearchResponse> lookForAnyEntity(String search){
+        List<EntitySearchResponse> retour = new ArrayList<>();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // ARTISAN
+        List<Artisan> artisans = artisanRepository.
+                findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(search.trim(),
+                        search.trim(), search.trim());
+        retour.addAll(artisans.stream().map(
+        a -> EntitySearchResponse.builder()
+            .id(a.getId())
+            .nom(a.getNom() + " " +a.getPrenom())
+            .contact(a.getContact1())
+            .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+            .metier(a.getActivite().getMetierPrincipale().getLibelle())
+            .paiement(a.getStatutPaiement())
+            .commune(a.getCommuneResidence().getLibelle())
+            .type("Artisans")
+            .image(getImageIfExists(a.getPhotoArtisan()))
+            .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+            .quartier(a.getQuartierResidence())
+            .amende(a.getAmendes().size())
+            .latitude(processGeoData(a.getLatitude()))
+            .longitude(processGeoData(a.getLongitude()))
+            .build()
+        ).toList());
+
+        // ApPRENTI
+        List<Apprenti> apprentis = apprentiRepository.
+                findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(search.trim(),
+                        search.trim(), search.trim());
+        retour.addAll(apprentis.stream().map(
+                a -> EntitySearchResponse.builder()
+                        .id(a.getId())
+                        .nom(a.getNom() + " " +a.getPrenom())
+                        .contact(a.getContact1())
+                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .metier(a.getMetier().getLibelle())
+                        .paiement(a.getStatutPaiement())
+                        .commune(a.getCommuneResidence().getLibelle())
+                        .type("Apprentis")
+                        .image(getImageIfExists(a.getPhotoApprenti()))
+                        .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                        .quartier(a.getQuartierResidence())
+                        .amende(a.getAmendes().size())
+                        .latitude(processGeoData(a.getLatitude()))
+                        .longitude(processGeoData(a.getLongitude()))
+                        .build()
+        ).toList());
+
+        // COMPAGNON
+        List<Compagnon> compagnons = compagnonRepository.
+                findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(search.trim(),
+                        search.trim(), search.trim());
+        retour.addAll(compagnons.stream().map(
+                a -> EntitySearchResponse.builder()
+                        .id(a.getId())
+                        .nom(a.getNom() + " " +a.getPrenom())
+                        .contact(a.getContact1())
+                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .metier(a.getMetier().getLibelle())
+                        .paiement(a.getStatutPaiement())
+                        .commune(a.getCommuneResidence().getLibelle())
+                        .type("Compagnons")
+                        .image(getImageIfExists(a.getPhotoCompagnon()))
+                        .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                        .quartier(a.getQuartierResidence())
+                        .amende(a.getAmendes().size())
+                        .latitude(processGeoData(a.getLatitude()))
+                        .longitude(processGeoData(a.getLongitude()))
+                        .build()
+        ).toList());
+
+        // ENTREPRISES
+        List<Entreprise> entreprises = entrepriseRepository.
+                findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(search.trim(), search.trim());
+        retour.addAll(entreprises.stream().map(
+                        a -> EntitySearchResponse.builder()
+                                .id(a.getId())
+                                .nom(a.getRaisonSociale())
+                                .contact(a.getContact())
+                                .datenaissance(a.getDateCreation().format(dateTimeFormatter))
+                                .metier(a.getActivitePrincipale().getLibelle())
+                                .paiement(a.getStatutPaiement())
+                                .commune(a.getCommune().getLibelle())
+                                .type("Entreprises")
+                                .image("")
+                                .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                                .quartier(a.getQuartier())
+                                .amende(a.getAmendes().size())
+                                .latitude(processGeoData(a.getLatitude()))
+                                .longitude(processGeoData(a.getLongitude()))
+                                .build()
+                ).toList());
         return retour;
     }
 }

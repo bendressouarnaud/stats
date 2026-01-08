@@ -22,7 +22,9 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     Artisan findByNumeroRegistre(String numero);
     // Recherche par NUMERO ou EMAIL
     Artisan findByEmailIgnoreCaseOrContact1(String email, String contact);
-    List<Artisan> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1(String nom, String prenom, String contact);
+    List<Artisan> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom,
+                                                                                                   String prenom,
+                                                                                                   String contact);
 
     @Query(value = "select e.label, e.id, count(a.id) as totentreprise, count(f.id) as totartisan from commune b " +
             "left join entreprise a  on b.id = a.commune_id left join artisan f on b.id = f.commune_residence_id " +

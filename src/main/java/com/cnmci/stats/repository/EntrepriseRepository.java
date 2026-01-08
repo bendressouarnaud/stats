@@ -18,7 +18,7 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     Entreprise findByNumeroRea(String numero);
     Entreprise findByContact(String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseOrContact(String libelle, String contact);
-    List<Entreprise> findAllByRaisonSocialeIgnoreCaseContainingOrContact(String libelle, String contact);
+    List<Entreprise> findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(String libelle, String contact);
 
     @Query(value = "select * from entreprise a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +
             "(a.statut_kyc = 1 and a.statut_paiement in (0,1))",
