@@ -94,7 +94,7 @@ public class StatistiqueService {
         // E N T R E P R I S E :
         List<Entreprise> entreprises = entrepriseRepository.findAllByOrderByRaisonSocialeAsc();
         int populationEntreprise = entreprises.size();
-        long attenduEntreprise = 5000L * populationEntreprise;
+        long attenduEntreprise = 25000L * populationEntreprise;
         // En cours
         long encoursEntreprise = paiementEnrolementRepository.findAllByEntrepriseIn(
                 entreprises.stream().filter(
