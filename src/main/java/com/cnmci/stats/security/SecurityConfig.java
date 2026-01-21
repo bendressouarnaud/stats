@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers( "/authentification","/accountcreation","/mobileauthentication",
                                 "/passwordforgotten","/confidentialite","/validation/**","/authentification-mobile",
+                                "/generate-user-payment-link",
                                 "/v3/**","/v2/**","/swagger-ui/**", "/v3/api-docs/**", "/v2/api-docs/**",
                                 "/swagger-resources/**", "/swagger-ui.html").permitAll()
                         /*.requestMatchers("/get-ville","/get-crm","/get-departement","/get-sousprefecture"

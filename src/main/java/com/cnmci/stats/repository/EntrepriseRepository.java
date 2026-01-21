@@ -16,7 +16,7 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     List<Entreprise> findAllByOrderByRaisonSocialeAsc();
     List<Entreprise> findAllByUtilisateur(Utilisateur user);
     Entreprise findByNumeroRea(String numero);
-    Entreprise findByContact(String contact);
+    List<Entreprise> findByContact(String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseOrContact(String libelle, String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(String libelle, String contact);
 

@@ -3,7 +3,9 @@ package com.cnmci.stats.service;
 import com.cnmci.core.model.*;
 import com.cnmci.stats.beans.EntitySearchResponse;
 import com.cnmci.stats.beans.StatsBean;
+import com.cnmci.stats.beans.StatsData;
 import com.cnmci.stats.repository.*;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,7 +55,7 @@ public class StatistiqueService {
         // En cours
         long encoursArtisan = paiementEnrolementRepository.findAllByArtisanIn(
                 artisans.stream().filter(
-                        a -> a.getStatutPaiement() == 2
+                        a -> a.getStatutPaiement() > 0
                 ).toList()
             ).stream().mapToInt(
                 PaiementEnrolement::getMontant
@@ -68,7 +70,7 @@ public class StatistiqueService {
         // En cours
         long encoursApprenti = paiementEnrolementRepository.findAllByApprentiIn(
                 apprentis.stream().filter(
-                        a -> a.getStatutPaiement() == 2
+                        a -> a.getStatutPaiement() > 0
                 ).toList()
         ).stream().mapToInt(
                 PaiementEnrolement::getMontant
@@ -83,7 +85,7 @@ public class StatistiqueService {
         // En cours
         long encoursCompagnon = paiementEnrolementRepository.findAllByCompagnonIn(
                 compagnons.stream().filter(
-                        a -> a.getStatutPaiement() == 2
+                        a -> a.getStatutPaiement() > 0
                 ).toList()
         ).stream().mapToInt(
                 PaiementEnrolement::getMontant
@@ -98,7 +100,7 @@ public class StatistiqueService {
         // En cours
         long encoursEntreprise = paiementEnrolementRepository.findAllByEntrepriseIn(
                 entreprises.stream().filter(
-                        a -> a.getStatutPaiement() == 2
+                        a -> a.getStatutPaiement() > 0
                 ).toList()
         ).stream().mapToInt(
                 PaiementEnrolement::getMontant
@@ -203,5 +205,52 @@ public class StatistiqueService {
                                 .build()
                 ).toList());
         return retour;
+    }
+
+    private double processDouble(double valeur){
+        BigDecimal startValue = new BigDecimal(valeur);
+        return startValue.setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    // Les métiers les plus représentés :
+    public List<StatsData> getRepartitionMetierByCommune(long communeId){
+        List<Tuple> liste = artisanRepository.getMetierByCommune(communeId);
+        var totalDonnee =  liste.stream().mapToLong(l -> l.get("total", Long.class)).sum();
+        // Now compute in PERCENTAGE :
+        return liste.stream()
+                .map(
+                        l -> new StatsData(
+                                l.get("libelle", String.class),
+                                processDouble(((double)(l.get("total", Long.class) * 100) / totalDonnee))
+                        )
+                ).toList();
+    }
+
+    // Population d'ARTISAN par COMMUNE de NAISSANCE
+    public List<StatsData> getArtisanFromBirthPlaceByCommune(long communeId){
+        List<Tuple> liste = artisanRepository.getArtisanFromBirthPlaceByCommune(communeId);
+        var totalDonnee =  liste.stream().mapToLong(l -> l.get("total", Long.class)).sum();
+        // Now compute in PERCENTAGE :
+        return liste.stream()
+                .map(
+                        l -> new StatsData(
+                                l.get("libelle", String.class),
+                                processDouble(((double)(l.get("total", Long.class) * 100) / totalDonnee))
+                        )
+                ).toList();
+    }
+
+    // Repartition de paiement par secteur d’activité
+    public List<StatsData> getPaymentByActivite(long communeId){
+        List<Tuple> liste = artisanRepository.getPaymentByActivite(communeId);
+        var totalDonnee =  liste.stream().mapToLong(l -> l.get("total", Long.class)).sum();
+        // Now compute in PERCENTAGE :
+        return liste.stream()
+                .map(
+                        l -> new StatsData(
+                                l.get("libelle", String.class),
+                                processDouble(((double)(l.get("total", Long.class) * 100) / totalDonnee))
+                        )
+                ).toList();
     }
 }

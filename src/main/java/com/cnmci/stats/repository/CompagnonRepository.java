@@ -18,6 +18,7 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
     List<Compagnon> findAllByUtilisateur(Utilisateur user);
     Compagnon findByNumeroImmatriculation(String numero);
     Compagnon findByEmailIgnoreCaseOrContact1(String email, String contact);
+    List<Compagnon> findByContact1(String contact);
     List<Compagnon> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 
     @Query(value = "select * from compagnon a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +

@@ -1,12 +1,10 @@
 package com.cnmci.stats.controller;
 
 import com.cnmci.core.model.Parametres;
-import com.cnmci.stats.beans.AmendeRequest;
-import com.cnmci.stats.beans.EntitySearchResponse;
-import com.cnmci.stats.beans.MessageResponse;
-import com.cnmci.stats.beans.StatsBean;
+import com.cnmci.stats.beans.*;
 import com.cnmci.stats.repository.ParametresRepository;
 import com.cnmci.stats.service.ActionService;
+import com.cnmci.stats.service.PaiementService;
 import com.cnmci.stats.service.StatistiqueService;
 import io.jsonwebtoken.security.Keys;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +29,7 @@ public class AccueilController {
     private final ParametresRepository parametresRepository;
     private final StatistiqueService statistiqueService;
     private final ActionService actionService;
+    private final PaiementService paiementService;
 
 
     // M E T H O D S :
@@ -92,6 +91,33 @@ public class AccueilController {
     public MessageResponse manageAmende(@RequestBody AmendeRequest data,
                                         HttpServletRequest httpServletRequest){
         return actionService.manageAmende(data, httpServletRequest);
+    }
+
+    @Operation(summary = "Récupérer les 10 métiers d'artisans les plus représentés dans UNE commune")
+    @GetMapping(value="/get-ten-biggest-activities-by-commune/{id}")
+    private List<StatsData> getRepartitionMetierByCommune(@PathVariable long id) {
+        return statistiqueService.getRepartitionMetierByCommune(id);
+    }
+
+    @Operation(summary = "Récupérer les 10 communes d'origine de naissance d'artisans les plus en vue dans UNE COMMUNE")
+    @GetMapping(value="/get-ten-biggest-birthplace-by-commune/{id}")
+    private List<StatsData> getArtisanFromBirthPlaceByCommune(@PathVariable long id) {
+        return statistiqueService.getArtisanFromBirthPlaceByCommune(id);
+    }
+
+    @Operation(summary = "Récupérer les 10 métiers desquels proviennent les ARTISANS qui PAIENT le PLUS")
+    @GetMapping(value="/get-ten-biggest-payers-by-commune/{id}")
+    private List<StatsData> getPaymentByActivite(@PathVariable long id) {
+        return statistiqueService.getPaymentByActivite(id);
+    }
+
+    @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
+    @PostMapping("/generate-user-payment-link")
+    @Parameter(name = "montant", description = "Montant de la transaction")
+    @Parameter(name = "telephone", description = "Contact de l'entité")
+    public WavePaymentResponse generateWavePaymentLink(@RequestBody PaymentWaveRequest data,
+                                        HttpServletRequest httpServletRequest){
+        return paiementService.generateWavePaymentLink(data, httpServletRequest);
     }
 
 }

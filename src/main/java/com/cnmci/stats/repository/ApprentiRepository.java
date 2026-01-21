@@ -18,6 +18,7 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     List<Apprenti> findAllByUtilisateur(Utilisateur user);
     List<Apprenti> findAllByOrderByNomAsc();
     Apprenti findByNumeroImmatriculation(String numero);
+    List<Apprenti> findByContact1(String contact);
     Apprenti findByEmailIgnoreCaseOrContact1(String email, String contact);
     List<Apprenti> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 

@@ -20,6 +20,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllByOrderByNomAsc();
     List<Artisan> findAll(Pageable pageable);
     Artisan findByNumeroRegistre(String numero);
+    List<Artisan> findByContact1(String contact);
     // Recherche par NUMERO ou EMAIL
     Artisan findByEmailIgnoreCaseOrContact1(String email, String contact);
     List<Artisan> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom,
@@ -95,4 +96,26 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             ") a  order by date asc",
             nativeQuery = true)
     List<Tuple> findAllUsersCreatedEntities(LocalDate dateDebut, LocalDate dateFin);
+
+    //  REPARTITION METIER COMMUNE
+    @Query(value = "select c.libelle, count(a.*) as total from artisan a inner join activite b on a.activite_id = b.id " +
+            "inner join metier c on c.id = b.metier_principale_id where b.commune_id = :communeId group by c.libelle order by " +
+            "count(a.*) desc limit 10",
+            nativeQuery = true)
+    List<Tuple> getMetierByCommune(long communeId);
+
+    //  Population d'ARTISAN par COMMUNE de NAISSANCE pour une COMMUNE
+    @Query(value = "select b.id, b.libelle, count(a.*) as total from artisan a inner join commune b on a.commune_naissance_id " +
+            "= b.id inner join activite c on a.activite_id = c.id where c.commune_id = 498 group by b.id, b.libelle " +
+            "order by count(a.*) desc limit 10",
+            nativeQuery = true)
+    List<Tuple> getArtisanFromBirthPlaceByCommune(long communeId);
+
+    //  Repartition de paiement par secteur d’activité
+    @Query(value = "select d.libelle, count(b.*) as total from artisan a inner join paiement_enrolement b " +
+            "on a.id = b.artisan_id inner join activite c on a.activite_id = c.id inner join metier d on " +
+            "d.id = c.metier_principale_id where c.commune_id = :communeId group by d.libelle order by " +
+            "count(b.*) desc limit 10",
+            nativeQuery = true)
+    List<Tuple> getPaymentByActivite(long communeId);
 }
