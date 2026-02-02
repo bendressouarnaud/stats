@@ -1,5 +1,6 @@
 package com.cnmci.stats.repository;
 
+import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Compagnon;
 import com.cnmci.core.model.Utilisateur;
 import org.springframework.data.domain.Pageable;
@@ -36,4 +37,20 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
             nativeQuery = true)
     List<Compagnon> findAllCompagnonFromReporting(int statutKyc, int statutPaiement,
                                                 LocalDate dateDebut, LocalDate dateFin);
+
+    @Query(value = "select distinct a.* from compagnon a inner join artisan_compagnon b on " +
+            "a.id = b.compagnon_id inner join artisan c on c.id = b.artisan_id " +
+            "inner join activite d on c.activite_id = d.id " +
+            "inner join quartier e on e.id = d.quartier_siege_id " +
+            "where e.id = :quartierId and a.statut_paiement = :statutPaiement and " +
+            "date(a.created_at) between date(:dateDebut) AND date(:dateFin) " +
+            "union " +
+            "select distinct a.* from compagnon a inner join entreprise_compagnon b on " +
+            "a.id = b.compagnon_id inner join entreprise c on c.id = b.entreprise_id " +
+            "inner join quartier d on d.id = c.quartier_siege_id " +
+            "where d.id = :quartierId and a.statut_paiement = :statutPaiement and " +
+            "date(a.created_at) between date(:dateDebut) AND date(:dateFin)",
+            nativeQuery = true)
+    List<Compagnon> findAllCompagnonFromAgentAsserment(long quartierId, int statutPaiement,
+                                                     LocalDate dateDebut, LocalDate dateFin);
 }

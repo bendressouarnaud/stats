@@ -1,6 +1,7 @@
 package com.cnmci.stats.repository;
 
 import com.cnmci.core.model.Apprenti;
+import com.cnmci.core.model.Artisan;
 import com.cnmci.core.model.Utilisateur;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -37,4 +38,20 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
             nativeQuery = true)
     List<Apprenti> findAllApprentiFromReporting(int statutKyc, int statutPaiement,
                                               LocalDate dateDebut, LocalDate dateFin);
+
+    @Query(value = "select distinct a.* from apprenti a inner join artisan_apprenti b on " +
+            "a.id = b.apprenti_id inner join artisan c on c.id = b.artisan_id " +
+            "inner join activite d on c.activite_id = d.id " +
+            "inner join quartier e on e.id = d.quartier_siege_id " +
+            "where e.id = :quartierId and a.statut_paiement = :statutPaiement and " +
+            "date(a.created_at) between date(:dateDebut) AND date(:dateFin) " +
+            "union " +
+            "select distinct a.* from apprenti a inner join entreprise_apprenti b on " +
+            "a.id = b.apprenti_id inner join entreprise c on c.id = b.entreprise_id " +
+            "inner join quartier d on d.id = c.quartier_siege_id " +
+            "where d.id = :quartierId and a.statut_paiement = :statutPaiement and " +
+            "date(a.created_at) between date(:dateDebut) AND date(:dateFin)",
+            nativeQuery = true)
+    List<Apprenti> findAllApprentiFromAgentAsserment(long quartierId, int statutPaiement,
+                                                   LocalDate dateDebut, LocalDate dateFin);
 }

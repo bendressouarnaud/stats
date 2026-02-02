@@ -80,6 +80,12 @@ public class AccueilController {
         return statistiqueService.lookForAnyEntity(search);
     }
 
+    @Operation(summary = "Récupérer les entités dont les critères de recherche ont été passés en paramètre")
+    @PostMapping(value="/agent-asserment-request")
+    private List<EntitySearchResponse> processAgentAssermenteRequest(@RequestBody ControleAgentSermenteRequest request) {
+        return statistiqueService.processAgentAssermenteRequest(request);
+    }
+
     @Operation(summary = "Pour gérer une Amende (création - Modification)")
     @PostMapping("/manage-amende")
     @Parameter(name = "id", description = "Id de l'amende")

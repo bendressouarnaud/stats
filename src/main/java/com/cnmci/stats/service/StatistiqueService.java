@@ -1,6 +1,7 @@
 package com.cnmci.stats.service;
 
 import com.cnmci.core.model.*;
+import com.cnmci.stats.beans.ControleAgentSermenteRequest;
 import com.cnmci.stats.beans.EntitySearchResponse;
 import com.cnmci.stats.beans.StatsBean;
 import com.cnmci.stats.beans.StatsData;
@@ -111,6 +112,109 @@ public class StatistiqueService {
         return retour;
     }
 
+
+    public List<EntitySearchResponse> processAgentAssermenteRequest(ControleAgentSermenteRequest request){
+        List<EntitySearchResponse> retour = new ArrayList<>();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // ARTISAN
+        List<Artisan> artisans = artisanRepository.findAllArtisanFromAgentAsserment(request.getQuartier(), request.getEtat(),
+                request.getDebut(), request.getFin());
+        retour.addAll(artisans.stream().map(
+                a -> EntitySearchResponse.builder()
+                        .id(a.getId())
+                        .nom(a.getNom() + " " +a.getPrenom())
+                        .contact(a.getContact1())
+                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .metier(a.getActivite().getMetierPrincipale().getLibelle())
+                        .paiement(a.getStatutPaiement())
+                        .commune(a.getCommuneResidence().getLibelle())
+                        .type("Artisans")
+                        .image(getImageIfExists(a.getPhotoArtisan()))
+                        .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                        .quartier(a.getActivite().getQuartierSiegeId().getLibelle()) // Quartier de l'ACTIVITE
+                        .amende(a.getAmendes().size())
+                        .latitude(processGeoData(a.getLatitude()))
+                        .longitude(processGeoData(a.getLongitude()))
+                        .build()
+        ).toList());
+
+        // APPRENTI
+        List<Apprenti> apprentis = apprentiRepository.findAllApprentiFromAgentAsserment(request.getQuartier(), request.getEtat(),
+                request.getDebut(), request.getFin());
+        retour.addAll(apprentis.stream().map(
+                a -> EntitySearchResponse.builder()
+                        .id(a.getId())
+                        .nom(a.getNom() + " " +a.getPrenom())
+                        .contact(a.getContact1())
+                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .metier(a.getMetier().getLibelle())
+                        .paiement(a.getStatutPaiement())
+                        .commune(a.getCommuneResidence().getLibelle())
+                        .type("Apprentis")
+                        .image(getImageIfExists(a.getPhotoApprenti()))
+                        .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                        .quartier(
+                                a.getArtisanApprentis().isEmpty() ?
+                                        a.getEntrepriseApprentis().stream().findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
+                                        a.getArtisanApprentis().stream().findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle()
+                        )
+                        .amende(a.getAmendes().size())
+                        .latitude(processGeoData(a.getLatitude()))
+                        .longitude(processGeoData(a.getLongitude()))
+                        .build()
+        ).toList());
+
+        // COMPAGNON
+        List<Compagnon> compagnons = compagnonRepository.findAllCompagnonFromAgentAsserment(request.getQuartier(), request.getEtat(),
+                request.getDebut(), request.getFin());
+        retour.addAll(compagnons.stream().map(
+                a -> EntitySearchResponse.builder()
+                        .id(a.getId())
+                        .nom(a.getNom() + " " +a.getPrenom())
+                        .contact(a.getContact1())
+                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .metier(a.getMetier().getLibelle())
+                        .paiement(a.getStatutPaiement())
+                        .commune(a.getCommuneResidence().getLibelle())
+                        .type("Compagnons")
+                        .image(getImageIfExists(a.getPhotoCompagnon()))
+                        .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                        .quartier(
+                                a.getArtisanCompagnons().isEmpty() ?
+                                        a.getEntrepriseCompagnons().stream().findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
+                                        a.getArtisanCompagnons().stream().findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle()
+                        )
+                        .amende(a.getAmendes().size())
+                        .latitude(processGeoData(a.getLatitude()))
+                        .longitude(processGeoData(a.getLongitude()))
+                        .build()
+        ).toList());
+
+        // ENTREPRISE :
+        List<Entreprise> entreprises = entrepriseRepository.findAllEntrepriseFromAgentAsserment(request.getQuartier(), request.getEtat(),
+                request.getDebut(), request.getFin());
+        retour.addAll(entreprises.stream().map(
+                a -> EntitySearchResponse.builder()
+            .id(a.getId())
+            .nom(a.getRaisonSociale())
+            .contact(a.getContact())
+            .datenaissance(a.getDateCreation().format(dateTimeFormatter))
+            .metier(a.getActivitePrincipale().getLibelle())
+            .paiement(a.getStatutPaiement())
+            .commune(a.getCommune().getLibelle())
+            .type("Entreprises")
+            .image("")
+            .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+            .quartier(a.getQuartierSiegeId().getLibelle())
+            .amende(a.getAmendes().size())
+            .latitude(processGeoData(a.getLatitude()))
+            .longitude(processGeoData(a.getLongitude()))
+            .build()
+        ).toList());
+        return retour;
+    }
+
+
     public List<EntitySearchResponse> lookForAnyEntity(String search){
         List<EntitySearchResponse> retour = new ArrayList<>();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -130,7 +234,7 @@ public class StatistiqueService {
             .type("Artisans")
             .image(getImageIfExists(a.getPhotoArtisan()))
             .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-            .quartier(a.getQuartierResidence())
+            .quartier(a.getActivite().getQuartierSiegeId().getLibelle()) // Quartier de l'ACTIVITE
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
@@ -153,7 +257,11 @@ public class StatistiqueService {
                         .type("Apprentis")
                         .image(getImageIfExists(a.getPhotoApprenti()))
                         .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-                        .quartier(a.getQuartierResidence())
+                        .quartier(
+                            a.getArtisanApprentis().isEmpty() ?
+                            a.getEntrepriseApprentis().stream().findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
+                            a.getArtisanApprentis().stream().findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle()
+                        )
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
@@ -176,7 +284,11 @@ public class StatistiqueService {
                         .type("Compagnons")
                         .image(getImageIfExists(a.getPhotoCompagnon()))
                         .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-                        .quartier(a.getQuartierResidence())
+                        .quartier(
+                                a.getArtisanCompagnons().isEmpty() ?
+                                        a.getEntrepriseCompagnons().stream().findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
+                                        a.getArtisanCompagnons().stream().findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle()
+                        )
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
@@ -198,7 +310,7 @@ public class StatistiqueService {
                                 .type("Entreprises")
                                 .image("")
                                 .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-                                .quartier(a.getQuartier())
+                                .quartier(a.getQuartierSiegeId().getLibelle())
                                 .amende(a.getAmendes().size())
                                 .latitude(processGeoData(a.getLatitude()))
                                 .longitude(processGeoData(a.getLongitude()))

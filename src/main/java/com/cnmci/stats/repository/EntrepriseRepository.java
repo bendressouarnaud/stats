@@ -1,5 +1,6 @@
 package com.cnmci.stats.repository;
 
+import com.cnmci.core.model.Artisan;
 import com.cnmci.core.model.Entreprise;
 import com.cnmci.core.model.Utilisateur;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +36,12 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
             nativeQuery = true)
     List<Entreprise> findAllEntrepriseFromReporting(int statutKyc, int statutPaiement,
                                                   LocalDate dateDebut, LocalDate dateFin);
+
+    @Query(value = "select distinct a.* from entreprise a inner join quartier b " +
+            "on a.quartier_siege_id = b.id " +
+            "where b.id = :quartierId and a.statut_paiement = :statutPaiement and " +
+            "date(a.created_at) between date(:dateDebut) AND date(:dateFin)",
+            nativeQuery = true)
+    List<Entreprise> findAllEntrepriseFromAgentAsserment(long quartierId, int statutPaiement,
+                                                   LocalDate dateDebut, LocalDate dateFin);
 }

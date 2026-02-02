@@ -50,6 +50,13 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllArtisanFromReporting(int statutKyc, int statutPaiement,
                                               LocalDate dateDebut, LocalDate dateFin);
 
+    @Query(value = "select distinct a.* from artisan a inner join activite b on a.activite_id = b.id " +
+            "inner join quartier c on c.id = b.quartier_siege_id " +
+            "where c.id = :quartierId and a.statut_paiement = :statutPaiement and " +
+            "date(a.created_at) between date(:dateDebut) AND date(:dateFin)",
+            nativeQuery = true)
+    List<Artisan> findAllArtisanFromAgentAsserment(long quartierId, int statutPaiement,
+                                              LocalDate dateDebut, LocalDate dateFin);
 
     // Return CONNECTED USER's DATA :
     @Query(value = "select * from (" +
