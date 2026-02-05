@@ -34,6 +34,18 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             nativeQuery = true)
     List<Tuple> findAllArtisanEntrepriseByCrm();
 
+    @Query(value = "select * from (" +
+            "select b.libelle ville, c.libelle, date(a.created_at), count(a.id) total from activite a inner join commune b on b.id = a.commune_id " +
+            "inner join quartier c on c.id = a.quartier_siege_id where b.id = :idCommune " +
+            "group by b.libelle, c.libelle, date(a.created_at) " +
+            "union all " +
+            "select b.libelle ville, c.libelle, date(a.created_at), count(a.id) total from entreprise a inner join commune b on a.commune_id = b.id " +
+            "inner join quartier c on c.id = a.quartier_siege_id where b.id = :idCommune " +
+            "group by b.libelle, c.libelle, date(a.created_at)" +
+            ") a order by date desc",
+            nativeQuery = true)
+    List<Tuple> findAllEntitiesFromTown(long idCommune);
+
     @Query(value = "select * from artisan a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +
             "(a.statut_kyc = 1 and a.statut_paiement in (0,1))",
             nativeQuery = true)

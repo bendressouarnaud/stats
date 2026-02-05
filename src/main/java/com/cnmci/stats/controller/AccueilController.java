@@ -117,6 +117,13 @@ public class AccueilController {
         return statistiqueService.getPaymentByActivite(id);
     }
 
+    @Operation(summary = "Récupérer les statistiques d'enrôlement des ARTISANS et ENTREPRISES" +
+            " en fonction de la commune de d'activité")
+    @GetMapping(value="/get-entities-from-quartier-ville/{id}")
+    private List<EntityFromQuartier> getEntitiesByQuartier(@PathVariable long id) {
+        return statistiqueService.getEntitiesByQuartier(id);
+    }
+
     @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
     @PostMapping("/generate-user-payment-link")
     @Parameter(name = "montant", description = "Montant de la transaction")

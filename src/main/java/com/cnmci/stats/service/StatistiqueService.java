@@ -1,10 +1,7 @@
 package com.cnmci.stats.service;
 
 import com.cnmci.core.model.*;
-import com.cnmci.stats.beans.ControleAgentSermenteRequest;
-import com.cnmci.stats.beans.EntitySearchResponse;
-import com.cnmci.stats.beans.StatsBean;
-import com.cnmci.stats.beans.StatsData;
+import com.cnmci.stats.beans.*;
 import com.cnmci.stats.repository.*;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.lang.Math.round;
@@ -364,5 +362,17 @@ public class StatistiqueService {
                                 processDouble(((double)(l.get("total", Long.class) * 100) / totalDonnee))
                         )
                 ).toList();
+    }
+
+    // Display per TOWN, the number of ENTITIES BY NEIGHBORHOOD :
+    public List<EntityFromQuartier> getEntitiesByQuartier(long idCommune){
+        return artisanRepository.findAllEntitiesFromTown(idCommune).stream()
+                .map(a -> EntityFromQuartier.builder()
+                        .quartier(a.get("libelle", String.class))
+                        .date(a.get("date", Date.class).toString())
+                        .total(a.get("total", Long.class))
+                        .build()
+                ).toList();
+
     }
 }
