@@ -232,7 +232,7 @@ public class StatistiqueService {
             .type("Artisans")
             .image(getImageIfExists(a.getPhotoArtisan()))
             .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-            .quartier(a.getActivite().getQuartierSiegeId().getLibelle()) // Quartier de l'ACTIVITE
+            .quartier(a.getQuartierResidence()) // Quartier de l'ACTIVITE
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
@@ -255,11 +255,7 @@ public class StatistiqueService {
                         .type("Apprentis")
                         .image(getImageIfExists(a.getPhotoApprenti()))
                         .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-                        .quartier(
-                            a.getArtisanApprentis().isEmpty() ?
-                            a.getEntrepriseApprentis().stream().findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
-                            a.getArtisanApprentis().stream().findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle()
-                        )
+                        .quartier(a.getQuartierResidence())
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
@@ -282,11 +278,7 @@ public class StatistiqueService {
                         .type("Compagnons")
                         .image(getImageIfExists(a.getPhotoCompagnon()))
                         .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
-                        .quartier(
-                                a.getArtisanCompagnons().isEmpty() ?
-                                        a.getEntrepriseCompagnons().stream().findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
-                                        a.getArtisanCompagnons().stream().findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle()
-                        )
+                        .quartier(a.getQuartierResidence())
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
