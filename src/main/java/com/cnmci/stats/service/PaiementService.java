@@ -66,6 +66,7 @@ public class PaiementService {
         if(artisan.size() == 1){
             data.put("id", String.valueOf(artisan.getFirst().getId()));
             data.put("type", "ART");
+            data.put("utilisateurId", String.valueOf(artisan.getFirst().getUtilisateur().getId()));
             return data;
         }
 
@@ -75,6 +76,7 @@ public class PaiementService {
             if(apprenti.size() == 1){
                 data.put("id", String.valueOf(apprenti.getFirst().getId()));
                 data.put("type", "APP");
+                data.put("utilisateurId", String.valueOf(apprenti.getFirst().getUtilisateur().getId()));
                 return  data;
             }
 
@@ -84,6 +86,7 @@ public class PaiementService {
                 if(compagnon.size() == 1){
                     data.put("id", String.valueOf(compagnon.getFirst().getId()));
                     data.put("type", "COM");
+                    data.put("utilisateurId", String.valueOf(compagnon.getFirst().getUtilisateur().getId()));
                     return  data;
                 }
 
@@ -93,6 +96,7 @@ public class PaiementService {
                     if(entreprise.size() == 1){
                         data.put("id", String.valueOf(entreprise.getFirst().getId()));
                         data.put("type", "ENT");
+                        data.put("utilisateurId", String.valueOf(entreprise.getFirst().getUtilisateur().getId()));
                         return  data;
                     }
                 }
@@ -114,12 +118,12 @@ public class PaiementService {
             if(dataIdType != null){
                 // Call WEB Services :
                 RestTemplate restTemplate = new RestTemplate();
-                String userMail = outilService.getBackUserConnectedName(httpServletRequest);
-                Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail).get();
+                //String userMail = outilService.getBackUserConnectedName(httpServletRequest);
+                //Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail).get();
 
                 String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
                         + "/" + String.valueOf(paymentWaveRequest.montant())+ "/0/" +
-                        String.valueOf(utilisateur.getId());
+                        String.valueOf(dataIdType.get("utilisateurId"));
                 log.info("Encodage : {}", idToKeep);
                 String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
 
