@@ -32,4 +32,9 @@ public interface PaiementEnrolementRepository extends CrudRepository<PaiementEnr
         "group by a.denomination, e.libelle, d.valeur, f.libelle",
         nativeQuery = true)
     List<Tuple> findAllEnrolementPayment();
+
+    @Query(value = "select date(a.created_at) dte, sum(montant) total from paiement_enrolement a " +
+            "group by date(a.created_at) order by date(a.created_at) desc limit 7",
+            nativeQuery = true)
+    List<Tuple> findLatestDailyPayments();
 }

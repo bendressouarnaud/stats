@@ -67,6 +67,11 @@ public class AccueilController {
         );
     }
 
+    @Operation(summary = "Récupérer les agrégats de paiement des derniers jours")
+    @GetMapping(value="/get-daily-payment")
+    private List<DailyPaymentLineChart> getLatestDailyPayments() {
+        return statistiqueService.getLatestDailyPayments();
+    }
 
     @Operation(summary = "Récupérer les STATISTIQUES globales des entités")
     @GetMapping(value="/get-entities-stats")

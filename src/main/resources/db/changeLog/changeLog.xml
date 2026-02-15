@@ -1,0 +1,1514 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="ankk (generated)" id="1764888242249-1">
+        <createSequence incrementBy="50" sequenceName="activite_principale_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-2">
+        <createSequence incrementBy="50" sequenceName="activite_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-3">
+        <createSequence incrementBy="50" sequenceName="amende_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-4">
+        <createSequence incrementBy="50" sequenceName="apprenti_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-5">
+        <createSequence incrementBy="50" sequenceName="artisan_apprenti_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-6">
+        <createSequence incrementBy="50" sequenceName="artisan_compagnon_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-7">
+        <createSequence incrementBy="50" sequenceName="artisan_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-8">
+        <createSequence incrementBy="50" sequenceName="classe_artisan_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-9">
+        <createSequence incrementBy="50" sequenceName="classe_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-10">
+        <createSequence incrementBy="50" sequenceName="commentaire_enrolement_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-11">
+        <createSequence incrementBy="50" sequenceName="commune_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-12">
+        <createSequence incrementBy="50" sequenceName="compagnon_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-13">
+        <createSequence incrementBy="50" sequenceName="crm_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-14">
+        <createSequence incrementBy="50" sequenceName="departement_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-15">
+        <createSequence incrementBy="50" sequenceName="diplome_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-16">
+        <createSequence incrementBy="50" sequenceName="entreprise_apprenti_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-17">
+        <createSequence incrementBy="50" sequenceName="entreprise_compagnon_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-18">
+        <createSequence incrementBy="50" sequenceName="entreprise_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-19">
+        <createSequence incrementBy="50" sequenceName="formation_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-20">
+        <createSequence incrementBy="50" sequenceName="forme_juridique_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-21">
+        <createSequence incrementBy="50" sequenceName="frais_enrolement_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-22">
+        <createSequence incrementBy="50" sequenceName="gerant_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-23">
+        <createSequence incrementBy="50" sequenceName="metier_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-24">
+        <createSequence incrementBy="50" sequenceName="niveau_etude_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-25">
+        <createSequence incrementBy="50" sequenceName="paiement_enrolement_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-26">
+        <createSequence incrementBy="50" sequenceName="partenaire_prestation_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-27">
+        <createSequence incrementBy="50" sequenceName="partenaire_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-28">
+        <createSequence incrementBy="50" sequenceName="payment_request_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-29">
+        <createSequence incrementBy="50" sequenceName="pays_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-30">
+        <createSequence incrementBy="50" sequenceName="prestation_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-31">
+        <createSequence incrementBy="50" sequenceName="profil_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-32">
+        <createSequence incrementBy="50" sequenceName="remuneration_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-33">
+        <createSequence incrementBy="50" sequenceName="sous_prefecture_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-34">
+        <createSequence incrementBy="50" sequenceName="statut_matrimonial_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-35">
+        <createSequence incrementBy="50" sequenceName="type_compte_bancaire_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-36">
+        <createSequence incrementBy="50" sequenceName="type_document_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-37">
+        <createSequence incrementBy="50" sequenceName="utilisateur_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-38">
+        <createTable tableName="activite">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="activitePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apprenti_femme" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apprenti_homme" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auxiliaire_femme" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auxiliaire_homme" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_creation" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="niveau_equipement" type="VARCHAR(255)"/>
+            <column name="quartier" type="VARCHAR(255)"/>
+            <column name="raison_social" type="VARCHAR(255)"/>
+            <column name="rccm" type="VARCHAR(255)"/>
+            <column name="salarie_femme" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salarie_homme" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sigle" type="VARCHAR(255)"/>
+            <column name="commune_id" type="BIGINT"/>
+            <column name="metier_principale_id" type="BIGINT"/>
+            <column name="metier_secondaire_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-39">
+        <createTable tableName="activite_principale">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="activite_principalePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-40">
+        <createTable tableName="amende">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="amendePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amende_solde" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="commentaire" type="VARCHAR(255)"/>
+            <column name="montant" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apprenti_id" type="BIGINT"/>
+            <column name="artisan_id" type="BIGINT"/>
+            <column name="compagnon_id" type="BIGINT"/>
+            <column name="entreprise_id" type="BIGINT"/>
+            <column name="utilisateur_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-41">
+        <createTable tableName="apprenti">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="apprentiPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="a_suivi_formation" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adresse_postal" type="VARCHAR(255)"/>
+            <column name="centre_formation_metier" type="VARCHAR(255)"/>
+            <column name="civilite" type="VARCHAR(255)"/>
+            <column name="cmu" type="VARCHAR(255)"/>
+            <column name="cnps" type="VARCHAR(255)"/>
+            <column name="contact1" type="VARCHAR(255)"/>
+            <column name="contact2" type="VARCHAR(255)"/>
+            <column name="date_debut_apprentissage" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_emission_piece" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_naissance" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="diplome_obtenu_metier" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="formation_metier_terminee" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="intitule_formation_metier" type="VARCHAR(255)"/>
+            <column name="latitude" type="FLOAT(53)"/>
+            <column name="lieu_naissance_autre" type="VARCHAR(255)"/>
+            <column name="longitude" type="FLOAT(53)"/>
+            <column name="nom" type="VARCHAR(255)"/>
+            <column name="numero_identification" type="UUID"/>
+            <column name="numero_immatriculation" type="VARCHAR(255)"/>
+            <column name="numero_piece" type="VARCHAR(255)"/>
+            <column name="photo_apprenti" type="VARCHAR(255)"/>
+            <column name="photo_cni_recto" type="VARCHAR(255)"/>
+            <column name="photo_cni_verso" type="VARCHAR(255)"/>
+            <column name="piece_delivre" type="VARCHAR(255)"/>
+            <column name="prenom" type="VARCHAR(255)"/>
+            <column name="print" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quartier_residence" type="VARCHAR(255)"/>
+            <column name="sexe" type="VARCHAR(255)"/>
+            <column name="statut_kyc" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_paiement" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_type" type="SMALLINT"/>
+            <column name="classe_id" type="BIGINT"/>
+            <column name="commune_residence_id" type="BIGINT"/>
+            <column name="diplome_id" type="BIGINT"/>
+            <column name="commune_naissance_id" type="BIGINT"/>
+            <column name="metier_id" type="BIGINT"/>
+            <column name="niveau_etude_id" type="BIGINT"/>
+            <column name="nationalite" type="BIGINT"/>
+            <column name="type_document_id" type="BIGINT"/>
+            <column name="utilisateur_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-42">
+        <createTable tableName="artisan">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="artisanPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adresse_postal" type="VARCHAR(255)"/>
+            <column name="chiffre_affaire" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="civilite" type="VARCHAR(255)"/>
+            <column name="cmu" type="VARCHAR(255)"/>
+            <column name="cnps" type="VARCHAR(255)"/>
+            <column name="comptabilite" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact1" type="VARCHAR(255)"/>
+            <column name="contact2" type="VARCHAR(255)"/>
+            <column name="date_emission_piece" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_expiration_carte" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_naissance" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="declaration_condamnation" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="declaration_maitrise_metier" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="latitude" type="FLOAT(53)"/>
+            <column name="lieu_naissance_autre" type="VARCHAR(255)"/>
+            <column name="longitude" type="FLOAT(53)"/>
+            <column name="nom" type="VARCHAR(255)"/>
+            <column name="numero_identification" type="UUID"/>
+            <column name="numero_piece" type="VARCHAR(255)"/>
+            <column name="numero_registre" type="VARCHAR(255)"/>
+            <column name="photo_artisan" type="VARCHAR(255)"/>
+            <column name="photo_cni_recto" type="VARCHAR(255)"/>
+            <column name="photo_cni_verso" type="VARCHAR(255)"/>
+            <column name="photo_diplome" type="VARCHAR(255)"/>
+            <column name="piece_delivre" type="VARCHAR(255)"/>
+            <column name="prenom" type="VARCHAR(255)"/>
+            <column name="presence_compte_bancaire" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="print" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quartier_residence" type="VARCHAR(255)"/>
+            <column name="regime_imposition_micro_entreprise" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="regime_imposition_taxe_communale" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="regime_social" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="regime_travailleur" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sexe" type="VARCHAR(255)"/>
+            <column name="statut_kyc" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_paiement" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_type" type="SMALLINT"/>
+            <column name="activite_id" type="BIGINT"/>
+            <column name="classe_id" type="BIGINT"/>
+            <column name="classe_artisan_id" type="BIGINT"/>
+            <column name="commune_residence_id" type="BIGINT"/>
+            <column name="crm_id" type="BIGINT"/>
+            <column name="departement_id" type="BIGINT"/>
+            <column name="diplome_id" type="BIGINT"/>
+            <column name="formation_id" type="BIGINT"/>
+            <column name="commune_naissance_id" type="BIGINT"/>
+            <column name="metier_id" type="BIGINT"/>
+            <column name="niveau_etude_id" type="BIGINT"/>
+            <column name="nationalite" type="BIGINT"/>
+            <column name="sous_prefecture_id" type="BIGINT"/>
+            <column name="statut_matrimonial_id" type="BIGINT"/>
+            <column name="compte_bancaire_id" type="BIGINT"/>
+            <column name="type_document_id" type="BIGINT"/>
+            <column name="utilisateur_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-43">
+        <createTable tableName="artisan_apprenti">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="artisan_apprentiPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apprenti_id" type="BIGINT"/>
+            <column name="artisan_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-44">
+        <createTable tableName="artisan_compagnon">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="artisan_compagnonPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="artisan_id" type="BIGINT"/>
+            <column name="compagnon_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-45">
+        <createTable tableName="classe">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="classePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-46">
+        <createTable tableName="classe_artisan">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="classe_artisanPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-47">
+        <createTable tableName="commentaire_enrolement">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="commentaire_enrolementPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="commentaire" type="VARCHAR(255)"/>
+            <column name="apprenti_id" type="BIGINT"/>
+            <column name="artisan_id" type="BIGINT"/>
+            <column name="compagnon_id" type="BIGINT"/>
+            <column name="entreprise_id" type="BIGINT"/>
+            <column name="utilisateur_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-48">
+        <createTable tableName="commune">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="communePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+            <column name="sous_prefecture_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-49">
+        <createTable tableName="compagnon">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="compagnonPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adresse_postal" type="VARCHAR(255)"/>
+            <column name="civilite" type="VARCHAR(255)"/>
+            <column name="cmu" type="VARCHAR(255)"/>
+            <column name="cnps" type="VARCHAR(255)"/>
+            <column name="contact1" type="VARCHAR(255)"/>
+            <column name="contact2" type="VARCHAR(255)"/>
+            <column name="date_debut_compagnonage" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_emission_piece" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_expiration_carte" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_naissance" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="declaration_condamnation" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="declaration_maitrise_metier" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="latitude" type="FLOAT(53)"/>
+            <column name="lieu_naissance_autre" type="VARCHAR(255)"/>
+            <column name="longitude" type="FLOAT(53)"/>
+            <column name="nom" type="VARCHAR(255)"/>
+            <column name="numero_identification" type="UUID"/>
+            <column name="numero_immatriculation" type="VARCHAR(255)"/>
+            <column name="numero_piece" type="VARCHAR(255)"/>
+            <column name="photo_cni_recto" type="VARCHAR(255)"/>
+            <column name="photo_cni_verso" type="VARCHAR(255)"/>
+            <column name="photo_compagnon" type="VARCHAR(255)"/>
+            <column name="photo_diplome" type="VARCHAR(255)"/>
+            <column name="piece_delivre" type="VARCHAR(255)"/>
+            <column name="prenom" type="VARCHAR(255)"/>
+            <column name="print" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quartier_residence" type="VARCHAR(255)"/>
+            <column name="sexe" type="VARCHAR(255)"/>
+            <column name="statut_kyc" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_paiement" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_type" type="SMALLINT"/>
+            <column name="classe_id" type="BIGINT"/>
+            <column name="commune_residence_id" type="BIGINT"/>
+            <column name="diplome_id" type="BIGINT"/>
+            <column name="commune_naissance_id" type="BIGINT"/>
+            <column name="metier_id" type="BIGINT"/>
+            <column name="niveau_etude_id" type="BIGINT"/>
+            <column name="nationalite" type="BIGINT"/>
+            <column name="type_document_id" type="BIGINT"/>
+            <column name="utilisateur_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-50">
+        <createTable tableName="crm">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="crmPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="abreviation" type="VARCHAR(255)"/>
+            <column name="code_crm" type="VARCHAR(255)"/>
+            <column name="label" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-51">
+        <createTable tableName="departement">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="departementPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+            <column name="crm_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-52">
+        <createTable tableName="diplome">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="diplomePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-53">
+        <createTable tableName="entreprise">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="entreprisePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adresse" type="VARCHAR(255)"/>
+            <column name="capital_social" type="BIGINT"/>
+            <column name="compte_contribuable" type="VARCHAR(255)"/>
+            <column name="contact" type="VARCHAR(255)"/>
+            <column name="date_creation" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_rccm" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="duree_personne_morale" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ilot_lot" type="VARCHAR(255)"/>
+            <column name="latitude" type="FLOAT(53)"/>
+            <column name="longitude" type="FLOAT(53)"/>
+            <column name="nombre_associes" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero_cnps" type="VARCHAR(255)"/>
+            <column name="numero_identification" type="UUID"/>
+            <column name="numero_rea" type="VARCHAR(255)"/>
+            <column name="objet_social" type="VARCHAR(255)"/>
+            <column name="print" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quartier" type="VARCHAR(255)"/>
+            <column name="raison_sociale" type="VARCHAR(255)"/>
+            <column name="rccm" type="VARCHAR(255)"/>
+            <column name="regime_fiscal" type="VARCHAR(255)"/>
+            <column name="sigle" type="VARCHAR(255)"/>
+            <column name="statut" type="SMALLINT"/>
+            <column name="statut_kyc" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="statut_paiement" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activite_principale_id" type="BIGINT"/>
+            <column name="activite_secondaire_id" type="BIGINT"/>
+            <column name="commune_id" type="BIGINT"/>
+            <column name="forme_juridique_id" type="BIGINT"/>
+            <column name="gerant_id" type="BIGINT"/>
+            <column name="utilisateur_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-54">
+        <createTable tableName="entreprise_apprenti">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="entreprise_apprentiPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apprenti_id" type="BIGINT"/>
+            <column name="entreprise_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-55">
+        <createTable tableName="entreprise_compagnon">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="entreprise_compagnonPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="compagnon_id" type="BIGINT"/>
+            <column name="entreprise_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-56">
+        <createTable tableName="formation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="formationPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-57">
+        <createTable tableName="forme_juridique">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="forme_juridiquePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-58">
+        <createTable tableName="frais_enrolement">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="frais_enrolementPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="categorie_enrolement" type="SMALLINT"/>
+            <column name="montant" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-59">
+        <createTable tableName="gerant">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="gerantPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adresse_postal" type="VARCHAR(255)"/>
+            <column name="civilite" type="VARCHAR(255)"/>
+            <column name="contact1" type="VARCHAR(255)"/>
+            <column name="contact2" type="VARCHAR(255)"/>
+            <column name="date_emission_piece" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_naissance" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="lieu_naissance_autre" type="VARCHAR(255)"/>
+            <column name="nom" type="VARCHAR(255)"/>
+            <column name="numero_piece" type="VARCHAR(255)"/>
+            <column name="piece_delivre" type="VARCHAR(255)"/>
+            <column name="prenom" type="VARCHAR(255)"/>
+            <column name="quartier_residence" type="VARCHAR(255)"/>
+            <column name="sexe" type="VARCHAR(255)"/>
+            <column name="commune_residence_id" type="BIGINT"/>
+            <column name="commune_naissance_id" type="BIGINT"/>
+            <column name="nationalite" type="BIGINT"/>
+            <column name="statut_matrimonial_id" type="BIGINT"/>
+            <column name="type_document_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-60">
+        <createTable tableName="metier">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="metierPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-61">
+        <createTable tableName="niveau_etude">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="niveau_etudePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-62">
+        <createTable tableName="paiement_enrolement">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="paiement_enrolementPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="annee" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="montant" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apprenti_id" type="BIGINT"/>
+            <column name="artisan_id" type="BIGINT"/>
+            <column name="compagnon_id" type="BIGINT"/>
+            <column name="entreprise_id" type="BIGINT"/>
+            <column name="frais_enrolement_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="utilisateur_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-63">
+        <createTable tableName="parametres">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="parametresPK"/>
+            </column>
+            <column name="byte_array" type="BYTEA"/>
+            <column name="envoi_mail" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-64">
+        <createTable tableName="partenaire">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="partenairePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact" type="VARCHAR(255)"/>
+            <column name="denomination" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-65">
+        <createTable tableName="partenaire_prestation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="partenaire_prestationPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="valeur" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="partenaire_id" type="BIGINT"/>
+            <column name="prestation_id" type="BIGINT"/>
+            <column name="remuneration_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-66">
+        <createTable tableName="payment_request">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_requestPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="categorie_enrolement" type="SMALLINT"/>
+            <column name="etat" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="launch_url" type="VARCHAR(255)"/>
+            <column name="montant" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="requester_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="requester_type" type="VARCHAR(255)"/>
+            <column name="wave_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-67">
+        <createTable tableName="pays">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="paysPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-68">
+        <createTable tableName="prestation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="prestationPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-69">
+        <createTable tableName="profil">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="profilPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-70">
+        <createTable tableName="remuneration">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="remunerationPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-71">
+        <createTable tableName="sous_prefecture">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sous_prefecturePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+            <column name="departement_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-72">
+        <createTable tableName="statut_matrimonial">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="statut_matrimonialPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-73">
+        <createTable tableName="type_compte_bancaire">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="type_compte_bancairePK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-74">
+        <createTable tableName="type_document">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="type_documentPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="libelle" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-75">
+        <createTable tableName="utilisateur">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="utilisateurPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="version" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actif" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="contact" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="nom" type="VARCHAR(255)"/>
+            <column name="prenom" type="VARCHAR(255)"/>
+            <column name="pwd" type="VARCHAR(255)"/>
+            <column name="crm_id" type="BIGINT"/>
+            <column name="partenaire_id" type="BIGINT"/>
+            <column name="profil_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-76">
+        <addUniqueConstraint columnNames="activite_id" constraintName="UC_ARTISANACTIVITE_ID_COL" tableName="artisan"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-77">
+        <createIndex indexName="activite_principale_entreprise_id_idx" tableName="entreprise">
+            <column name="activite_principale_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-78">
+        <createIndex indexName="activite_secondaire_entreprise_id_idx" tableName="entreprise">
+            <column name="activite_secondaire_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-79">
+        <createIndex indexName="apprenti_amende_id_idx" tableName="amende">
+            <column name="apprenti_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-80">
+        <createIndex indexName="apprenti_artisan_id_idx" tableName="artisan_apprenti">
+            <column name="apprenti_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-81">
+        <createIndex indexName="apprenti_commentaire_enrol_id_idx" tableName="commentaire_enrolement">
+            <column name="apprenti_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-82">
+        <createIndex indexName="apprenti_enrolement_id_idx" tableName="paiement_enrolement">
+            <column name="apprenti_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-83">
+        <createIndex indexName="apprenti_entreprise_id_idx" tableName="entreprise_apprenti">
+            <column name="apprenti_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-84">
+        <createIndex indexName="artisan_amende_id_idx" tableName="amende">
+            <column name="artisan_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-85">
+        <createIndex indexName="artisan_apprenti_id_idx" tableName="artisan_apprenti">
+            <column name="artisan_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-86">
+        <createIndex indexName="artisan_commentaire_enrol_id_idx" tableName="commentaire_enrolement">
+            <column name="artisan_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-87">
+        <createIndex indexName="artisan_compagnon_id_idx" tableName="artisan_compagnon">
+            <column name="artisan_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-88">
+        <createIndex indexName="artisan_enrolement_id_idx" tableName="paiement_enrolement">
+            <column name="artisan_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-89">
+        <createIndex indexName="commune_entreprise_id_idx" tableName="entreprise">
+            <column name="commune_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-90">
+        <createIndex indexName="commune_naissance_apprenti_id_idx" tableName="apprenti">
+            <column name="commune_naissance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-91">
+        <createIndex indexName="commune_naissance_artisan_id_idx" tableName="artisan">
+            <column name="commune_naissance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-92">
+        <createIndex indexName="commune_naissance_compagnon_id_idx" tableName="compagnon">
+            <column name="commune_naissance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-93">
+        <createIndex indexName="commune_naissance_gerant_id_idx" tableName="gerant">
+            <column name="commune_naissance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-94">
+        <createIndex indexName="commune_residence_apprenti_id_idx" tableName="apprenti">
+            <column name="commune_residence_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-95">
+        <createIndex indexName="commune_residence_artisan_id_idx" tableName="artisan">
+            <column name="commune_residence_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-96">
+        <createIndex indexName="commune_residence_compagnon_id_idx" tableName="compagnon">
+            <column name="commune_residence_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-97">
+        <createIndex indexName="commune_residence_gerant_id_idx" tableName="gerant">
+            <column name="commune_residence_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-98">
+        <createIndex indexName="compagnon_amende_id_idx" tableName="amende">
+            <column name="compagnon_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-99">
+        <createIndex indexName="compagnon_artisan_id_idx" tableName="artisan_compagnon">
+            <column name="compagnon_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-100">
+        <createIndex indexName="compagnon_commentaire_enrol_id_idx" tableName="commentaire_enrolement">
+            <column name="compagnon_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-101">
+        <createIndex indexName="compagnon_enrolement_id_idx" tableName="paiement_enrolement">
+            <column name="compagnon_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-102">
+        <createIndex indexName="compagnon_entreprise_id_idx" tableName="entreprise_compagnon">
+            <column name="compagnon_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-103">
+        <createIndex indexName="crm_artisan_id_idx" tableName="artisan">
+            <column name="crm_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-104">
+        <createIndex indexName="crm_departement_id_idx" tableName="departement">
+            <column name="crm_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-105">
+        <createIndex indexName="departement_artisan_id_idx" tableName="artisan">
+            <column name="departement_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-106">
+        <createIndex indexName="departement_sousprefecture_id_idx" tableName="sous_prefecture">
+            <column name="departement_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-107">
+        <createIndex indexName="entreprise_amende_id_idx" tableName="amende">
+            <column name="entreprise_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-108">
+        <createIndex indexName="entreprise_apprenti_id_idx" tableName="entreprise_apprenti">
+            <column name="entreprise_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-109">
+        <createIndex indexName="entreprise_commentaire_enrol_id_idx" tableName="commentaire_enrolement">
+            <column name="entreprise_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-110">
+        <createIndex indexName="entreprise_compagnon_id_idx" tableName="entreprise_compagnon">
+            <column name="entreprise_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-111">
+        <createIndex indexName="entreprise_enrolement_id_idx" tableName="paiement_enrolement">
+            <column name="entreprise_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-112">
+        <createIndex indexName="gerant_entreprise_id_idx" tableName="entreprise">
+            <column name="gerant_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-113">
+        <createIndex indexName="metier_apprenti_id_idx" tableName="apprenti">
+            <column name="metier_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-114">
+        <createIndex indexName="metier_artisan_id_idx" tableName="artisan">
+            <column name="metier_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-115">
+        <createIndex indexName="metier_compagnon_id_idx" tableName="compagnon">
+            <column name="metier_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-116">
+        <createIndex indexName="metier_principale_activite_id_idx" tableName="activite">
+            <column name="metier_principale_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-117">
+        <createIndex indexName="metier_secondaire_activite_id_idx" tableName="activite">
+            <column name="metier_secondaire_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-118">
+        <createIndex indexName="partenaire_prestation_pp_idx" tableName="partenaire_prestation">
+            <column name="partenaire_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-119">
+        <createIndex indexName="pays_apprenti_id_idx" tableName="apprenti">
+            <column name="nationalite"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-120">
+        <createIndex indexName="pays_artisan_id_idx" tableName="artisan">
+            <column name="nationalite"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-121">
+        <createIndex indexName="pays_compagnon_id_idx" tableName="compagnon">
+            <column name="nationalite"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-122">
+        <createIndex indexName="pays_gerant_id_idx" tableName="gerant">
+            <column name="nationalite"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-123">
+        <createIndex indexName="prestation_partenaire_pp_idx" tableName="partenaire_prestation">
+            <column name="prestation_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-124">
+        <createIndex indexName="sous_prefecture_artisan_id_idx" tableName="artisan">
+            <column name="sous_prefecture_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-125">
+        <createIndex indexName="sous_prefecture_commune_id_idx" tableName="commune">
+            <column name="sous_prefecture_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-126">
+        <createIndex indexName="utilisateur_amende_id_idx" tableName="amende">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-127">
+        <createIndex indexName="utilisateur_apprenti_id_idx" tableName="apprenti">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-128">
+        <createIndex indexName="utilisateur_artisan_id_idx" tableName="artisan">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-129">
+        <createIndex indexName="utilisateur_commentaire_enrol_id_idx" tableName="commentaire_enrolement">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-130">
+        <createIndex indexName="utilisateur_compagnon_id_idx" tableName="compagnon">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-131">
+        <createIndex indexName="utilisateur_enrolement_id_idx" tableName="paiement_enrolement">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-132">
+        <createIndex indexName="utilisateur_entreprise_id_idx" tableName="entreprise">
+            <column name="utilisateur_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-133">
+        <addForeignKeyConstraint baseColumnNames="metier_principale_id" baseTableName="activite" constraintName="FK_activite_principale" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-134">
+        <addForeignKeyConstraint baseColumnNames="activite_principale_id" baseTableName="entreprise" constraintName="FK_activite_principale_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-135">
+        <addForeignKeyConstraint baseColumnNames="metier_secondaire_id" baseTableName="activite" constraintName="FK_activite_secondaire" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-136">
+        <addForeignKeyConstraint baseColumnNames="activite_secondaire_id" baseTableName="entreprise" constraintName="FK_activite_secondaire_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-137">
+        <addForeignKeyConstraint baseColumnNames="apprenti_id" baseTableName="amende" constraintName="FK_apprenti_amende" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apprenti" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-138">
+        <addForeignKeyConstraint baseColumnNames="apprenti_id" baseTableName="artisan_apprenti" constraintName="FK_apprenti_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apprenti" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-139">
+        <addForeignKeyConstraint baseColumnNames="apprenti_id" baseTableName="commentaire_enrolement" constraintName="FK_apprenti_commentaire_enrol" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apprenti" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-140">
+        <addForeignKeyConstraint baseColumnNames="apprenti_id" baseTableName="entreprise_apprenti" constraintName="FK_apprenti_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apprenti" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-141">
+        <addForeignKeyConstraint baseColumnNames="apprenti_id" baseTableName="paiement_enrolement" constraintName="FK_apprenti_paiement_enrolement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apprenti" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-142">
+        <addForeignKeyConstraint baseColumnNames="activite_id" baseTableName="artisan" constraintName="FK_artisan_activite" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="activite" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-143">
+        <addForeignKeyConstraint baseColumnNames="artisan_id" baseTableName="amende" constraintName="FK_artisan_amende" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="artisan" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-144">
+        <addForeignKeyConstraint baseColumnNames="artisan_id" baseTableName="artisan_apprenti" constraintName="FK_artisan_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="artisan" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-145">
+        <addForeignKeyConstraint baseColumnNames="artisan_id" baseTableName="commentaire_enrolement" constraintName="FK_artisan_commentaire_enrol" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="artisan" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-146">
+        <addForeignKeyConstraint baseColumnNames="artisan_id" baseTableName="artisan_compagnon" constraintName="FK_artisan_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="artisan" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-147">
+        <addForeignKeyConstraint baseColumnNames="artisan_id" baseTableName="paiement_enrolement" constraintName="FK_artisan_paiement_enrolement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="artisan" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-148">
+        <addForeignKeyConstraint baseColumnNames="classe_id" baseTableName="apprenti" constraintName="FK_classe_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="classe" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-149">
+        <addForeignKeyConstraint baseColumnNames="classe_id" baseTableName="artisan" constraintName="FK_classe_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="classe" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-150">
+        <addForeignKeyConstraint baseColumnNames="classe_artisan_id" baseTableName="artisan" constraintName="FK_classe_artisan_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="classe_artisan" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-151">
+        <addForeignKeyConstraint baseColumnNames="classe_id" baseTableName="compagnon" constraintName="FK_classe_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="classe" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-152">
+        <addForeignKeyConstraint baseColumnNames="commune_id" baseTableName="activite" constraintName="FK_commune_activite" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-153">
+        <addForeignKeyConstraint baseColumnNames="commune_id" baseTableName="entreprise" constraintName="FK_commune_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-154">
+        <addForeignKeyConstraint baseColumnNames="commune_naissance_id" baseTableName="apprenti" constraintName="FK_commune_naissance_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-155">
+        <addForeignKeyConstraint baseColumnNames="commune_naissance_id" baseTableName="artisan" constraintName="FK_commune_naissance_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-156">
+        <addForeignKeyConstraint baseColumnNames="commune_naissance_id" baseTableName="compagnon" constraintName="FK_commune_naissance_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-157">
+        <addForeignKeyConstraint baseColumnNames="commune_naissance_id" baseTableName="gerant" constraintName="FK_commune_naissance_gerant" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-158">
+        <addForeignKeyConstraint baseColumnNames="commune_residence_id" baseTableName="apprenti" constraintName="FK_commune_residence_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-159">
+        <addForeignKeyConstraint baseColumnNames="commune_residence_id" baseTableName="artisan" constraintName="FK_commune_residence_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-160">
+        <addForeignKeyConstraint baseColumnNames="commune_residence_id" baseTableName="compagnon" constraintName="FK_commune_residence_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-161">
+        <addForeignKeyConstraint baseColumnNames="commune_residence_id" baseTableName="gerant" constraintName="FK_commune_residence_gerant" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="commune" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-162">
+        <addForeignKeyConstraint baseColumnNames="compagnon_id" baseTableName="amende" constraintName="FK_compagnon_amende" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="compagnon" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-163">
+        <addForeignKeyConstraint baseColumnNames="compagnon_id" baseTableName="artisan_compagnon" constraintName="FK_compagnon_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="compagnon" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-164">
+        <addForeignKeyConstraint baseColumnNames="compagnon_id" baseTableName="commentaire_enrolement" constraintName="FK_compagnon_commentaire_enrol" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="compagnon" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-165">
+        <addForeignKeyConstraint baseColumnNames="compagnon_id" baseTableName="entreprise_compagnon" constraintName="FK_compagnon_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="compagnon" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-166">
+        <addForeignKeyConstraint baseColumnNames="compagnon_id" baseTableName="paiement_enrolement" constraintName="FK_compagnon_paiement_enrolement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="compagnon" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-167">
+        <addForeignKeyConstraint baseColumnNames="compte_bancaire_id" baseTableName="artisan" constraintName="FK_compte_bancaire_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="type_compte_bancaire" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-168">
+        <addForeignKeyConstraint baseColumnNames="crm_id" baseTableName="artisan" constraintName="FK_crm_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="crm" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-169">
+        <addForeignKeyConstraint baseColumnNames="crm_id" baseTableName="departement" constraintName="FK_crm_departement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="crm" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-170">
+        <addForeignKeyConstraint baseColumnNames="crm_id" baseTableName="utilisateur" constraintName="FK_crm_utilisateur" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="crm" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-171">
+        <addForeignKeyConstraint baseColumnNames="departement_id" baseTableName="artisan" constraintName="FK_departement_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="departement" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-172">
+        <addForeignKeyConstraint baseColumnNames="departement_id" baseTableName="sous_prefecture" constraintName="FK_departement_sousprefecture" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="departement" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-173">
+        <addForeignKeyConstraint baseColumnNames="diplome_id" baseTableName="apprenti" constraintName="FK_diplome_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="diplome" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-174">
+        <addForeignKeyConstraint baseColumnNames="diplome_id" baseTableName="artisan" constraintName="FK_diplome_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="diplome" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-175">
+        <addForeignKeyConstraint baseColumnNames="diplome_id" baseTableName="compagnon" constraintName="FK_diplome_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="diplome" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-176">
+        <addForeignKeyConstraint baseColumnNames="entreprise_id" baseTableName="amende" constraintName="FK_entreprise_amende" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="entreprise" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-177">
+        <addForeignKeyConstraint baseColumnNames="entreprise_id" baseTableName="entreprise_apprenti" constraintName="FK_entreprise_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="entreprise" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-178">
+        <addForeignKeyConstraint baseColumnNames="entreprise_id" baseTableName="commentaire_enrolement" constraintName="FK_entreprise_commentaire_enrol" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="entreprise" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-179">
+        <addForeignKeyConstraint baseColumnNames="entreprise_id" baseTableName="entreprise_compagnon" constraintName="FK_entreprise_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="entreprise" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-180">
+        <addForeignKeyConstraint baseColumnNames="entreprise_id" baseTableName="paiement_enrolement" constraintName="FK_entreprise_paiement_enrolement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="entreprise" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-181">
+        <addForeignKeyConstraint baseColumnNames="formation_id" baseTableName="artisan" constraintName="FK_formation_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formation" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-182">
+        <addForeignKeyConstraint baseColumnNames="forme_juridique_id" baseTableName="entreprise" constraintName="FK_forme_juridique_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="forme_juridique" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-183">
+        <addForeignKeyConstraint baseColumnNames="frais_enrolement_id" baseTableName="paiement_enrolement" constraintName="FK_frais_paiement_enrolement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="frais_enrolement" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-184">
+        <addForeignKeyConstraint baseColumnNames="gerant_id" baseTableName="entreprise" constraintName="FK_gerant_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="gerant" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-185">
+        <addForeignKeyConstraint baseColumnNames="metier_id" baseTableName="apprenti" constraintName="FK_metier_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-186">
+        <addForeignKeyConstraint baseColumnNames="metier_id" baseTableName="artisan" constraintName="FK_metier_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-187">
+        <addForeignKeyConstraint baseColumnNames="metier_id" baseTableName="compagnon" constraintName="FK_metier_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="metier" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-188">
+        <addForeignKeyConstraint baseColumnNames="niveau_etude_id" baseTableName="apprenti" constraintName="FK_niveau_etude_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="niveau_etude" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-189">
+        <addForeignKeyConstraint baseColumnNames="niveau_etude_id" baseTableName="artisan" constraintName="FK_niveau_etude_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="niveau_etude" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-190">
+        <addForeignKeyConstraint baseColumnNames="niveau_etude_id" baseTableName="compagnon" constraintName="FK_niveau_etude_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="niveau_etude" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-191">
+        <addForeignKeyConstraint baseColumnNames="partenaire_id" baseTableName="partenaire_prestation" constraintName="FK_partenaire_prestation_pp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="partenaire" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-192">
+        <addForeignKeyConstraint baseColumnNames="partenaire_id" baseTableName="utilisateur" constraintName="FK_partenaire_utilisateur" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="partenaire" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-193">
+        <addForeignKeyConstraint baseColumnNames="nationalite" baseTableName="apprenti" constraintName="FK_pays_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="pays" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-194">
+        <addForeignKeyConstraint baseColumnNames="nationalite" baseTableName="artisan" constraintName="FK_pays_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="pays" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-195">
+        <addForeignKeyConstraint baseColumnNames="nationalite" baseTableName="compagnon" constraintName="FK_pays_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="pays" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-196">
+        <addForeignKeyConstraint baseColumnNames="nationalite" baseTableName="gerant" constraintName="FK_pays_gerant" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="pays" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-197">
+        <addForeignKeyConstraint baseColumnNames="prestation_id" baseTableName="partenaire_prestation" constraintName="FK_prestation_partenaire_pp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="prestation" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-198">
+        <addForeignKeyConstraint baseColumnNames="profil_id" baseTableName="utilisateur" constraintName="FK_profil_utilisateur" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="profil" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-199">
+        <addForeignKeyConstraint baseColumnNames="remuneration_id" baseTableName="partenaire_prestation" constraintName="FK_remuneration_partenaire_prestation" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="remuneration" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-200">
+        <addForeignKeyConstraint baseColumnNames="sous_prefecture_id" baseTableName="artisan" constraintName="FK_sous_prefecture_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sous_prefecture" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-201">
+        <addForeignKeyConstraint baseColumnNames="sous_prefecture_id" baseTableName="commune" constraintName="FK_sous_prefecture_commune" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sous_prefecture" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-202">
+        <addForeignKeyConstraint baseColumnNames="statut_matrimonial_id" baseTableName="artisan" constraintName="FK_statut_matrimonial_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="statut_matrimonial" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-203">
+        <addForeignKeyConstraint baseColumnNames="statut_matrimonial_id" baseTableName="gerant" constraintName="FK_statut_matrimonial_gerant" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="statut_matrimonial" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-204">
+        <addForeignKeyConstraint baseColumnNames="type_document_id" baseTableName="apprenti" constraintName="FK_type_document_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="type_document" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-205">
+        <addForeignKeyConstraint baseColumnNames="type_document_id" baseTableName="artisan" constraintName="FK_type_document_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="type_document" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-206">
+        <addForeignKeyConstraint baseColumnNames="type_document_id" baseTableName="compagnon" constraintName="FK_type_document_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="type_document" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-207">
+        <addForeignKeyConstraint baseColumnNames="type_document_id" baseTableName="gerant" constraintName="FK_type_document_gerant" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="type_document" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-208">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="amende" constraintName="FK_utilisateur_amende" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-209">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="apprenti" constraintName="FK_utilisateur_apprenti" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-210">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="artisan" constraintName="FK_utilisateur_artisan" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-211">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="commentaire_enrolement" constraintName="FK_utilisateur_commentaire_enrol" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-212">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="compagnon" constraintName="FK_utilisateur_compagnon" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-213">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="entreprise" constraintName="FK_utilisateur_entreprise" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+    <changeSet author="ankk (generated)" id="1764888242249-214">
+        <addForeignKeyConstraint baseColumnNames="utilisateur_id" baseTableName="paiement_enrolement" constraintName="FK_utilisateur_paiement_enrolement" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="utilisateur" validate="true"/>
+    </changeSet>
+
+    <include file="db/changeLog/changeLog-init-data.xml"/>
+    <include file="db/changeLog/changeLog-init-data-2.xml"/>
+    <include file="db/changeLog/changeLog-init-data-3.xml"/>
+    <include file="db/changeLog/changeLog-init-data-4.xml"/>
+    <include file="db/changeLog/changeLog-init-data-5.xml"/>
+    <include file="db/changeLog/changeLog-init-data-6.xml"/>
+    <include file="db/changeLog/changeLog-init-data-7.xml"/>
+    <include file="db/changeLog/changeLog-2.xml"/>
+    <include file="db/changeLog/changeLog-init-data-8.xml"/>
+    <include file="db/changeLog/changeLog-init-data-9.xml"/>
+</databaseChangeLog>

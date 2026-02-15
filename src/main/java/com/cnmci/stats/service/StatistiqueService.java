@@ -45,6 +45,15 @@ public class StatistiqueService {
         return data != null ? data : 0.0;
     }
 
+    public List<DailyPaymentLineChart> getLatestDailyPayments(){
+        return paiementEnrolementRepository.findLatestDailyPayments().stream().map(
+                p -> DailyPaymentLineChart.builder()
+                        .day((p.get("dte", Date.class).toString()).substring(5))
+                        .total((p.get("total", Long.class)).doubleValue() / 100000)
+                        .build()
+        ).toList();
+    }
+
     public List<StatsBean> getEntitiesStatistiques(){
         List<StatsBean> retour = new ArrayList<>();
         // ARTISAN :
