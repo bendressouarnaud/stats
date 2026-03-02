@@ -132,7 +132,7 @@ public class StatistiqueService {
                         .nom(a.getNom() + " " +a.getPrenom())
                         .contact(a.getContact1())
                         .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
-                        .metier(a.getActivite().getMetierPrincipale().getLibelle())
+                        .metier(a.getMetier().getLibelle())
                         .paiement(a.getStatutPaiement())
                         .commune(a.getCommuneResidence().getLibelle())
                         .type("Artisans")
@@ -222,6 +222,9 @@ public class StatistiqueService {
     }
 
 
+    //private int getAmountAlreadyPaid()
+
+
     public List<EntitySearchResponse> lookForAnyEntity(String search){
         List<EntitySearchResponse> retour = new ArrayList<>();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -235,7 +238,7 @@ public class StatistiqueService {
             .nom(a.getNom() + " " +a.getPrenom())
             .contact(a.getContact1())
             .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
-            .metier(a.getActivite().getMetierPrincipale().getLibelle())
+            .metier(a.getMetier().getLibelle())
             .paiement(a.getStatutPaiement())
             .commune(a.getCommuneResidence().getLibelle())
             .type("Artisans")
@@ -245,6 +248,8 @@ public class StatistiqueService {
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
+                .montant(15000 - (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
+                        PaiementEnrolement::getMontant).sum()))
             .build()
         ).toList());
 
@@ -268,6 +273,8 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
+                        .montant(5000 - (paiementEnrolementRepository.findAllByApprenti(a).stream().mapToInt(
+                                PaiementEnrolement::getMontant).sum()))
                         .build()
         ).toList());
 
@@ -291,6 +298,8 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
+                        .montant(5000 - (paiementEnrolementRepository.findAllByCompagnon(a).stream().mapToInt(
+                                PaiementEnrolement::getMontant).sum()))
                         .build()
         ).toList());
 
@@ -313,6 +322,8 @@ public class StatistiqueService {
                                 .amende(a.getAmendes().size())
                                 .latitude(processGeoData(a.getLatitude()))
                                 .longitude(processGeoData(a.getLongitude()))
+                                .montant(25000 - (paiementEnrolementRepository.findAllByEntreprise(a).stream().mapToInt(
+                                        PaiementEnrolement::getMontant).sum()))
                                 .build()
                 ).toList());
         return retour;

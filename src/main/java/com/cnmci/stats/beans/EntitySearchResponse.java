@@ -22,4 +22,5 @@ public class EntitySearchResponse {
     private int amende;
     private double latitude;
     private double longitude;
+    private long montant;
 }
