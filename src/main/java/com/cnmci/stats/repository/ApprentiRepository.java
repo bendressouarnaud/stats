@@ -54,4 +54,13 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
             nativeQuery = true)
     List<Apprenti> findAllApprentiFromAgentAsserment(long quartierId, int statutPaiement,
                                                    LocalDate dateDebut, LocalDate dateFin);
+
+
+    @Query(value = "select a.* from apprenti a inner join artisan_apprenti b on a.id = b.apprenti_id " +
+            "inner join artisan c on c.id = b.artisan_id where c.crm_id = :crmId " +
+            "union " +
+            "select a.* from apprenti a inner join entreprise_apprenti b on a.id = b.apprenti_id " +
+            "inner join entreprise c on c.id = b.entreprise_id where c.crm_id = :crmId",
+            nativeQuery = true)
+    List<Apprenti> findAllApprentiFromCrm(long crmId);
 }

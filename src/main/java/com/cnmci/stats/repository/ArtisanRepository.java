@@ -1,6 +1,7 @@
 package com.cnmci.stats.repository;
 
 import com.cnmci.core.model.Artisan;
+import com.cnmci.core.model.Crm;
 import com.cnmci.core.model.Utilisateur;
 import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllByStatutKycAndStatutPaiement(int kyc, int paiement);
     List<Artisan> findAllByUtilisateur(Utilisateur user);
     List<Artisan> findAllByOrderByNomAsc();
+    List<Artisan> findAllByCrm(Crm crm);
     List<Artisan> findAll(Pageable pageable);
     Artisan findByNumeroRegistre(String numero);
     List<Artisan> findByContact1(String contact);

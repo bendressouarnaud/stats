@@ -53,4 +53,12 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
             nativeQuery = true)
     List<Compagnon> findAllCompagnonFromAgentAsserment(long quartierId, int statutPaiement,
                                                      LocalDate dateDebut, LocalDate dateFin);
+
+    @Query(value = "select a.* from compagnon a inner join artisan_compagnon b on a.id = b.compagnon_id " +
+            "inner join artisan c on c.id = b.artisan_id where c.crm_id = :crmId " +
+            "union " +
+            "select a.* from compagnon a inner join entreprise_compagnon b on a.id = b.compagnon_id " +
+            "inner join entreprise c on c.id = b.entreprise_id where c.crm_id = :crmId",
+            nativeQuery = true)
+    List<Compagnon> findAllCompagnonFromCrm(long crmId);
 }

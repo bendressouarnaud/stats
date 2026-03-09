@@ -1,6 +1,7 @@
 package com.cnmci.stats.repository;
 
 import com.cnmci.core.model.Artisan;
+import com.cnmci.core.model.Crm;
 import com.cnmci.core.model.Entreprise;
 import com.cnmci.core.model.Utilisateur;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     List<Entreprise> findAllByOrderByRaisonSocialeAsc();
     List<Entreprise> findAllByUtilisateur(Utilisateur user);
     Entreprise findByNumeroRea(String numero);
+    List<Entreprise> findAllByCrm(Crm crm);
     List<Entreprise> findByContact(String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseOrContact(String libelle, String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(String libelle, String contact);

@@ -75,8 +75,8 @@ public class AccueilController {
 
     @Operation(summary = "Récupérer les STATISTIQUES globales des entités")
     @GetMapping(value="/get-entities-stats")
-    private List<StatsBean> processApprentiMobile() {
-        return statistiqueService.getEntitiesStatistiques();
+    private List<StatsBean> processApprentiMobile(HttpServletRequest httpServletRequest) {
+        return statistiqueService.getEntitiesStatistiques(httpServletRequest);
     }
 
     @Operation(summary = "Récupérer les entités dont le nom ou le contact correspond au paramètre")
