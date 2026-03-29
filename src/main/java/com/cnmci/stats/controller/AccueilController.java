@@ -79,6 +79,12 @@ public class AccueilController {
         return statistiqueService.getEntitiesStatistiques(httpServletRequest);
     }
 
+    @Operation(summary = "Récupérer les STATISTIQUES globales des entités")
+    @GetMapping(value="/get-entities-stats-crm/{id}")
+    private List<StatsBean> processApprentiMobileCrm(@PathVariable long id) {
+        return statistiqueService.getEntitiesStatistiquesCrm(id);
+    }
+
     @Operation(summary = "Récupérer les entités dont le nom ou le contact correspond au paramètre")
     @GetMapping(value="/look-for-any-entity/{search}")
     private List<EntitySearchResponse> lookForAnyEntity(@PathVariable String search) {

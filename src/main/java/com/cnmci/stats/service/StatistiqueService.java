@@ -68,131 +68,182 @@ public class StatistiqueService {
             case "ROLE_FORMALITE_CRM":
             case "ROLE_PRESIDENT_CRM":
                 // ARTISAN :
-                List<Artisan> artisans = artisanRepository.findAllByCrm(utilisateur.getCrm());
-                int populationArtisan = artisans.size();
-                long attenduArtisan = 15000L * populationArtisan;
+                Tuple totalArtisanNew = artisanRepository.findTotalArtisanFromCrm(
+                        utilisateur.getCrm().getId(), 0);
+                Tuple totalArtisanReNew = artisanRepository.findTotalArtisanFromCrm(
+                        utilisateur.getCrm().getId(), 3);
+                int populationArtisan = (totalArtisanNew.get("tot", Long.class)).intValue();
+                int populationArtisanRenew = (totalArtisanReNew.get("tot", Long.class)).intValue();
+                long attenduArtisan = (15000L * populationArtisan) + (5000L * populationArtisanRenew);
                 // En cours
-                long encoursArtisan = paiementEnrolementRepository.findAllByArtisanIn(
-                        artisans.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleArtisan = paiementEnrolementRepository.
+                        findAmountPaidByArtisanFromCrm(utilisateur.getCrm().getId());
+                long encoursArtisan = encoursTupleArtisan != null ?
+                        encoursTupleArtisan.get("total", Long.class) : 0;
                 double pourcentageArtisan = (double) (encoursArtisan * 100) / attenduArtisan;
-                retour.add(new StatsBean("Artisans", populationArtisan, attenduArtisan, encoursArtisan, roundValue(pourcentageArtisan)));
+                retour.add(new StatsBean("Artisans", (populationArtisan + populationArtisanRenew), attenduArtisan, encoursArtisan,
+                        pourcentageArtisan > 0 ? roundValue(pourcentageArtisan) : 0));
 
                 // APPRENTI :
-                List<Apprenti> apprentis = apprentiRepository.findAllApprentiFromCrm(utilisateur.getCrm().getId());
-                int populationApprenti = apprentis.size();
-                long attenduApprenti = 5000L * populationApprenti;
+                Tuple totalApprenti = apprentiRepository.findTotalFromCrm(utilisateur.getCrm().getId(), 0);
+                Tuple totalApprentiRenew = apprentiRepository.findTotalFromCrm(utilisateur.getCrm().getId(), 3);
+                int populationApprenti = (totalApprenti.get("total", BigDecimal.class)).intValue();
+                int populationApprentiRenew = (totalApprentiRenew.get("total", BigDecimal.class)).intValue();
+                long attenduApprenti = 5000L * (populationApprenti + populationApprentiRenew);
                 // En cours
-                long encoursApprenti = paiementEnrolementRepository.findAllByApprentiIn(
-                        apprentis.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                //System.out.println("Id : "+ String.valueOf(utilisateur.getCrm().getId()));
+                Tuple encoursTupleApprenti = paiementEnrolementRepository.
+                        findAmountPaidByApprentiFromCrm(utilisateur.getCrm().getId());
+                long encoursApprenti = encoursTupleApprenti != null ?
+                        encoursTupleApprenti.get("total", Long.class) : 0;
                 double pourcentageApprenti = (double) (encoursApprenti * 100) / attenduApprenti;
-                retour.add(new StatsBean("Apprentis", populationApprenti, attenduApprenti, encoursApprenti, roundValue(pourcentageApprenti)));
-
+                retour.add(new StatsBean("Apprentis", (populationApprenti + populationApprentiRenew), attenduApprenti, encoursApprenti,
+                        pourcentageApprenti > 0 ? roundValue(pourcentageApprenti) : 0));
 
                 // C O M P A G N O N :
-                List<Compagnon> compagnons = compagnonRepository.findAllCompagnonFromCrm(utilisateur.getCrm().getId());
-                int populationCompagnon = compagnons.size();
-                long attenduCompagnon = 5000L * populationCompagnon;
+                Tuple totalCompagnon = compagnonRepository.findTotalFromCrm(utilisateur.getCrm().getId(), 0);
+                Tuple totalCompagnonRenew = compagnonRepository.findTotalFromCrm(utilisateur.getCrm().getId(), 3);
+                int populationCompagnon = (totalCompagnon.get("total", BigDecimal.class)).intValue();
+                int populationCompagnonRenew = (totalCompagnonRenew.get("total", BigDecimal.class)).intValue();
+                long attenduCompagnon = 5000L * (populationCompagnon + populationCompagnonRenew);
                 // En cours
-                long encoursCompagnon = paiementEnrolementRepository.findAllByCompagnonIn(
-                        compagnons.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleCompagnon = paiementEnrolementRepository.
+                        findAmountPaidByCompagnonFromCrm(utilisateur.getCrm().getId());
+                long encoursCompagnon = encoursTupleCompagnon != null ?
+                        encoursTupleCompagnon.get("total", Long.class) : 0;
                 double pourcentageCompagnon = (double) (encoursCompagnon * 100) / attenduCompagnon;
-                retour.add(new StatsBean("Compagnons", populationCompagnon, attenduCompagnon, encoursCompagnon, roundValue(pourcentageCompagnon)));
-
+                retour.add(new StatsBean("Compagnons", (populationCompagnon + populationCompagnonRenew), attenduCompagnon, encoursCompagnon,
+                        pourcentageCompagnon > 0 ? roundValue(pourcentageCompagnon) : 0));
 
                 // E N T R E P R I S E :
-                List<Entreprise> entreprises = entrepriseRepository.findAllByCrm(utilisateur.getCrm());
-                int populationEntreprise = entreprises.size();
+                Tuple totalEntreprise = entrepriseRepository.findTotalEntrepriseFromCrm(utilisateur.getCrm().getId());
+                int populationEntreprise = (totalEntreprise.get("tot", Long.class)).intValue();
                 long attenduEntreprise = 25000L * populationEntreprise;
                 // En cours
-                long encoursEntreprise = paiementEnrolementRepository.findAllByEntrepriseIn(
-                        entreprises.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleEntreprise = paiementEnrolementRepository.
+                        findAmountPaidByEntrepriseFromCrm(utilisateur.getCrm().getId());
+                long encoursEntreprise = encoursTupleEntreprise != null ?
+                        encoursTupleEntreprise.get("total", Long.class) : 0;
                 double pourcentageEntreprise = (double) (encoursEntreprise * 100) / attenduEntreprise;
-                retour.add(new StatsBean("Entreprises", populationEntreprise, attenduEntreprise, encoursEntreprise, roundValue(pourcentageEntreprise)));
+                retour.add(new StatsBean("Entreprises", populationEntreprise, attenduEntreprise, encoursEntreprise,
+                        pourcentageEntreprise > 0 ? roundValue(pourcentageEntreprise) : 0));
                 break;
 
             default:
                 // ARTISAN :
-                List<Artisan> artisansDef = artisanRepository.findAllByOrderByNomAsc();
-                int populationArtisanDef = artisansDef.size();
-                long attenduArtisanDef = 15000L * populationArtisanDef;
+                Tuple totalArtisanDef = artisanRepository.findTotalArtisan(0);
+                Tuple totalArtisanDefRenew = artisanRepository.findTotalArtisan(3);
+                int populationArtisanDef = (totalArtisanDef.get("tot", Long.class)).intValue();
+                int populationArtisanDefRenew = (totalArtisanDefRenew.get("tot", Long.class)).intValue();
+                long attenduArtisanDef = (15000L * populationArtisanDef) + (5000L * populationArtisanDefRenew);
                 // En cours
-                long encoursArtisanDef = paiementEnrolementRepository.findAllByArtisanIn(
-                        artisansDef.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleArtisanDef = paiementEnrolementRepository.
+                        findAmountPaidByArtisan();
+                long encoursArtisanDef = encoursTupleArtisanDef.get("total", Long.class);
                 double pourcentageArtisanDef = (double) (encoursArtisanDef * 100) / attenduArtisanDef;
-                retour.add(new StatsBean("Artisans", populationArtisanDef, attenduArtisanDef, encoursArtisanDef, roundValue(pourcentageArtisanDef)));
+                retour.add(new StatsBean("Artisans",
+                        (populationArtisanDef + populationArtisanDefRenew),
+                        attenduArtisanDef, encoursArtisanDef, roundValue(pourcentageArtisanDef)));
 
                 // APPRENTI :
-                List<Apprenti> apprentisDef = apprentiRepository.findAllByOrderByNomAsc();
-                int populationApprentiDef = apprentisDef.size();
+                Tuple totalApprentiDef = apprentiRepository.findTotal();
+                int populationApprentiDef = (totalApprentiDef.get("total", Long.class)).intValue();
                 long attenduApprentiDef = 5000L * populationApprentiDef;
                 // En cours
-                long encoursApprentiDef = paiementEnrolementRepository.findAllByApprentiIn(
-                        apprentisDef.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleApprentiDef = paiementEnrolementRepository.
+                        findAmountPaidByApprenti();
+                long encoursApprentiDef = encoursTupleApprentiDef.get("total", Long.class);
                 double pourcentageApprentiDef = (double) (encoursApprentiDef * 100) / attenduApprentiDef;
                 retour.add(new StatsBean("Apprentis", populationApprentiDef, attenduApprentiDef, encoursApprentiDef, roundValue(pourcentageApprentiDef)));
 
                 // C O M P A G N O N :
-                List<Compagnon> compagnonsDef = compagnonRepository.findAllByOrderByNomAsc();
-                int populationCompagnonDef = compagnonsDef.size();
+                Tuple totalCompagnonDef = compagnonRepository.findTotal();
+                int populationCompagnonDef = (totalCompagnonDef.get("total", Long.class)).intValue();
                 long attenduCompagnonDef = 5000L * populationCompagnonDef;
                 // En cours
-                long encoursCompagnonDef = paiementEnrolementRepository.findAllByCompagnonIn(
-                        compagnonsDef.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleCompagnonDef = paiementEnrolementRepository.
+                        findAmountPaidByCompagnon();
+                long encoursCompagnonDef = encoursTupleCompagnonDef.get("total", Long.class);
                 double pourcentageCompagnonDef = (double) (encoursCompagnonDef * 100) / attenduCompagnonDef;
                 retour.add(new StatsBean("Compagnons", populationCompagnonDef, attenduCompagnonDef, encoursCompagnonDef, roundValue(pourcentageCompagnonDef)));
 
                 // E N T R E P R I S E :
-                List<Entreprise> entreprisesDef = entrepriseRepository.findAllByOrderByRaisonSocialeAsc();
-                int populationEntrepriseDef = entreprisesDef.size();
+                Tuple totalEntrepriseDef = entrepriseRepository.findTotalEntreprise();
+                int populationEntrepriseDef = (totalEntrepriseDef.get("tot", Long.class)).intValue();
                 long attenduEntrepriseDef = 25000L * populationEntrepriseDef;
                 // En cours
-                long encoursEntrepriseDef = paiementEnrolementRepository.findAllByEntrepriseIn(
-                        entreprisesDef.stream().filter(
-                                a -> a.getStatutPaiement() > 0
-                        ).toList()
-                ).stream().mapToInt(
-                        PaiementEnrolement::getMontant
-                ).sum();
+                Tuple encoursTupleEntrepriseDef = paiementEnrolementRepository.
+                        findAmountPaidByEntreprise();
+                long encoursEntrepriseDef = encoursTupleEntrepriseDef.get("total", Long.class);
                 double pourcentageEntrepriseDef = (double) (encoursEntrepriseDef * 100) / attenduEntrepriseDef;
                 retour.add(new StatsBean("Entreprises", populationEntrepriseDef, attenduEntrepriseDef, encoursEntrepriseDef, roundValue(pourcentageEntrepriseDef)));
                 break;
         }
+        return retour;
+    }
 
+    public List<StatsBean> getEntitiesStatistiquesCrm(long idCrm){
+        List<StatsBean> retour = new ArrayList<>();
+        // ARTISAN :
+        Tuple totalArtisanNew = artisanRepository.findTotalArtisanFromCrm(
+                idCrm, 0);
+        Tuple totalArtisanReNew = artisanRepository.findTotalArtisanFromCrm(
+                idCrm, 3);
+        int populationArtisan = (totalArtisanNew.get("tot", Long.class)).intValue();
+        int populationArtisanRenew = (totalArtisanReNew.get("tot", Long.class)).intValue();
+        long attenduArtisan = (15000L * populationArtisan) + (5000L * populationArtisanRenew);
+        // En cours
+        Tuple encoursTupleArtisan = paiementEnrolementRepository.
+                findAmountPaidByArtisanFromCrm(idCrm);
+        long encoursArtisan = encoursTupleArtisan != null ?
+                encoursTupleArtisan.get("total", Long.class) : 0;
+        double pourcentageArtisan = (double) (encoursArtisan * 100) / attenduArtisan;
+        retour.add(new StatsBean("Artisans", (populationArtisan + populationArtisanRenew), attenduArtisan, encoursArtisan,
+                pourcentageArtisan > 0 ? roundValue(pourcentageArtisan) : 0));
+
+        // APPRENTI :
+        Tuple totalApprenti = apprentiRepository.findTotalFromCrm(idCrm, 0);
+        Tuple totalApprentiRenew = apprentiRepository.findTotalFromCrm(idCrm, 3);
+        int populationApprenti = (totalApprenti.get("total", BigDecimal.class)).intValue();
+        int populationApprentiRenew = (totalApprentiRenew.get("total", BigDecimal.class)).intValue();
+        long attenduApprenti = 5000L * (populationApprenti + populationApprentiRenew);
+        // En cours
+        //System.out.println("Id : "+ String.valueOf(utilisateur.getCrm().getId()));
+        Tuple encoursTupleApprenti = paiementEnrolementRepository.
+                findAmountPaidByApprentiFromCrm(idCrm);
+        long encoursApprenti = encoursTupleApprenti != null ?
+                encoursTupleApprenti.get("total", Long.class) : 0;
+        double pourcentageApprenti = (double) (encoursApprenti * 100) / attenduApprenti;
+        retour.add(new StatsBean("Apprentis", (populationApprenti + populationApprentiRenew), attenduApprenti, encoursApprenti,
+                pourcentageApprenti > 0 ? roundValue(pourcentageApprenti) : 0));
+
+        // C O M P A G N O N :
+        Tuple totalCompagnon = compagnonRepository.findTotalFromCrm(idCrm, 0);
+        Tuple totalCompagnonRenew = compagnonRepository.findTotalFromCrm(idCrm, 3);
+        int populationCompagnon = (totalCompagnon.get("total", BigDecimal.class)).intValue();
+        int populationCompagnonRenew = (totalCompagnonRenew.get("total", BigDecimal.class)).intValue();
+        long attenduCompagnon = 5000L * (populationCompagnon + populationCompagnonRenew);
+        // En cours
+        Tuple encoursTupleCompagnon = paiementEnrolementRepository.
+                findAmountPaidByCompagnonFromCrm(idCrm);
+        long encoursCompagnon = encoursTupleCompagnon != null ?
+                encoursTupleCompagnon.get("total", Long.class) : 0;
+        double pourcentageCompagnon = (double) (encoursCompagnon * 100) / attenduCompagnon;
+        retour.add(new StatsBean("Compagnons", (populationCompagnon + populationCompagnonRenew), attenduCompagnon, encoursCompagnon,
+                pourcentageCompagnon > 0 ? roundValue(pourcentageCompagnon) : 0));
+
+        // E N T R E P R I S E :
+        Tuple totalEntreprise = entrepriseRepository.findTotalEntrepriseFromCrm(idCrm);
+        int populationEntreprise = (totalEntreprise.get("tot", Long.class)).intValue();
+        long attenduEntreprise = 25000L * populationEntreprise;
+        // En cours
+        Tuple encoursTupleEntreprise = paiementEnrolementRepository.
+                findAmountPaidByEntrepriseFromCrm(idCrm);
+        long encoursEntreprise = encoursTupleEntreprise != null ?
+                encoursTupleEntreprise.get("total", Long.class) : 0;
+        double pourcentageEntreprise = (double) (encoursEntreprise * 100) / attenduEntreprise;
+        retour.add(new StatsBean("Entreprises", populationEntreprise, attenduEntreprise, encoursEntreprise,
+                pourcentageEntreprise > 0 ? roundValue(pourcentageEntreprise) : 0));
         return retour;
     }
 

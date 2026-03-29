@@ -4,6 +4,7 @@ import com.cnmci.core.model.Artisan;
 import com.cnmci.core.model.Crm;
 import com.cnmci.core.model.Entreprise;
 import com.cnmci.core.model.Utilisateur;
+import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -46,4 +47,13 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
             nativeQuery = true)
     List<Entreprise> findAllEntrepriseFromAgentAsserment(long quartierId, int statutPaiement,
                                                    LocalDate dateDebut, LocalDate dateFin);
+
+    // Données de la CRM :
+    @Query(value = "select count(*) as tot from entreprise where crm_id = :crmId",
+            nativeQuery = true)
+    Tuple findTotalEntrepriseFromCrm(long crmId);
+    // Global
+    @Query(value = "select count(*) as tot from entreprise",
+            nativeQuery = true)
+    Tuple findTotalEntreprise();
 }

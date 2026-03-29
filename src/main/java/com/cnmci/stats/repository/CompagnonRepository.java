@@ -3,6 +3,7 @@ package com.cnmci.stats.repository;
 import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Compagnon;
 import com.cnmci.core.model.Utilisateur;
+import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -61,4 +62,21 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
             "inner join entreprise c on c.id = b.entreprise_id where c.crm_id = :crmId",
             nativeQuery = true)
     List<Compagnon> findAllCompagnonFromCrm(long crmId);
+
+    // Données de la CRM :
+    @Query(value = "select sum(tot) as total from (" +
+            "select count(distinct a.id) as tot from compagnon a inner join artisan_compagnon b on a.id = b.compagnon_id " +
+            "inner join artisan c on c.id = b.artisan_id " +
+            "where c.crm_id = :crmId and a.statut_type = :statutType " +
+            "union all " +
+            "select count(distinct a.id) as tot from compagnon a inner join entreprise_compagnon b on a.id = b.compagnon_id " +
+            "inner join entreprise c on c.id = b.entreprise_id " +
+            "where c.crm_id = :crmId and a.statut_type = :statutType " +
+            ") a",
+            nativeQuery = true)
+    Tuple findTotalFromCrm(long crmId, int statutType);
+    // Global
+    @Query(value = "select count(*) as total from compagnon",
+            nativeQuery = true)
+    Tuple findTotal();
 }

@@ -139,4 +139,19 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "count(b.*) desc limit 10",
             nativeQuery = true)
     List<Tuple> getPaymentByActivite(long communeId);
+
+
+    // Données de la CRM :
+    @Query(value = "select count(*) as tot from artisan where crm_id = :crmId and " +
+            "statut_type = :statutType",
+            nativeQuery = true)
+    Tuple findTotalArtisanFromCrm(long crmId, int statutType);
+    // Global
+    @Query(value = "select count(*) as tot from artisan where statut_type = :statutType",
+            nativeQuery = true)
+    Tuple findTotalArtisan(int statutType);
+
+
+    // those who have not paid yet or have paid a part :
+    List<Artisan> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
 }

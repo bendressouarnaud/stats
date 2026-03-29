@@ -37,4 +37,54 @@ public interface PaiementEnrolementRepository extends CrudRepository<PaiementEnr
             "group by date(a.created_at) order by date(a.created_at) desc limit 7",
             nativeQuery = true)
     List<Tuple> findLatestDailyPayments();
+
+    // CRM :
+    @Query(value = "select CASE when sum(montant) is not null then sum(montant) else 0 end as total from paiement_enrolement a inner join artisan b " +
+            "on a.artisan_id = b.id where b.crm_id = :crmId",
+            nativeQuery = true)
+    Tuple findAmountPaidByArtisanFromCrm(long crmId);
+    @Query(value = "select CASE when sum(montant) is not null then sum(montant) " +
+            "else 0 end as total from paiement_enrolement a where apprenti_id in (" +
+            "select id from (" +
+            "select distinct a.id from apprenti a inner join artisan_apprenti b on a.id = b.apprenti_id " +
+            "inner join artisan c on (c.id = b.artisan_id and c.crm_id = :crmId) " +
+            "union all " +
+            "select distinct a.id from apprenti a inner join entreprise_apprenti b on a.id = b.apprenti_id " +
+            "inner join entreprise c on (c.id = b.entreprise_id and c.crm_id = :crmId) " +
+            ") a)",
+            nativeQuery = true)
+    Tuple findAmountPaidByApprentiFromCrm(long crmId);
+    @Query(value = "select CASE when sum(montant) is not null then sum(montant) " +
+            "else 0 end as total from paiement_enrolement a where apprenti_id in (" +
+            "select id from (" +
+            "select distinct a.id from compagnon a inner join artisan_compagnon b on a.id = b.compagnon_id " +
+            "inner join artisan c on (c.id = b.artisan_id and c.crm_id = :crmId) " +
+            "union all " +
+            "select distinct a.id from compagnon a inner join entreprise_compagnon b on a.id = b.compagnon_id " +
+            "inner join entreprise c on (c.id = b.entreprise_id and c.crm_id = :crmId) " +
+            ") a)",
+            nativeQuery = true)
+    Tuple findAmountPaidByCompagnonFromCrm(long crmId);
+    @Query(value = "select CASE when sum(montant) is not null then sum(montant) else 0 end as total from paiement_enrolement a inner join entreprise b " +
+            "on a.entreprise_id = b.id where b.crm_id = :crmId",
+            nativeQuery = true)
+    Tuple findAmountPaidByEntrepriseFromCrm(long crmId);
+
+    // Global
+    @Query(value = "select sum(montant) as total from paiement_enrolement a inner join artisan b " +
+            "on a.artisan_id = b.id",
+            nativeQuery = true)
+    Tuple findAmountPaidByArtisan();
+    @Query(value = "select sum(montant) as total from paiement_enrolement a inner join apprenti b " +
+            "on a.apprenti_id = b.id",
+            nativeQuery = true)
+    Tuple findAmountPaidByApprenti();
+    @Query(value = "select sum(montant) as total from paiement_enrolement a inner join compagnon b " +
+            "on a.compagnon_id = b.id",
+            nativeQuery = true)
+    Tuple findAmountPaidByCompagnon();
+    @Query(value = "select sum(montant) as total from paiement_enrolement a inner join entreprise b " +
+            "on a.entreprise_id = b.id",
+            nativeQuery = true)
+    Tuple findAmountPaidByEntreprise();
 }
