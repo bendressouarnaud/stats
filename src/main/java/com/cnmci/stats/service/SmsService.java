@@ -72,7 +72,7 @@ public class SmsService {
                     restTemplate = new RestTemplate();
                     headers = new HttpHeaders();
                     headers.setContentType(MediaType.APPLICATION_JSON);
-                    headers.set("Authorization", "Bearer " + response.getBody().accessToken());
+                    headers.set("Authorization", "Bearer " + accessToken);
 
                     StringBuilder contenu = new StringBuilder();
                     contenu.append("Bonjour ");
