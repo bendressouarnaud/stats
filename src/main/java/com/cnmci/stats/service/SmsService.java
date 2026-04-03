@@ -1,9 +1,13 @@
 package com.cnmci.stats.service;
 
+import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Artisan;
+import com.cnmci.core.model.Compagnon;
 import com.cnmci.stats.beans.SmsRequest;
 import com.cnmci.stats.beans.SmsResponseToken;
+import com.cnmci.stats.repository.ApprentiRepository;
 import com.cnmci.stats.repository.ArtisanRepository;
+import com.cnmci.stats.repository.CompagnonRepository;
 import com.cnmci.stats.repository.ParametresRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,8 @@ public class SmsService {
 
     // A T T R I B U T E S  :
     private final ArtisanRepository artisanRepository;
+    private final ApprentiRepository apprentiRepository;
+    private final CompagnonRepository compagnonRepository;
     private final ParametresRepository parametresRepository;
     private int totalSmsEnvoye = 0;
     private String accessToken = "0";
@@ -39,12 +45,14 @@ public class SmsService {
 
     //@Async
     @Transactional
-    public void sendMessage(String client, String contact, String dateEnrolement, long idArtisan){
+    public void sendMessage(String client, String contact, int type, long idArtisan){
         if(checkSendingParameter()) {
             try {
                 RestTemplate restTemplate = new RestTemplate();
                 ResponseEntity<SmsResponseToken> response = null;
                 HttpHeaders headers = new HttpHeaders();
+
+                log.info("totalSmsEnvoye : {}", totalSmsEnvoye);
 
                 if (totalSmsEnvoye == 0) {
                     // Get TOKEN :
@@ -78,8 +86,9 @@ public class SmsService {
                     contenu.append("Bonjour ");
                     contenu.append(client);
                     contenu.append(". ");
-                    contenu.append("La Chambre des METIERS vous rappelle à solder les frais de votre enrôlement effectué le ");
-                    contenu.append(dateEnrolement);
+                    contenu.append("La Chambre des METIERS vous rappelle à finaliser votre enrôlement : ");
+                    contenu.append("https://cnmci.sfpci.com/link-pay");
+                    //contenu.append(dateEnrolement);
 
                     // Bonjour DIARASSOUBALO. La Chambre des métiers de CIV vous rappelle à solder les frais de votre enrôlement effectué le 2026-03-67
                     HttpEntity<SmsRequest> entitySms = new HttpEntity<>(
@@ -88,13 +97,31 @@ public class SmsService {
                     restTemplate.postForLocation("https://messaging.sfpci.com/api/v1/messages",
                             entitySms
                     );
-                    log.info("SMS transmis");
+                    log.info("SMS transmis pour : {}", contact);
 
                     // Set FLAG :
-                    Artisan artisan = artisanRepository.findById(idArtisan).get();
-                    int updateRappel = artisan.getRappelSms() + 1;
-                    artisan.setRappelSms(updateRappel);
-                    artisanRepository.save(artisan);
+                    switch (type){
+                        case 0:
+                            Artisan artisan = artisanRepository.findById(idArtisan).get();
+                            int updateRappel = artisan.getRappelSms() + 1;
+                            artisan.setRappelSms(updateRappel);
+                            artisanRepository.save(artisan);
+                            break;
+
+                        case 1:
+                            Apprenti apprenti = apprentiRepository.findById(idArtisan).get();
+                            int updateRappelApprenti = apprenti.getRappelSms() + 1;
+                            apprenti.setRappelSms(updateRappelApprenti);
+                            apprentiRepository.save(apprenti);
+                            break;
+
+                        default:
+                            Compagnon compagnon = compagnonRepository.findById(idArtisan).get();
+                            int updateRappelCompagnon = compagnon.getRappelSms() + 1;
+                            compagnon.setRappelSms(updateRappelCompagnon);
+                            compagnonRepository.save(compagnon);
+                            break;
+                    }
 
                     totalSmsEnvoye++;
                     if (totalSmsEnvoye > 20) {

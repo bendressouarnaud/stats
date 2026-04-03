@@ -390,7 +390,8 @@ public class StatistiqueService {
                         .id(a.getId())
                         .nom(a.getNom() + " " +a.getPrenom())
                         .contact(a.getContact1())
-                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .datenaissance(a.getDateNaissance() != null ?
+                                a.getDateNaissance().format(dateTimeFormatter) : "")
                         .metier(a.getMetier().getLibelle())
                         .paiement(a.getStatutPaiement())
                         .commune(a.getCommuneResidence().getLibelle())

@@ -1,7 +1,11 @@
 package com.cnmci.stats.parametrage;
 
+import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Artisan;
+import com.cnmci.core.model.Compagnon;
+import com.cnmci.stats.repository.ApprentiRepository;
 import com.cnmci.stats.repository.ArtisanRepository;
+import com.cnmci.stats.repository.CompagnonRepository;
 import com.cnmci.stats.service.SmsService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -21,6 +25,10 @@ public class MesTaches {
     private static final String PREFIX_NUMBER_ID = "+225";
     @Autowired
     ArtisanRepository artisanRepository;
+    @Autowired
+    ApprentiRepository apprentiRepository;
+    @Autowired
+    CompagnonRepository compagnonRepository;
     @Autowired
     SmsService smsService;
 
@@ -42,23 +50,50 @@ public class MesTaches {
 
     //
     //@Scheduled(cron="0 0 10 * * *", zone="Africa/Nouakchott")  // tous les jours à 9h
-    @Scheduled(cron="0 * 10 * * *", zone="Africa/Nouakchott")  // toutes les minutes
+    @Scheduled(cron="0 15 15 * * *", zone="Africa/Nouakchott")  // toutes les minutes
     public void checkEnrolmentDelay(){
         // Pick
         System.out.println("Démarrage de l'envoi de rappel SMS");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Artisan> listeArtisan = artisanRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
-        listeArtisan.stream()
+        List<Artisan> listeTransmission = listeArtisan.stream()
             .filter(
                     a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
-            )
-            .forEach(
+            ).toList();
+        System.out.println("Total des artisans SMS : " + String.valueOf(listeTransmission.size()));
+        listeTransmission.forEach(
                 a -> {
                     // Send
                     smsService.sendMessage(a.getNom(), checkContact(a.getContact1()),
-                            a.getCreatedAt().format(dateTimeFormatter), a.getId());
+                            0, a.getId());
                 }
             );
         //
+
+        // APPRENTI
+        List<Apprenti> listeApprenti = apprentiRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
+        listeApprenti.stream()
+            .filter(
+                    a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
+            ).forEach(
+                    a -> {
+                        // Send
+                        smsService.sendMessage(a.getNom(), checkContact(a.getContact1()),
+                                1, a.getId());
+                    }
+            );
+
+        // COMPAGNON :
+        List<Compagnon> listeCompagnon = compagnonRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
+        listeCompagnon.stream()
+                .filter(
+                        a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
+                ).forEach(
+                        a -> {
+                            // Send
+                            smsService.sendMessage(a.getNom(), checkContact(a.getContact1()),
+                                    2, a.getId());
+                        }
+                );
     }
 }

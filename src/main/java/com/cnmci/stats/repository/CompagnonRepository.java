@@ -79,4 +79,6 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
     @Query(value = "select count(*) as total from compagnon",
             nativeQuery = true)
     Tuple findTotal();
+
+    List<Compagnon> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
 }

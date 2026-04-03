@@ -82,4 +82,6 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     @Query(value = "select count(*) as total from apprenti",
             nativeQuery = true)
     Tuple findTotal();
+
+    List<Apprenti> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
 }
