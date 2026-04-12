@@ -1,12 +1,11 @@
 package com.cnmci.stats.parametrage;
 
-import com.cnmci.core.model.Apprenti;
-import com.cnmci.core.model.Artisan;
-import com.cnmci.core.model.Compagnon;
-import com.cnmci.stats.repository.ApprentiRepository;
-import com.cnmci.stats.repository.ArtisanRepository;
-import com.cnmci.stats.repository.CompagnonRepository;
+import com.cnmci.core.model.*;
+import com.cnmci.stats.beans.PeopleToSendSmsTo;
+import com.cnmci.stats.repository.*;
+import com.cnmci.stats.service.MailService;
 import com.cnmci.stats.service.SmsService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,7 +30,15 @@ public class MesTaches {
     @Autowired
     CompagnonRepository compagnonRepository;
     @Autowired
+    UtilisateurRepository utilisateurRepository;
+    @Autowired
+    CommuneRepository communeRepository;
+    @Autowired
+    ProfilRepository profilRepository;
+    @Autowired
     SmsService smsService;
+    @Autowired
+    MailService mailService;
 
 
     // M E T H O D S :
@@ -50,9 +58,11 @@ public class MesTaches {
 
     //
     //@Scheduled(cron="0 0 10 * * *", zone="Africa/Nouakchott")  // tous les jours à 9h
-    @Scheduled(cron="0 15 15 * * *", zone="Africa/Nouakchott")  // toutes les minutes
+    @Scheduled(cron="0 30 10-15 * * *", zone="Africa/Nouakchott")  // toutes les minutes
+    @Transactional
     public void checkEnrolmentDelay(){
         // Pick
+        List<PeopleToSendSmsTo> listeUsers = new ArrayList<>();
         System.out.println("Démarrage de l'envoi de rappel SMS");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Artisan> listeArtisan = artisanRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
@@ -60,40 +70,61 @@ public class MesTaches {
             .filter(
                     a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
             ).toList();
-        System.out.println("Total des artisans SMS : " + String.valueOf(listeTransmission.size()));
-        listeTransmission.forEach(
-                a -> {
-                    // Send
-                    smsService.sendMessage(a.getNom(), checkContact(a.getContact1()),
-                            0, a.getId());
-                }
-            );
+        listeUsers.addAll(listeTransmission.stream()
+            .map(
+                a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
+                        0, a.getId(), a.getActivite().getCommune().getLibelle(),
+                        a.getActivite().getQuartierSiegeId().getLibelle(),
+                        a.getPaiementEnrolements().isEmpty() ? 0 :
+                                a.getPaiementEnrolements().stream().
+                                        mapToInt(PaiementEnrolement::getMontant).sum(),
+                        "Artisan")
+            ).toList());
         //
 
         // APPRENTI
         List<Apprenti> listeApprenti = apprentiRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
-        listeApprenti.stream()
-            .filter(
-                    a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
-            ).forEach(
-                    a -> {
-                        // Send
-                        smsService.sendMessage(a.getNom(), checkContact(a.getContact1()),
-                                1, a.getId());
-                    }
-            );
+        listeUsers.addAll(listeApprenti.stream()
+                .filter(
+                        a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
+                )
+                .map(
+                        a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
+                                1, a.getId(), "",
+                                "",
+                                a.getPaiementEnrolements().isEmpty() ? 0 :
+                                        a.getPaiementEnrolements().stream().
+                                                mapToInt(PaiementEnrolement::getMontant).sum(),
+                                "Apprenti")
+                ).toList());
 
         // COMPAGNON :
         List<Compagnon> listeCompagnon = compagnonRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
-        listeCompagnon.stream()
+        listeUsers.addAll(listeCompagnon.stream()
                 .filter(
                         a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
-                ).forEach(
-                        a -> {
-                            // Send
-                            smsService.sendMessage(a.getNom(), checkContact(a.getContact1()),
-                                    2, a.getId());
-                        }
-                );
+                )
+                .map(
+                        a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
+                                2, a.getId(), "",
+                                "",
+                                a.getPaiementEnrolements().isEmpty() ? 0 :
+                                        a.getPaiementEnrolements().stream().
+                                                mapToInt(PaiementEnrolement::getMontant).sum(),
+                                "Compagnon")
+                ).toList());
+
+        System.out.println("Total des entittés SMS : " + String.valueOf(listeUsers.size()));
+
+        // Send :
+        if(!listeUsers.isEmpty()){
+            smsService.sendMessage(listeUsers);
+            // Send email to AGENT ASSERMENTE :
+            String[] listeMails = (String[]) utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get())
+                    .stream()
+                    .filter(u -> (u.getEmail() != null && !u.getEmail().isBlank()))
+                    .map(Utilisateur::getEmail).toArray();
+            mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails);
+        }
     }
 }

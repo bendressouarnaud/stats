@@ -3,6 +3,7 @@ package com.cnmci.stats.service;
 import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Artisan;
 import com.cnmci.core.model.Compagnon;
+import com.cnmci.stats.beans.PeopleToSendSmsTo;
 import com.cnmci.stats.beans.SmsRequest;
 import com.cnmci.stats.beans.SmsResponseToken;
 import com.cnmci.stats.repository.ApprentiRepository;
@@ -19,6 +20,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -30,7 +33,7 @@ public class SmsService {
     private final CompagnonRepository compagnonRepository;
     private final ParametresRepository parametresRepository;
     private int totalSmsEnvoye = 0;
-    private String accessToken = "0";
+    private String accessToken = "";
     private Boolean sendSms = null;
 
 
@@ -45,7 +48,7 @@ public class SmsService {
 
     //@Async
     @Transactional
-    public void sendMessage(String client, String contact, int type, long idArtisan){
+    public void sendMessage(List<PeopleToSendSmsTo> listeUsers){
         if(checkSendingParameter()) {
             try {
                 RestTemplate restTemplate = new RestTemplate();
@@ -54,82 +57,84 @@ public class SmsService {
 
                 log.info("totalSmsEnvoye : {}", totalSmsEnvoye);
 
-                if (totalSmsEnvoye == 0) {
-                    // Get TOKEN :
-                    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                for(PeopleToSendSmsTo data : listeUsers){
+                    if (totalSmsEnvoye == 0) {
+                        // Get TOKEN :
+                        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-                    //Map<String, String> listeParam = new HashMap<>();
-                    MultiValueMap<String, String> listeParam = new LinkedMultiValueMap<>();
-                    listeParam.add("client_id", "messaging-service-client");
-                    listeParam.add("client_secret", "6LXmtscYKly7ZDhDJvz4Kkm5Qc5gJt08");
-                    listeParam.add("username", "cnmci");
-                    listeParam.add("password", "CnMotQpOTDWv");
-                    listeParam.add("grant_type", "password");
+                        MultiValueMap<String, String> listeParam = new LinkedMultiValueMap<>();
+                        listeParam.add("client_id", "messaging-service-client");
+                        listeParam.add("client_secret", "6LXmtscYKly7ZDhDJvz4Kkm5Qc5gJt08");
+                        listeParam.add("username", "cnmci");
+                        listeParam.add("password", "CnMotQpOTDWv");
+                        listeParam.add("grant_type", "password");
 
-                    HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(listeParam, headers);
+                        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(listeParam, headers);
 
-                    response = restTemplate.exchange("https://sso.sfpci.com/realms/messaging-service-realm/protocol/openid-connect/token",
-                            HttpMethod.POST,
-                            entity,
-                            SmsResponseToken.class);
-                    accessToken = response.getStatusCode().is2xxSuccessful() ? response.getBody().accessToken() : "";
-                }
-
-                if (!accessToken.isEmpty()) {
-                    // Move on :
-                    restTemplate = new RestTemplate();
-                    headers = new HttpHeaders();
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-                    headers.set("Authorization", "Bearer " + accessToken);
-
-                    StringBuilder contenu = new StringBuilder();
-                    contenu.append("Bonjour ");
-                    contenu.append(client);
-                    contenu.append(". ");
-                    contenu.append("La Chambre des METIERS vous rappelle à finaliser votre enrôlement : ");
-                    contenu.append("https://cnmci.sfpci.com/link-pay");
-                    //contenu.append(dateEnrolement);
-
-                    // Bonjour DIARASSOUBALO. La Chambre des métiers de CIV vous rappelle à solder les frais de votre enrôlement effectué le 2026-03-67
-                    HttpEntity<SmsRequest> entitySms = new HttpEntity<>(
-                            new SmsRequest("SMS", contact,
-                                    contenu.toString()), headers);
-                    restTemplate.postForLocation("https://messaging.sfpci.com/api/v1/messages",
-                            entitySms
-                    );
-                    log.info("SMS transmis pour : {}", contact);
-
-                    // Set FLAG :
-                    switch (type){
-                        case 0:
-                            Artisan artisan = artisanRepository.findById(idArtisan).get();
-                            int updateRappel = artisan.getRappelSms() + 1;
-                            artisan.setRappelSms(updateRappel);
-                            artisanRepository.save(artisan);
-                            break;
-
-                        case 1:
-                            Apprenti apprenti = apprentiRepository.findById(idArtisan).get();
-                            int updateRappelApprenti = apprenti.getRappelSms() + 1;
-                            apprenti.setRappelSms(updateRappelApprenti);
-                            apprentiRepository.save(apprenti);
-                            break;
-
-                        default:
-                            Compagnon compagnon = compagnonRepository.findById(idArtisan).get();
-                            int updateRappelCompagnon = compagnon.getRappelSms() + 1;
-                            compagnon.setRappelSms(updateRappelCompagnon);
-                            compagnonRepository.save(compagnon);
-                            break;
+                        response = restTemplate.exchange("https://sso.sfpci.com/realms/messaging-service-realm/protocol/openid-connect/token",
+                                HttpMethod.POST,
+                                entity,
+                                SmsResponseToken.class);
+                        accessToken = response.getStatusCode().is2xxSuccessful() ? response.getBody().accessToken() : "";
+                        log.info("accessToken : {}", accessToken);
                     }
 
-                    totalSmsEnvoye++;
-                    if (totalSmsEnvoye > 20) {
-                        // Reset :
-                        totalSmsEnvoye = 0;
+                    if (!accessToken.isEmpty()) {
+                        // Move on :
+                        restTemplate = new RestTemplate();
+                        headers = new HttpHeaders();
+                        headers.setContentType(MediaType.APPLICATION_JSON);
+                        headers.set("Authorization", "Bearer " + accessToken);
+
+                        StringBuilder contenu = new StringBuilder();
+                        contenu.append("Bonjour ");
+                        contenu.append(data.nom());
+                        contenu.append(". ");
+                        contenu.append("La Chambre des METIERS vous rappelle à finaliser votre enrôlement : ");
+                        contenu.append("https://cnmci.sfpci.com/link-pay");
+                        //contenu.append(dateEnrolement);
+
+                        // Bonjour DIARASSOUBALO. La Chambre des métiers de CIV vous rappelle à solder les frais de votre enrôlement effectué le 2026-03-67
+                        HttpEntity<SmsRequest> entitySms = new HttpEntity<>(
+                                new SmsRequest("SMS", data.contact(),
+                                        contenu.toString()), headers);
+                        restTemplate.postForLocation("https://messaging.sfpci.com/api/v1/messages",
+                                entitySms
+                        );
+                        log.info("SMS transmis pour : {}", data.contact());
+
+                        // Set FLAG :
+                        switch (data.mode()){
+                            case 0:
+                                Artisan artisan = artisanRepository.findById(data.id()).get();
+                                int updateRappel = artisan.getRappelSms() + 1;
+                                artisan.setRappelSms(updateRappel);
+                                artisanRepository.save(artisan);
+                                break;
+
+                            case 1:
+                                Apprenti apprenti = apprentiRepository.findById(data.id()).get();
+                                int updateRappelApprenti = apprenti.getRappelSms() + 1;
+                                apprenti.setRappelSms(updateRappelApprenti);
+                                apprentiRepository.save(apprenti);
+                                break;
+
+                            default:
+                                Compagnon compagnon = compagnonRepository.findById(data.id()).get();
+                                int updateRappelCompagnon = compagnon.getRappelSms() + 1;
+                                compagnon.setRappelSms(updateRappelCompagnon);
+                                compagnonRepository.save(compagnon);
+                                break;
+                        }
+
+                        totalSmsEnvoye++;
+                        if (totalSmsEnvoye > 20) {
+                            // Reset :
+                            totalSmsEnvoye = 0;
+                        }
+                    } else {
+                        System.out.println("Impossible de transmettre le SMS");
                     }
-                } else {
-                    System.out.println("Impossible de transmettre le SMS");
                 }
             } catch (Exception e) {
                 log.error("Exception rencontrée : {}", e.toString());

@@ -376,7 +376,7 @@ public class StatistiqueService {
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
-                .montant(15000 - (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
+            .montant(15000 - (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
                         PaiementEnrolement::getMontant).sum()))
             .build()
         ).toList());
@@ -440,7 +440,8 @@ public class StatistiqueService {
                                 .id(a.getId())
                                 .nom(a.getRaisonSociale())
                                 .contact(a.getContact())
-                                .datenaissance(a.getDateCreation().format(dateTimeFormatter))
+                                .datenaissance(a.getDateCreation() != null ?
+                                        a.getDateCreation().format(dateTimeFormatter) : "")
                                 .metier(a.getActivitePrincipale().getLibelle())
                                 .paiement(a.getStatutPaiement())
                                 .commune(a.getCommune().getLibelle())

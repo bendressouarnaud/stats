@@ -1,5 +1,6 @@
 package com.cnmci.stats.repository;
 
+import com.cnmci.core.model.Profil;
 import com.cnmci.core.model.Utilisateur;
 import org.springframework.data.repository.CrudRepository;
 
@@ -8,4 +9,5 @@ import java.util.Optional;
 
 public interface UtilisateurRepository extends CrudRepository<Utilisateur, Long> {
     Optional<Utilisateur> findByEmail(String email);
+    List<Utilisateur> findAllByProfil(Profil profil);
 }
