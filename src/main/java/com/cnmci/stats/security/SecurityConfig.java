@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers( "/authentification","/accountcreation","/mobileauthentication",
                                 "/passwordforgotten","/confidentialite","/validation/**","/authentification-mobile",
+                                "/get-entities-from-commune/**",
                                 "/generate-user-payment-link",
                                 "/v3/**","/v2/**","/swagger-ui/**", "/v3/api-docs/**", "/v2/api-docs/**",
                                 "/swagger-resources/**", "/swagger-ui.html").permitAll()
@@ -81,6 +82,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // Configure allowed origins, methods, and headers
         configuration.setAllowedOrigins(List.of("http://localhost:3000",
+                "https://taxsika.sfpci.com",
+                "http://51.210.101.189::8091",
                 "https://cnmci.sfpci.com",
                 "https://cnmci-test.sfpci.com",
                 "http://localhost:5173"));

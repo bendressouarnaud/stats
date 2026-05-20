@@ -144,4 +144,11 @@ public class AccueilController {
         return paiementService.generateWavePaymentLink(data, httpServletRequest);
     }
 
+    @Operation(summary = "Récupérer les artisans d'une commune")
+    @GetMapping(value="/get-entities-from-commune/{idCommune}/{artisanId}")
+    private List<ArtisanFromMairieResponse> getArtisanByCommuneIdAndArtisanId(@PathVariable long idCommune,
+        @PathVariable long artisanId) {
+        return statistiqueService.getArtisanByCommuneIdAndArtisanId(idCommune,artisanId);
+    }
+
 }

@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     List<Apprenti> findAllByStatutKycAndStatutPaiement(int kyc, int paiement, Pageable pageable);
@@ -21,6 +22,7 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     List<Apprenti> findAllByOrderByNomAsc();
     Apprenti findByNumeroImmatriculation(String numero);
     List<Apprenti> findByContact1(String contact);
+    Optional<Apprenti> findByIdAndStatutPaiement(long id, int statutPaiement);
     Apprenti findByEmailIgnoreCaseOrContact1(String email, String contact);
     List<Apprenti> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 

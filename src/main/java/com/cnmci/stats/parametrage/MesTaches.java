@@ -2,12 +2,11 @@ package com.cnmci.stats.parametrage;
 
 import com.cnmci.core.model.*;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
+import com.cnmci.stats.beans.UtilisateurNotifcationTaille;
 import com.cnmci.stats.repository.*;
 import com.cnmci.stats.service.MailService;
 import com.cnmci.stats.service.SmsService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -15,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -23,6 +23,7 @@ public class MesTaches {
     // A t t r i b u t e s :
     private static final int DELAI_MOIS_APRES_ENROLEMENT = 3;
     private static final String PREFIX_NUMBER_ID = "+225";
+    private static final int LIMIT_USER = 15;
     @Autowired
     ArtisanRepository artisanRepository;
     @Autowired
@@ -57,8 +58,7 @@ public class MesTaches {
     }
 
     //
-    //@Scheduled(cron="0 0 10 * * *", zone="Africa/Nouakchott")  // tous les jours à 9h
-    @Scheduled(cron="0 30 10-15 * * *", zone="Africa/Nouakchott")  // toutes les minutes
+    @Scheduled(cron="0 */20 9-11 * * *", zone="Africa/Nouakchott")
     @Transactional
     public void checkEnrolmentDelay(){
         // Pick
@@ -70,11 +70,14 @@ public class MesTaches {
             .filter(
                     a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
             ).toList();
-        listeUsers.addAll(listeTransmission.stream()
+        // Appply LIMITATION from there :
+        var taille = listeTransmission.size();
+        listeUsers.addAll(listeTransmission.subList(0, Math.min(LIMIT_USER, taille)).stream()
             .map(
                 a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
                         0, a.getId(), a.getActivite().getCommune().getLibelle(),
-                        a.getActivite().getQuartierSiegeId().getLibelle(),
+                        (a.getActivite().getQuartierSiegeId() != null ?
+                                a.getActivite().getQuartierSiegeId().getLibelle() : "---"),
                         a.getPaiementEnrolements().isEmpty() ? 0 :
                                 a.getPaiementEnrolements().stream().
                                         mapToInt(PaiementEnrolement::getMontant).sum(),
@@ -84,10 +87,13 @@ public class MesTaches {
 
         // APPRENTI
         List<Apprenti> listeApprenti = apprentiRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
-        listeUsers.addAll(listeApprenti.stream()
+        List<Apprenti> listeTransmissionApprenti = listeApprenti.stream()
                 .filter(
                         a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
-                )
+                ).toList();
+        // Appply LIMITATION from there :
+        var tailleApprenti = listeTransmissionApprenti.size();
+        listeUsers.addAll(listeTransmissionApprenti.subList(0, Math.min(LIMIT_USER, tailleApprenti)).stream()
                 .map(
                         a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
                                 1, a.getId(), "",
@@ -100,10 +106,13 @@ public class MesTaches {
 
         // COMPAGNON :
         List<Compagnon> listeCompagnon = compagnonRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
-        listeUsers.addAll(listeCompagnon.stream()
+        List<Compagnon> listeTransmissionCompagnon = listeCompagnon.stream()
                 .filter(
                         a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
-                )
+                ).toList();
+        // Appply LIMITATION from there :
+        var tailleCompagnon = listeTransmissionCompagnon.size();
+        listeUsers.addAll(listeTransmissionCompagnon.subList(0, Math.min(LIMIT_USER, tailleCompagnon)).stream()
                 .map(
                         a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
                                 2, a.getId(), "",
@@ -120,11 +129,23 @@ public class MesTaches {
         if(!listeUsers.isEmpty()){
             smsService.sendMessage(listeUsers);
             // Send email to AGENT ASSERMENTE :
-            String[] listeMails = (String[]) utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get())
+            String emailAssermente = utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get())
                     .stream()
                     .filter(u -> (u.getEmail() != null && !u.getEmail().isBlank()))
-                    .map(Utilisateur::getEmail).toArray();
-            mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails);
+                    .map(
+                            l -> new UtilisateurNotifcationTaille(
+                                    l.getEmail(),
+                                    l.getNotificationControles().size()
+                            )
+                    ).min(Comparator.comparing(UtilisateurNotifcationTaille::notifications)).get()
+                    .email();
+            String[] listeMails = new String[3];
+            // Add more addresses :
+            listeMails[0] = "lancidiomande@gmail.com";
+            listeMails[1] = "mbambi@sfpci.com";
+            listeMails[2] = "ngbandamakonan@gmail.com";
+            mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails,
+                    emailAssermente);
         }
     }
 }

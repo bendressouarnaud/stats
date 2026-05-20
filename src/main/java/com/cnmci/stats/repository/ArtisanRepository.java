@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllByStatutKycAndStatutPaiement(int kyc, int paiement, Pageable pageable);
@@ -23,6 +24,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAll(Pageable pageable);
     Artisan findByNumeroRegistre(String numero);
     List<Artisan> findByContact1(String contact);
+    Optional<Artisan> findByIdAndStatutPaiement(long id, int statutPaiement);
     // Recherche par NUMERO ou EMAIL
     Artisan findByEmailIgnoreCaseOrContact1(String email, String contact);
     List<Artisan> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom,
@@ -154,4 +156,15 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
 
     // those who have not paid yet or have paid a part :
     List<Artisan> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
+
+
+    @Query(value = "select a.id,concat(a.nom,' ',a.prenom) nomartisan,date(a.date_naissance), contact1, contact2, " +
+            "c.libelle quartier_affaire, d.libelle as job, case when longitude is not null then longitude " +
+            "else 0 end as lon, " +
+            "case when latitude is not null then latitude " +
+            "else 0 end as lat from artisan a inner join activite b " +
+            "on a.activite_id = b.id inner join quartier c on c.id = b.quartier_siege_id inner join metier d on d.id = " +
+            "a.metier_id where b.commune_id = :communeId and a.id > :artisanId",
+            nativeQuery = true)
+    List<Tuple> getArtisanByCommuneIdAndArtisanId(long communeId, long artisanId);
 }

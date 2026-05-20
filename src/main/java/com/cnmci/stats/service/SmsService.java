@@ -47,7 +47,7 @@ public class SmsService {
 
 
     //@Async
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void sendMessage(List<PeopleToSendSmsTo> listeUsers){
         if(checkSendingParameter()) {
             try {
@@ -92,15 +92,20 @@ public class SmsService {
                         contenu.append(". ");
                         contenu.append("La Chambre des METIERS vous rappelle à finaliser votre enrôlement : ");
                         contenu.append("https://cnmci.sfpci.com/link-pay");
-                        //contenu.append(dateEnrolement);
 
-                        // Bonjour DIARASSOUBALO. La Chambre des métiers de CIV vous rappelle à solder les frais de votre enrôlement effectué le 2026-03-67
                         HttpEntity<SmsRequest> entitySms = new HttpEntity<>(
                                 new SmsRequest("SMS", data.contact(),
                                         contenu.toString()), headers);
-                        restTemplate.postForLocation("https://messaging.sfpci.com/api/v1/messages",
-                                entitySms
-                        );
+                        try {
+                            restTemplate.postForLocation("https://messaging.sfpci.com/api/v1/messages",
+                                    entitySms
+                            );
+                        }
+                        catch (Exception exc){
+                            // Reset this to get new TOKEN :
+                            totalSmsEnvoye = 0;
+                            log.error("Exception lors de l'envoi : {}", exc.toString());
+                        }
                         log.info("SMS transmis pour : {}", data.contact());
 
                         // Set FLAG :
@@ -136,6 +141,8 @@ public class SmsService {
                         System.out.println("Impossible de transmettre le SMS");
                     }
                 }
+                // Reset THIS everytime a SET of SMS is sent :
+                totalSmsEnvoye = 0;
             } catch (Exception e) {
                 log.error("Exception rencontrée : {}", e.toString());
             }

@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
     List<Compagnon> findAll(Pageable pageable);
@@ -21,6 +22,7 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
     Compagnon findByNumeroImmatriculation(String numero);
     Compagnon findByEmailIgnoreCaseOrContact1(String email, String contact);
     List<Compagnon> findByContact1(String contact);
+    Optional<Compagnon> findByIdAndStatutPaiement(long id, int statutPaiement);
     List<Compagnon> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 
     @Query(value = "select * from compagnon a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +

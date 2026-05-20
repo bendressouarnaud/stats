@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -105,6 +102,31 @@ public class PaiementService {
         return null;
     }
 
+    private boolean checkIfAlreadyPaid(String requester, long id){
+        return switch (requester){
+            case "ENT" -> {
+                Optional<Entreprise> optEnt =
+                        entrepriseRepository.findByIdAndStatutPaiement(id, 2);
+                yield optEnt.isPresent();
+            }
+            case "ART" -> {
+                Optional<Artisan> optEnt =
+                        artisanRepository.findByIdAndStatutPaiement(id, 2);
+                yield optEnt.isPresent();
+            }
+            case "APP" -> {
+                Optional<Apprenti> optEnt =
+                        apprentiRepository.findByIdAndStatutPaiement(id, 2);
+                yield optEnt.isPresent();
+            }
+            default -> {
+                Optional<Compagnon> optEnt =
+                        compagnonRepository.findByIdAndStatutPaiement(id, 2);
+                yield optEnt.isPresent();
+            }
+        };
+    }
+
     @Transactional
     public WavePaymentResponse generateWavePaymentLink(PaymentWaveRequest paymentWaveRequest,
                                         HttpServletRequest httpServletRequest){
@@ -116,6 +138,11 @@ public class PaiementService {
             // Get DATA :
             Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone());
             if(dataIdType != null){
+                if(checkIfAlreadyPaid(dataIdType.get("type"), Long.parseLong(dataIdType.get("id")))){
+                    log.info("Le client {} avec Id {} a déjà soldé !", dataIdType.get("type"),
+                            dataIdType.get("id"));
+                    return null;
+                }
                 // Call WEB Services :
                 RestTemplate restTemplate = new RestTemplate();
                 //String userMail = outilService.getBackUserConnectedName(httpServletRequest);

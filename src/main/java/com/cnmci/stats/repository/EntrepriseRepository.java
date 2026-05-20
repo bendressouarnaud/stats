@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     List<Entreprise> findAllByStatutKycOrStatutPaiement(int kyc, int paiement, Pageable pageable);
@@ -21,6 +22,7 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     Entreprise findByNumeroRea(String numero);
     List<Entreprise> findAllByCrm(Crm crm);
     List<Entreprise> findByContact(String contact);
+    Optional<Entreprise> findByIdAndStatutPaiement(long id, int statutPaiement);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseOrContact(String libelle, String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(String libelle, String contact);
 

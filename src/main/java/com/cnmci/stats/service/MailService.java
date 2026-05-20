@@ -1,8 +1,13 @@
 package com.cnmci.stats.service;
 
+import com.cnmci.core.model.NotificationControle;
+import com.cnmci.core.model.Utilisateur;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
+import com.cnmci.stats.repository.NotificationControleRepository;
 import com.cnmci.stats.repository.ParametresRepository;
+import com.cnmci.stats.repository.UtilisateurRepository;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +28,8 @@ public class MailService {
     private String emailSenderAddress;
     private final JavaMailSender emailSender;
     private final ParametresRepository parametresRepository;
+    private final UtilisateurRepository utilisateurRepository;
+    private final NotificationControleRepository notificationControleRepository;
     private Boolean sendMail = null;
 
 
@@ -35,7 +42,8 @@ public class MailService {
     }
 
     //@Async
-    public void entitiesInLateToAgentAssermente(List<PeopleToSendSmsTo> listeUsers, String[] mails){
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void entitiesInLateToAgentAssermente(List<PeopleToSendSmsTo> listeUsers, String[] mails, String emailAssermente){
         if(checkSendingParameter()) {
             try {
                 MimeMessage mimeMessage = emailSender.createMimeMessage();
@@ -64,10 +72,19 @@ public class MailService {
 
                 // Envoi du MAIL :
                 helper.setText(String.valueOf(contenu), true);
-                helper.setTo(mails);
+                helper.setTo(emailAssermente);
+                helper.setCc(mails);
                 helper.setSubject("Personnes en retard de régularisation");
                 helper.setFrom(emailSenderAddress);
                 emailSender.send(mimeMessage);
+
+                // Raise FLAG for the FIRST MAIL:
+                Utilisateur user = utilisateurRepository.findByEmail(emailAssermente).get();
+                notificationControleRepository.save(
+                        NotificationControle.builder()
+                        .utilisateur(user)
+                        .build());
+                log.info("Mail de RAPPEL envoyé à : {}", emailAssermente);
             } catch (Exception exc) {
                 System.out.println("mailCreation(...) : " + exc.toString());
                 //log.error("mailCreation(...) : {}", exc.toString());

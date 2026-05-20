@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -513,6 +514,23 @@ public class StatistiqueService {
                         .quartier(a.get("libelle", String.class))
                         .date(a.get("date", Date.class).toString())
                         .total(a.get("total", Long.class))
+                        .build()
+                ).toList();
+
+    }
+
+    public List<ArtisanFromMairieResponse> getArtisanByCommuneIdAndArtisanId(long idCommune, long artisanId){
+        return artisanRepository.getArtisanByCommuneIdAndArtisanId(idCommune, artisanId).stream()
+                .map(a -> ArtisanFromMairieResponse.builder()
+                        .id(a.get("id", Long.class))
+                        .nom(a.get("nomartisan", String.class))
+                        .date((a.get("date", Date.class)).toString())//.toLocalDateTime().format(dateTimeFormatter))
+                        .contact1(a.get("contact1", String.class))
+                        .contact2(a.get("contact2", String.class))
+                        .quartier(a.get("quartier_affaire", String.class))
+                        .metier(a.get("job", String.class))
+                        .longitude(a.get("lon", Double.class))
+                        .latitude(a.get("lat", Double.class))
                         .build()
                 ).toList();
 
