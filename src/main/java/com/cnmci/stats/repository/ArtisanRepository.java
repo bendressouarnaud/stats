@@ -157,6 +157,11 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     // those who have not paid yet or have paid a part :
     List<Artisan> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
 
+    @Query(value = "select distinct a.* from artisan a inner join activite b on a.activite_id = b.id " +
+            "where b.quartier_siege_id = :quartierSiegeId and a.statut_paiement in (0,1)",
+            nativeQuery = true)
+    List<Artisan> findAllByQuartierSiege(long quartierSiegeId);
+
 
     @Query(value = "select a.id,concat(a.nom,' ',a.prenom) nomartisan,date(a.date_naissance), contact1, contact2, " +
             "c.libelle quartier_affaire, d.libelle as job, case when longitude is not null then longitude " +

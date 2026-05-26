@@ -1,6 +1,7 @@
 package com.cnmci.stats.service;
 
 import com.cnmci.core.model.*;
+import com.cnmci.stats.beans.ActionTerrainRequest;
 import com.cnmci.stats.beans.AmendeRequest;
 import com.cnmci.stats.beans.MessageResponse;
 import com.cnmci.stats.repository.*;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,9 @@ public class ActionService {
     private final CompagnonRepository compagnonRepository;
     private final EntrepriseRepository entrepriseRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final ActionTerrainRepository actionTerrainRepository;
+    private final CommuneRepository communeRepository;
+    private final QuartierRepository quartierRepository;
     private final OutilService outilService;
 
 
@@ -78,6 +83,33 @@ public class ActionService {
                 .id(newOrUpdate.getId())
                 .localDateTime(LocalDateTime.now())
                 .message("Amende succès")
+                .httpStatus(HttpStatus.OK.value())
+                .build();
+    }
+
+    // Persist ActionTerrain
+    @Transactional
+    public MessageResponse processActionTerrain(ActionTerrainRequest data, HttpServletRequest httpServletRequest){
+        Optional<ActionTerrain> optData = actionTerrainRepository.findById(data.id());
+        ActionTerrain actionTerrain = optData.orElseGet(
+                () -> {
+                    String userMail = outilService.getBackUserConnectedName(httpServletRequest);
+                    return ActionTerrain.builder()
+                            .sent(false)
+                            .utilisateur(utilisateurRepository.findByEmail(userMail).get())
+                            .build();
+                }
+        );
+        actionTerrain.setActif(data.choix() == 1);
+        actionTerrain.setCommune(communeRepository.findById(data.commune()).get());
+        actionTerrain.setQuartier(quartierRepository.findById(data.quartier()).get());
+        //
+        ActionTerrain newOrUpdate = actionTerrainRepository.save(actionTerrain);
+        log.info("Action traitée");
+        return MessageResponse.builder()
+                .id(newOrUpdate.getId())
+                .localDateTime(LocalDateTime.now())
+                .message("Action terrain succès")
                 .httpStatus(HttpStatus.OK.value())
                 .build();
     }

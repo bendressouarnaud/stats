@@ -23,9 +23,11 @@ public class MesTaches {
     // A t t r i b u t e s :
     private static final int DELAI_MOIS_APRES_ENROLEMENT = 3;
     private static final String PREFIX_NUMBER_ID = "+225";
-    private static final int LIMIT_USER = 15;
+    private static final int LIMIT_USER = 20;
     @Autowired
     ArtisanRepository artisanRepository;
+    @Autowired
+    ActionTerrainRepository actionTerrainRepository;
     @Autowired
     ApprentiRepository apprentiRepository;
     @Autowired
@@ -61,9 +63,37 @@ public class MesTaches {
     @Scheduled(cron="0 */20 9-11 * * *", zone="Africa/Nouakchott")
     @Transactional
     public void checkEnrolmentDelay(){
-        // Pick
         List<PeopleToSendSmsTo> listeUsers = new ArrayList<>();
-        System.out.println("Démarrage de l'envoi de rappel SMS");
+        // Pick PARAMETRIZED DATA from all USERS :
+        List<ActionTerrain> listeActions = actionTerrainRepository.findAllByActifAndSent(true, false);
+        ActionTerrain holdAction = null;
+        for(ActionTerrain act : listeActions){
+            List<Artisan> listeArtisan = artisanRepository.findAllByQuartierSiege(act.getQuartier().getId());
+            List<Artisan> listeTransmission = listeArtisan.stream()
+                    .filter(
+                            a -> compareDates(a.getCreatedAt()) >= DELAI_MOIS_APRES_ENROLEMENT
+                    ).toList();
+            // Appply LIMITATION from there :
+            var taille = listeTransmission.size();
+            listeUsers.addAll(listeTransmission.subList(0, Math.min(LIMIT_USER, taille)).stream()
+                    .map(
+                            a -> new PeopleToSendSmsTo(a.getNom(), checkContact(a.getContact1()),
+                                    0, a.getId(), a.getActivite().getCommune().getLibelle(),
+                                    (a.getActivite().getQuartierSiegeId() != null ?
+                                            a.getActivite().getQuartierSiegeId().getLibelle() : "---"),
+                                    a.getPaiementEnrolements().isEmpty() ? 0 :
+                                            a.getPaiementEnrolements().stream().
+                                                    mapToInt(PaiementEnrolement::getMontant).sum(),
+                                    "Artisan")
+                    ).toList());
+            // Hold USER's
+            holdAction = act;
+            // Stop :
+            break;
+        }
+
+        // Pick
+        /*System.out.println("Démarrage de l'envoi de rappel SMS");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Artisan> listeArtisan = artisanRepository.findAllByRappelSmsAndStatutPaiementIn(0, List.of(0, 1));
         List<Artisan> listeTransmission = listeArtisan.stream()
@@ -124,21 +154,13 @@ public class MesTaches {
                 ).toList());
 
         System.out.println("Total des entittés SMS : " + String.valueOf(listeUsers.size()));
+        */
 
         // Send :
         if(!listeUsers.isEmpty()){
             smsService.sendMessage(listeUsers);
             // Send email to AGENT ASSERMENTE :
-            String emailAssermente = utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get())
-                    .stream()
-                    .filter(u -> (u.getEmail() != null && !u.getEmail().isBlank()))
-                    .map(
-                            l -> new UtilisateurNotifcationTaille(
-                                    l.getEmail(),
-                                    l.getNotificationControles().size()
-                            )
-                    ).min(Comparator.comparing(UtilisateurNotifcationTaille::notifications)).get()
-                    .email();
+            String emailAssermente = holdAction.getUtilisateur().getEmail();
             String[] listeMails = new String[3];
             // Add more addresses :
             listeMails[0] = "lancidiomande@gmail.com";
@@ -146,6 +168,9 @@ public class MesTaches {
             listeMails[2] = "ngbandamakonan@gmail.com";
             mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails,
                     emailAssermente);
+            // Update FLAG :
+            holdAction.setSent(true);
+            actionTerrainRepository.save(holdAction);
         }
     }
 }

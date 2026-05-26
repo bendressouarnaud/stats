@@ -151,4 +151,15 @@ public class AccueilController {
         return statistiqueService.getArtisanByCommuneIdAndArtisanId(idCommune,artisanId);
     }
 
+    @Operation(summary = "Pour gérer une action terrain (création - Modification)")
+    @PostMapping("/manage-action-terrain")
+    @Parameter(name = "id", description = "Id de l'action")
+    @Parameter(name = "commune", description = "Id de la commune")
+    @Parameter(name = "quartier", description = "Id du Quartier")
+    @Parameter(name = "choix", description = "Choix")
+    public MessageResponse manageActionTerrain(@RequestBody ActionTerrainRequest data,
+                                        HttpServletRequest httpServletRequest){
+        return actionService.processActionTerrain(data, httpServletRequest);
+    }
+
 }
