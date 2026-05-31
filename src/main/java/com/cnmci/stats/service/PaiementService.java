@@ -1,11 +1,9 @@
 package com.cnmci.stats.service;
 
 import com.cnmci.core.enums.CategorieEnrolement;
+import com.cnmci.core.enums.StatutType;
 import com.cnmci.core.model.*;
-import com.cnmci.stats.beans.MessageResponse;
-import com.cnmci.stats.beans.PaymentWaveRequest;
-import com.cnmci.stats.beans.WavePaymentOriginalRequest;
-import com.cnmci.stats.beans.WavePaymentResponse;
+import com.cnmci.stats.beans.*;
 import com.cnmci.stats.exception.OurGenericException;
 import com.cnmci.stats.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +34,7 @@ public class PaiementService {
     private final CompagnonRepository compagnonRepository;
     private final EntrepriseRepository entrepriseRepository;
     private final PaymentRequestRepository paymentRequestRepository;
+    private final PaiementEnrolementRepository paiementEnrolementRepository;
     @Value("${client.wave.token}")
     private String waveToken;
     @Value("${backend.web.url}")
@@ -61,9 +60,17 @@ public class PaiementService {
         // Artisan :
         List<Artisan> artisan = artisanRepository.findByContact1(telephone.trim());
         if(artisan.size() == 1){
-            data.put("id", String.valueOf(artisan.getFirst().getId()));
+            Artisan artData = artisan.getFirst();
+            data.put("id", String.valueOf(artData.getId()));
             data.put("type", "ART");
-            data.put("utilisateurId", String.valueOf(artisan.getFirst().getUtilisateur().getId()));
+            data.put("utilisateurId", String.valueOf(artData.getUtilisateur().getId()));
+            List<PaiementEnrolement> listeP = paiementEnrolementRepository.findAllByArtisan(artData);
+            int sommeAPayer = artData.getStatutType() == StatutType.ENROLE ? 15000 : 5000;
+            data.put("sommeAPayer", String.valueOf(listeP.isEmpty() ? sommeAPayer :
+                            (sommeAPayer - listeP.stream().mapToInt(
+                                    PaiementEnrolement::getMontant).sum())
+                    )
+            );
             return data;
         }
 
@@ -71,19 +78,31 @@ public class PaiementService {
             // Apprenti :
             List<Apprenti> apprenti = apprentiRepository.findByContact1(telephone.trim());
             if(apprenti.size() == 1){
-                data.put("id", String.valueOf(apprenti.getFirst().getId()));
+                Apprenti appData = apprenti.getFirst();
+                data.put("id", String.valueOf(appData.getId()));
                 data.put("type", "APP");
-                data.put("utilisateurId", String.valueOf(apprenti.getFirst().getUtilisateur().getId()));
-                return  data;
+                data.put("utilisateurId", String.valueOf(appData.getUtilisateur().getId()));
+                List<PaiementEnrolement> listeP = paiementEnrolementRepository.findAllByApprenti(appData);
+                data.put("sommeAPayer", String.valueOf(listeP.isEmpty() ? 5000 :
+                        (5000 - listeP.stream().mapToInt(
+                                PaiementEnrolement::getMontant).sum()))
+                );
+                return data;
             }
 
             if(apprenti.isEmpty()){
                 // Compagnon :
                 List<Compagnon> compagnon = compagnonRepository.findByContact1(telephone.trim());
                 if(compagnon.size() == 1){
-                    data.put("id", String.valueOf(compagnon.getFirst().getId()));
+                    Compagnon comData = compagnon.getFirst();
+                    data.put("id", String.valueOf(comData.getId()));
                     data.put("type", "COM");
-                    data.put("utilisateurId", String.valueOf(compagnon.getFirst().getUtilisateur().getId()));
+                    data.put("utilisateurId", String.valueOf(comData.getUtilisateur().getId()));
+                    List<PaiementEnrolement> listeP = paiementEnrolementRepository.findAllByCompagnon(comData);
+                    data.put("sommeAPayer", String.valueOf(listeP.isEmpty() ? 5000 :
+                            (5000 - listeP.stream().mapToInt(
+                                    PaiementEnrolement::getMontant).sum()))
+                    );
                     return  data;
                 }
 
@@ -91,9 +110,15 @@ public class PaiementService {
                     // Entreprise :
                     List<Entreprise> entreprise = entrepriseRepository.findByContact(telephone.trim());
                     if(entreprise.size() == 1){
-                        data.put("id", String.valueOf(entreprise.getFirst().getId()));
+                        Entreprise entData = entreprise.getFirst();
+                        data.put("id", String.valueOf(entData.getId()));
                         data.put("type", "ENT");
-                        data.put("utilisateurId", String.valueOf(entreprise.getFirst().getUtilisateur().getId()));
+                        data.put("utilisateurId", String.valueOf(entData.getUtilisateur().getId()));
+                        List<PaiementEnrolement> listeP = paiementEnrolementRepository.findAllByEntreprise(entData);
+                        data.put("sommeAPayer", String.valueOf(listeP.isEmpty() ? 25000 :
+                                (25000 - listeP.stream().mapToInt(
+                                        PaiementEnrolement::getMontant).sum()))
+                        );
                         return  data;
                     }
                 }
@@ -128,8 +153,8 @@ public class PaiementService {
     }
 
     @Transactional
-    public WavePaymentResponse generateWavePaymentLink(PaymentWaveRequest paymentWaveRequest,
-                                        HttpServletRequest httpServletRequest){
+    public WavePaymentResponse generateWavePaymentLink(PaymentWaveContactRequest paymentWaveRequest,
+                                                       HttpServletRequest httpServletRequest){
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", "Bearer " + waveToken);
@@ -149,13 +174,13 @@ public class PaiementService {
                 //Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail).get();
 
                 String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
-                        + "/" + String.valueOf(paymentWaveRequest.montant())+ "/0/" +
+                        + "/" + dataIdType.get("sommeAPayer") + "/0/" +
                         String.valueOf(dataIdType.get("utilisateurId"));
                 log.info("Encodage : {}", idToKeep);
                 String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
 
                 WavePaymentOriginalRequest objectRequest = new WavePaymentOriginalRequest();
-                objectRequest.setAmount(paymentWaveRequest.montant());
+                objectRequest.setAmount(Integer.parseInt(dataIdType.get("sommeAPayer")));
                 objectRequest.setCurrency("XOF");
                 objectRequest.setErrorUrl(
                         backendWebUrl + "invalidation/" + encodedString);
@@ -180,7 +205,7 @@ public class PaiementService {
                     PaymentRequest prt = PaymentRequest.builder()
                             .requesterId(Long.parseLong(dataIdType.get("id")))
                             .requesterType(dataIdType.get("type"))
-                            .montant(paymentWaveRequest.montant())
+                            .montant(Integer.parseInt(dataIdType.get("sommeAPayer")))
                             .etat(0)
                             .waveId(wavePaymentResponse.getId())
                             .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
@@ -200,6 +225,83 @@ public class PaiementService {
             }
         } catch (Exception exc) {
             log.error("generateWavePaymentLink(...) : ", exc.toString());
+            throw new OurGenericException(exc.toString());
+        }
+    }
+
+    @Transactional
+    public WavePaymentResponse generateWavePaymentLinkFromCallCenter(PaymentWaveContactRequest paymentWaveRequest,
+                                                       HttpServletRequest httpServletRequest){
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + waveToken);
+            headers.add("Content-Type", "application/json");
+
+            // Get DATA :
+            Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone());
+            if(dataIdType != null){
+                if(checkIfAlreadyPaid(dataIdType.get("type"), Long.parseLong(dataIdType.get("id")))){
+                    log.info("Le client {} avec Id {} a déjà soldé !", dataIdType.get("type"),
+                            dataIdType.get("id"));
+                    return null;
+                }
+                // Call WEB Services :
+                RestTemplate restTemplate = new RestTemplate();
+                String userMail = outilService.getBackUserConnectedName(httpServletRequest);
+                Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail).get();
+
+                String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
+                        + "/" + dataIdType.get("sommeAPayer") + "/0/" +
+                        String.valueOf(utilisateur.getId());
+                log.info("Encodage CALL CENTER : {}", idToKeep);
+                String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
+
+                WavePaymentOriginalRequest objectRequest = new WavePaymentOriginalRequest();
+                objectRequest.setAmount(Integer.parseInt(dataIdType.get("sommeAPayer")));
+                objectRequest.setCurrency("XOF");
+                objectRequest.setErrorUrl(
+                        backendWebUrl + "invalidation/" + encodedString);
+                objectRequest.setSuccessUrl(
+                        backendWebUrl + "validation/" + encodedString);
+
+                HttpEntity<WavePaymentOriginalRequest> entity = new HttpEntity<>(objectRequest, headers);
+                ResponseEntity<WavePaymentResponse> responseEntity = restTemplate.postForEntity(waveUrl,
+                        entity, WavePaymentResponse.class);
+                if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                    // Delete previous request not completed :
+                    PaymentRequest paymentRequest = paymentRequestRepository.
+                            findByRequesterTypeAndRequesterIdAndEtat(
+                                    dataIdType.get("type"), Long.parseLong(dataIdType.get("id")), 0);
+                    if(paymentRequest != null){
+                        paymentRequestRepository.delete(paymentRequest);
+                    }
+
+                    // Persist :
+                    WavePaymentResponse wavePaymentResponse = responseEntity.getBody();
+                    // Track this :
+                    PaymentRequest prt = PaymentRequest.builder()
+                            .requesterId(Long.parseLong(dataIdType.get("id")))
+                            .requesterType(dataIdType.get("type"))
+                            .montant(Integer.parseInt(dataIdType.get("sommeAPayer")))
+                            .etat(0)
+                            .waveId(wavePaymentResponse.getId())
+                            .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
+                            .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .build();
+                    paymentRequestRepository.save(prt);
+                    return wavePaymentResponse;
+                }
+                else {
+                    throw new OurGenericException("Impossible de poursuivre, une erreur est survenue !");
+                }
+            }
+            else {
+                // Raise EXCEPTION :
+                throw new OurGenericException("Le numéro de téléphone renseigné est soit inexistant " +
+                        "soit est un doublon !");
+            }
+        } catch (Exception exc) {
+            log.error("generateWavePaymentLinkFromCallCenter(...) : ", exc.toString());
             throw new OurGenericException(exc.toString());
         }
     }

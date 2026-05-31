@@ -137,11 +137,19 @@ public class AccueilController {
 
     @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
     @PostMapping("/generate-user-payment-link")
-    @Parameter(name = "montant", description = "Montant de la transaction")
     @Parameter(name = "telephone", description = "Contact de l'entité")
-    public WavePaymentResponse generateWavePaymentLink(@RequestBody PaymentWaveRequest data,
+    public WavePaymentResponse generateWavePaymentLink(@RequestBody PaymentWaveContactRequest data,
                                         HttpServletRequest httpServletRequest){
         return paiementService.generateWavePaymentLink(data, httpServletRequest);
+    }
+
+    // generateWavePaymentLinkFromCallCenter
+    @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
+    @PostMapping("/generate-payment-link-call-center")
+    @Parameter(name = "telephone", description = "Contact de l'entité")
+    public WavePaymentResponse generateWavePaymentLinkFromCallCenter(@RequestBody PaymentWaveContactRequest data,
+                                                       HttpServletRequest httpServletRequest){
+        return paiementService.generateWavePaymentLinkFromCallCenter(data, httpServletRequest);
     }
 
     @Operation(summary = "Récupérer les artisans d'une commune")
