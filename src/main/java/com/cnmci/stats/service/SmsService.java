@@ -3,13 +3,11 @@ package com.cnmci.stats.service;
 import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Artisan;
 import com.cnmci.core.model.Compagnon;
+import com.cnmci.core.model.Utilisateur;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
 import com.cnmci.stats.beans.SmsRequest;
 import com.cnmci.stats.beans.SmsResponseToken;
-import com.cnmci.stats.repository.ApprentiRepository;
-import com.cnmci.stats.repository.ArtisanRepository;
-import com.cnmci.stats.repository.CompagnonRepository;
-import com.cnmci.stats.repository.ParametresRepository;
+import com.cnmci.stats.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -29,6 +28,7 @@ public class SmsService {
 
     // A T T R I B U T E S  :
     private final ArtisanRepository artisanRepository;
+    private final UtilisateurRepository utilisateurRepository;
     private final ApprentiRepository apprentiRepository;
     private final CompagnonRepository compagnonRepository;
     private final ParametresRepository parametresRepository;
@@ -48,7 +48,7 @@ public class SmsService {
 
     //@Async
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void sendMessage(List<PeopleToSendSmsTo> listeUsers){
+    public void sendMessage(List<PeopleToSendSmsTo> listeUsers, long userActionTerrain){
         if(checkSendingParameter()) {
             try {
                 RestTemplate restTemplate = new RestTemplate();
@@ -114,6 +114,9 @@ public class SmsService {
                                 Artisan artisan = artisanRepository.findById(data.id()).get();
                                 int updateRappel = artisan.getRappelSms() + 1;
                                 artisan.setRappelSms(updateRappel);
+                                artisan.setUtilisateurAgentAssermente(
+                                        utilisateurRepository.findById(userActionTerrain).get());
+                                artisan.setDateAssignationAssermente(OffsetDateTime.now());
                                 artisanRepository.save(artisan);
                                 break;
 

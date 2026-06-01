@@ -1,11 +1,14 @@
 package com.cnmci.stats.parametrage;
 
 import com.cnmci.core.model.*;
+import com.cnmci.stats.LibelleTotal;
+import com.cnmci.stats.beans.AssermenteAction;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
 import com.cnmci.stats.beans.UtilisateurNotifcationTaille;
 import com.cnmci.stats.repository.*;
 import com.cnmci.stats.service.MailService;
 import com.cnmci.stats.service.SmsService;
+import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,7 +62,81 @@ public class MesTaches {
         return contact.trim().startsWith(PREFIX_NUMBER_ID) ? contact : (PREFIX_NUMBER_ID + contact);
     }
 
-    //
+    // Reset ACTION_TERRAIN Values    Europe/Paris
+    @Scheduled(cron="0 0 15 * * *", zone="Africa/Nouakchott")
+    @Transactional
+    public void resetActionTerrainValues(){
+        List<ActionTerrain> listeActions = actionTerrainRepository.findAllByActifAndSent(true, true);
+        listeActions.forEach(
+                a -> {
+                    a.setSent(false);
+                    actionTerrainRepository.save(a);
+                }
+        );
+    }
+
+    // Send AGENT ASSERMENTé ACTION    Europe/Paris
+    @Scheduled(cron="0 45 15 * * *", zone="Africa/Nouakchott")
+    @Transactional
+    public void sendAgentAssermenteActionOutside(){
+        try{
+            List<Tuple> liste = artisanRepository.getArtisanListAssignedToAgentAssermente();
+            List<AssermenteAction> listeAction = liste.stream()
+                    .map(l -> new AssermenteAction(
+                                    l.get("agent_assermentes", String.class),
+                                    l.get("artisans", String.class),
+                                    l.get("somme_encaisse", Long.class)
+                            )
+                    ).toList();
+            // Send the MAIL if NEEDED :
+            List<Utilisateur> listeAgentAssermente =
+                    utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get());
+            List<String> listeEnCopie = new ArrayList<>();
+            listeEnCopie.addAll(listeAgentAssermente.stream()
+                    .map(l -> l.getEmail().trim())
+                    .toList());
+            listeEnCopie.add("lancidiomande@gmail.com");
+            listeEnCopie.add("mbambi@sfpci.com");
+            listeEnCopie.add("arnaud.koffi@sfpci.com");
+            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("yfulgence10@gmail.com");
+            String[] tabEmail = listeEnCopie.toArray(new String[0]);
+            mailService.mailResumeActionAssermente(listeAction, "gvamaracoulibaly@gmail.com", tabEmail);
+        } catch (Exception e) {
+            System.out.println("sendAgentAssermenteActionOutside(...) : " + e.toString());
+        }
+    }
+
+    @Scheduled(cron="0 30 11,15 * * *", zone="Africa/Nouakchott")
+    @Transactional
+    public void sendTotalNotPaidArtisanByCrm(){
+        try{
+            List<Tuple> listeArtisans = artisanRepository.getArtisanByCrmNotSoldOutYet();
+            List<LibelleTotal> listeDonne = listeArtisans.stream()
+                    .map(l -> new LibelleTotal(
+                            l.get("label", String.class),
+                            l.get("tot", Long.class)
+                    ))
+                    .toList();
+            // Pick all 'ROLE_FORMALITE_CRM' :
+            List<Utilisateur> listeSG = utilisateurRepository.findAllByProfil(profilRepository.findById(5L).get());
+            List<String> listeEnCopie = new ArrayList<>();
+            listeEnCopie.addAll(listeSG.stream()
+                    .map(l -> l.getEmail().trim())
+                    .toList());
+            listeEnCopie.add("lancidiomande@gmail.com");
+            listeEnCopie.add("mbambi@sfpci.com");
+            listeEnCopie.add("arnaud.koffi@sfpci.com");
+            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("yfulgence10@gmail.com");
+            listeEnCopie.add("princedesirekoffi@gmail.com");
+            String[] tabEmail = listeEnCopie.toArray(new String[0]);
+            mailService.mailArtisansNotSoldOutYet(listeDonne, "gvamaracoulibaly@gmail.com", tabEmail);
+        } catch (Exception e) {
+            System.out.println("sendTotalNotPaidArtisanByCrm(...) : " + e.toString());
+        }
+    }
+
     @Scheduled(cron="0 */20 9-11 * * *", zone="Africa/Nouakchott")
     @Transactional
     public void checkEnrolmentDelay(){
@@ -86,6 +163,14 @@ public class MesTaches {
                                                     mapToInt(PaiementEnrolement::getMontant).sum(),
                                     "Artisan")
                     ).toList());
+            // PICK ONLY ID's
+            /*listeTransmission.forEach(
+                a -> {
+                    a.setUtilisateurAgentAssermente(act.getUtilisateur());
+                    a.setDateAssignationAssermente(OffsetDateTime.now());
+                    artisanRepository.save(a);
+                }
+            );*/
             // Hold USER's
             holdAction = act;
             // Stop :
@@ -158,14 +243,15 @@ public class MesTaches {
 
         // Send :
         if(!listeUsers.isEmpty()){
-            smsService.sendMessage(listeUsers);
+            long idUser = holdAction.getUtilisateur().getId();
+            smsService.sendMessage(listeUsers, idUser);
             // Send email to AGENT ASSERMENTE :
             String emailAssermente = holdAction.getUtilisateur().getEmail();
             String[] listeMails = new String[3];
             // Add more addresses :
             listeMails[0] = "lancidiomande@gmail.com";
             listeMails[1] = "mbambi@sfpci.com";
-            listeMails[2] = "ngbandamakonan@gmail.com";
+            listeMails[2] = "arnaud.koffi@sfpci.com";
             mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails,
                     emailAssermente);
             // Update FLAG :

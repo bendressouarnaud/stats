@@ -158,7 +158,8 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
 
     @Query(value = "select distinct a.* from artisan a inner join activite b on a.activite_id = b.id " +
-            "where b.quartier_siege_id = :quartierSiegeId and a.statut_paiement in (0,1)",
+            "where b.quartier_siege_id = :quartierSiegeId and a.statut_paiement in (0,1) and " +
+            "a.utilisateur_agent_assermente_id is null",
             nativeQuery = true)
     List<Artisan> findAllByQuartierSiege(long quartierSiegeId);
 
@@ -172,4 +173,21 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "a.metier_id where b.commune_id = :communeId and a.id > :artisanId",
             nativeQuery = true)
     List<Tuple> getArtisanByCommuneIdAndArtisanId(long communeId, long artisanId);
+
+    @Query(value = "select b.label, count(a.id) as tot from artisan a inner join crm b on a.crm_id = b.id " +
+            "where a.statut_paiement in (0,1) group by b.label",
+            nativeQuery = true)
+    List<Tuple> getArtisanByCrmNotSoldOutYet();
+
+    @Query(value = "select a.id, concat(a.nom,' ',a.prenom) as agent_assermentes," +
+            "concat(b.nom,' ',b.prenom) as artisans," +
+            "case when sum(c.montant) is not null then sum(c.montant) " +
+            "else 0 end as somme_encaisse " +
+            "from utilisateur a inner join artisan b on (a.id = b.utilisateur_agent_assermente_id " +
+            "and date(date_assignation_assermente) = date(now())) " +
+            "left join paiement_enrolement c on c.artisan_id = b.id " +
+            "where a.id in (select distinct utilisateur_id from action_terrain where sent = false) " +
+            "group by a.id, concat(a.nom,' ',a.prenom), concat(b.nom,' ',b.prenom)",
+            nativeQuery = true)
+    List<Tuple> getArtisanListAssignedToAgentAssermente();
 }
