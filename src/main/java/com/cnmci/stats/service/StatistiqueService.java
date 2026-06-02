@@ -535,4 +535,16 @@ public class StatistiqueService {
                 ).toList();
 
     }
+
+    // Afficher les STATS UTILISATEUR PAR CRM
+    public List<ArtisanDailyCreatedUser> getUserStatsByCrm(long idCrm){
+        return artisanRepository.getArtisanCreatedDailyByUserAndFromCrm(idCrm).stream()
+                .map(a -> new ArtisanDailyCreatedUser(
+                        a.get("id", Long.class),
+                        a.get("agent", String.class),
+                        a.get("tot_artisan", Long.class),
+                        a.get("somme_recouvree", Long.class)
+                        )
+                ).toList();
+    }
 }

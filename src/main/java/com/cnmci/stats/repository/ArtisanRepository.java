@@ -190,4 +190,12 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "group by a.id, concat(a.nom,' ',a.prenom), concat(b.nom,' ',b.prenom)",
             nativeQuery = true)
     List<Tuple> getArtisanListAssignedToAgentAssermente();
+
+    @Query(value = "select a.id,concat(a.nom,' ',a.prenom) as agent, count(b.id) tot_artisan," +
+            "case when sum(c.montant) is not null then sum(c.montant) else 0 end as somme_recouvree " +
+            "from utilisateur a left join artisan b on (a.id = b.utilisateur_id and date(b.created_at) = date(now())) " +
+            "left join paiement_enrolement c on (b.id = c.artisan_id and date(c.created_at) = date(now())) " +
+            "where a.crm_id = :idCRm and a.actif = true group by a.id,concat(a.nom,' ',a.prenom)",
+            nativeQuery = true)
+    List<Tuple> getArtisanCreatedDailyByUserAndFromCrm(long idCRm);
 }

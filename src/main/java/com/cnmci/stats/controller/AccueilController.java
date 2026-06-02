@@ -170,4 +170,10 @@ public class AccueilController {
         return actionService.processActionTerrain(data, httpServletRequest);
     }
 
+    @Operation(summary = "Récupérer les artisans d'une CRM créés le jour courant")
+    @GetMapping(value="/get-daily-artisan-stats-from-crm/{idCrm}")
+    private List<ArtisanDailyCreatedUser> getUserStatsByCrm(@PathVariable long idCrm) {
+        return statistiqueService.getUserStatsByCrm(idCrm);
+    }
+
 }
