@@ -31,6 +31,8 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
                                                                                                    String prenom,
                                                                                                    String contact);
 
+    List<Artisan> findAllByUtilisateurAgentAssermenteAndStatutPaiementIn(Utilisateur agent, List<Integer> statut);
+
     @Query(value = "select e.label, e.id, count(a.id) as totentreprise, count(f.id) as totartisan from commune b " +
             "left join entreprise a  on b.id = a.commune_id left join artisan f on b.id = f.commune_residence_id " +
             "inner join sous_prefecture c on c.id = b.sous_prefecture_id inner join departement d on d.id = " +

@@ -176,4 +176,10 @@ public class AccueilController {
         return statistiqueService.getUserStatsByCrm(idCrm);
     }
 
+    @Operation(summary = "Récupérer les artisans qui ont été assignés à un Agent assermenté")
+    @GetMapping(value="/get-artisan-list-action-terrain")
+    private List<EntitySearchResponse> getArtisanTrackedListFromAgentAssermente(HttpServletRequest httpServletRequest) {
+        return statistiqueService.getArtisanTrackedListFromAgentAssermente(httpServletRequest);
+    }
+
 }

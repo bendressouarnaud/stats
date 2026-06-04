@@ -5,6 +5,7 @@ import com.cnmci.stats.beans.*;
 import com.cnmci.stats.repository.*;
 import jakarta.persistence.Tuple;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -546,5 +547,34 @@ public class StatistiqueService {
                         a.get("somme_recouvree", Long.class)
                         )
                 ).toList();
+    }
+
+    @Transactional
+    public List<EntitySearchResponse> getArtisanTrackedListFromAgentAssermente(HttpServletRequest httpServletRequest) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String userMail = outilService.getBackUserConnectedName(httpServletRequest);
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail.trim()).get();
+        List<Artisan> artisans = artisanRepository.
+                findAllByUtilisateurAgentAssermenteAndStatutPaiementIn(utilisateur, List.of(0, 1));
+        return artisans.stream().map(
+                a -> EntitySearchResponse.builder()
+                        .id(a.getId())
+                        .nom(a.getNom() + " " +a.getPrenom())
+                        .contact(a.getContact1())
+                        .datenaissance(a.getDateNaissance().format(dateTimeFormatter))
+                        .metier(a.getMetier().getLibelle())
+                        .paiement(a.getStatutPaiement())
+                        .commune(a.getCommuneResidence().getLibelle())
+                        .type("Artisans")
+                        .image(getImageIfExists(a.getPhotoArtisan()))
+                        .datenrolement(a.getCreatedAt().format(dateTimeFormatter))
+                        .quartier(a.getQuartierResidence()) // Quartier de l'ACTIVITE
+                        .amende(a.getAmendes().size())
+                        .latitude(processGeoData(a.getLatitude()))
+                        .longitude(processGeoData(a.getLongitude()))
+                        .montant(15000 - (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
+                                PaiementEnrolement::getMontant).sum()))
+                        .build()
+        ).toList();
     }
 }
