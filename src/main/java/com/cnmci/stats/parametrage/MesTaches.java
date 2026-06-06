@@ -63,7 +63,8 @@ public class MesTaches {
     }
 
     // Reset ACTION_TERRAIN Values    Europe/Paris
-    @Scheduled(cron="0 0 15 * * *", zone="Africa/Nouakchott")
+    // second minute hour day month weekday
+    @Scheduled(cron="0 0 15 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void resetActionTerrainValues(){
         List<ActionTerrain> listeActions = actionTerrainRepository.findAllByActifAndSent(true, true);
@@ -76,7 +77,7 @@ public class MesTaches {
     }
 
     // Send AGENT ASSERMENTé ACTION    Europe/Paris
-    @Scheduled(cron="0 45 15 * * *", zone="Africa/Nouakchott")
+    @Scheduled(cron="0 45 15 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void sendAgentAssermenteActionOutside(){
         try{
@@ -107,7 +108,7 @@ public class MesTaches {
         }
     }
 
-    @Scheduled(cron="0 30 11,15 * * *", zone="Africa/Nouakchott")
+    @Scheduled(cron="0 30 11,15 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void sendTotalNotPaidArtisanByCrm(){
         try{
@@ -137,7 +138,7 @@ public class MesTaches {
         }
     }
 
-    @Scheduled(cron="0 */20 9-11 * * *", zone="Africa/Nouakchott")
+    @Scheduled(cron="0 */20 9-11 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void checkEnrolmentDelay(){
         List<PeopleToSendSmsTo> listeUsers = new ArrayList<>();
