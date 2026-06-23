@@ -189,7 +189,14 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "and date(date_assignation_assermente) = date(now())) " +
             "left join paiement_enrolement c on c.artisan_id = b.id " +
             "where a.id in (select distinct utilisateur_id from action_terrain where sent = false) " +
-            "group by a.id, concat(a.nom,' ',a.prenom), concat(b.nom,' ',b.prenom)",
+            "group by a.id, concat(a.nom,' ',a.prenom), concat(b.nom,' ',b.prenom) " +
+            "union " +
+            "select b.id, concat(b.nom,' ',b.prenom) agent_assermentes," +
+            "concat(c.nom,' ',c.prenom) as artisans, a.montant as somme_encaisse " +
+            "from paiement_enrolement a inner join utilisateur b on " +
+            "(a.utilisateur_id = b.id and date(a.created_at) = date(now())) " +
+            "inner join artisan c on c.id = a.artisan_id " +
+            "where b.id in (select distinct utilisateur_id from action_terrain d)",
             nativeQuery = true)
     List<Tuple> getArtisanListAssignedToAgentAssermente();
 
