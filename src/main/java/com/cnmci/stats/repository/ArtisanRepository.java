@@ -1,5 +1,6 @@
 package com.cnmci.stats.repository;
 
+import com.cnmci.core.model.Apprenti;
 import com.cnmci.core.model.Artisan;
 import com.cnmci.core.model.Crm;
 import com.cnmci.core.model.Utilisateur;
@@ -30,6 +31,11 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom,
                                                                                                    String prenom,
                                                                                                    String contact);
+
+    @Query(value = "select * from artisan where concat(lower(nom),' ', lower(prenom)) like %:wordToSearch% or " +
+            "contact1 like %:wordToSearch%",
+            nativeQuery = true)
+    List<Artisan> findAllArtisanByNomPrenomOrContact(String wordToSearch);
 
     List<Artisan> findAllByUtilisateurAgentAssermenteAndStatutPaiementIn(Utilisateur agent, List<Integer> statut);
 

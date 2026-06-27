@@ -1,9 +1,6 @@
 package com.cnmci.stats.repository;
 
-import com.cnmci.core.model.Artisan;
-import com.cnmci.core.model.Crm;
-import com.cnmci.core.model.Entreprise;
-import com.cnmci.core.model.Utilisateur;
+import com.cnmci.core.model.*;
 import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +22,11 @@ public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     Optional<Entreprise> findByIdAndStatutPaiement(long id, int statutPaiement);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseOrContact(String libelle, String contact);
     List<Entreprise> findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(String libelle, String contact);
+
+    @Query(value = "select * from entreprise where lower(raison_sociale) like %:wordToSearch% or " +
+            "contact like %:wordToSearch%",
+            nativeQuery = true)
+    List<Entreprise> findAllEntrepriseByRaisonSocialeOrContact(String wordToSearch);
 
     @Query(value = "select * from entreprise a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +
             "(a.statut_kyc = 1 and a.statut_paiement in (0,1))",

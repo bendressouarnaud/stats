@@ -26,6 +26,11 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     Apprenti findByEmailIgnoreCaseOrContact1(String email, String contact);
     List<Apprenti> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 
+    @Query(value = "select * from apprenti where concat(lower(nom),' ', lower(prenom)) like %:wordToSearch% or " +
+            "contact1 like %:wordToSearch%",
+            nativeQuery = true)
+    List<Apprenti> findAllApprentiByNomPrenomOrContact(String wordToSearch);
+
     @Query(value = "select * from apprenti a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +
             "(a.statut_kyc = 1 and a.statut_paiement in (0,1))",
             nativeQuery = true)

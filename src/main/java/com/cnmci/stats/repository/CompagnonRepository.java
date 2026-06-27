@@ -25,6 +25,11 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
     Optional<Compagnon> findByIdAndStatutPaiement(long id, int statutPaiement);
     List<Compagnon> findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(String nom, String prenom, String contact);
 
+    @Query(value = "select * from compagnon where concat(lower(nom),' ', lower(prenom)) like %:wordToSearch% or " +
+            "contact1 like %:wordToSearch%",
+            nativeQuery = true)
+    List<Compagnon> findAllCompagnonByNomPrenomOrContact(String wordToSearch);
+
     @Query(value = "select * from compagnon a where (a.statut_kyc = 0 and a.statut_paiement in (0,1,2)) or " +
             "(a.statut_kyc = 1 and a.statut_paiement in (0,1))",
             nativeQuery = true)

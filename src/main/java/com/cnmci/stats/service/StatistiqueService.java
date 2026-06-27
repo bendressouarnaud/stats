@@ -1,5 +1,6 @@
 package com.cnmci.stats.service;
 
+import com.cnmci.core.enums.StatutType;
 import com.cnmci.core.model.*;
 import com.cnmci.stats.beans.*;
 import com.cnmci.stats.repository.*;
@@ -360,8 +361,7 @@ public class StatistiqueService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // ARTISAN
         List<Artisan> artisans = artisanRepository.
-                findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(search.trim(),
-                        search.trim(), search.trim());
+                findAllArtisanByNomPrenomOrContact(search.trim().toLowerCase());
         retour.addAll(artisans.stream().map(
         a -> EntitySearchResponse.builder()
             .id(a.getId())
@@ -378,15 +378,15 @@ public class StatistiqueService {
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
-            .montant(15000 - (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
+            .montant((a.getStatutType() == StatutType.ENROLE ? 15000 : 5000) -
+                    (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
                         PaiementEnrolement::getMontant).sum()))
             .build()
         ).toList());
 
         // ApPRENTI
         List<Apprenti> apprentis = apprentiRepository.
-                findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(search.trim(),
-                        search.trim(), search.trim());
+                findAllApprentiByNomPrenomOrContact(search.trim().toLowerCase());
         retour.addAll(apprentis.stream().map(
                 a -> EntitySearchResponse.builder()
                         .id(a.getId())
@@ -411,8 +411,7 @@ public class StatistiqueService {
 
         // COMPAGNON
         List<Compagnon> compagnons = compagnonRepository.
-                findAllByNomIgnoreCaseContainingOrPrenomIgnoreCaseContainingOrContact1Containing(search.trim(),
-                        search.trim(), search.trim());
+                findAllCompagnonByNomPrenomOrContact(search.trim().toLowerCase());
         retour.addAll(compagnons.stream().map(
                 a -> EntitySearchResponse.builder()
                         .id(a.getId())
@@ -436,7 +435,7 @@ public class StatistiqueService {
 
         // ENTREPRISES
         List<Entreprise> entreprises = entrepriseRepository.
-                findAllByRaisonSocialeIgnoreCaseContainingOrContactContaining(search.trim(), search.trim());
+                findAllEntrepriseByRaisonSocialeOrContact(search.trim().toLowerCase());
         retour.addAll(entreprises.stream().map(
                         a -> EntitySearchResponse.builder()
                                 .id(a.getId())
