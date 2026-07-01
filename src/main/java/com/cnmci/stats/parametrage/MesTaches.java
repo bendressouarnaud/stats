@@ -96,19 +96,21 @@ public class MesTaches {
             listeEnCopie.addAll(listeAgentAssermente.stream()
                     .map(l -> l.getEmail().trim())
                     .toList());
-            listeEnCopie.add("lancidiomande@gmail.com");
+            //listeEnCopie.add("lancidiomande@gmail.com");
             listeEnCopie.add("mbambi@sfpci.com");
             listeEnCopie.add("arnaud.koffi@sfpci.com");
             listeEnCopie.add("koneyibrahima@gmail.com");
             listeEnCopie.add("yfulgence10@gmail.com");
             String[] tabEmail = listeEnCopie.toArray(new String[0]);
-            mailService.mailResumeActionAssermente(listeAction, "gvamaracoulibaly@gmail.com", tabEmail);
+            if(!listeAction.isEmpty()) {
+                mailService.mailResumeActionAssermente(listeAction, "gvamaracoulibaly@gmail.com", tabEmail);
+            }
         } catch (Exception e) {
             System.out.println("sendAgentAssermenteActionOutside(...) : " + e.toString());
         }
     }
 
-    @Scheduled(cron="0 30 11,15 * * MON-FRI", zone="Africa/Nouakchott")
+    @Scheduled(cron="0 30 15 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void sendTotalNotPaidArtisanByCrm(){
         try{
@@ -125,7 +127,7 @@ public class MesTaches {
             listeEnCopie.addAll(listeSG.stream()
                     .map(l -> l.getEmail().trim())
                     .toList());
-            listeEnCopie.add("lancidiomande@gmail.com");
+            //listeEnCopie.add("lancidiomande@gmail.com");
             listeEnCopie.add("mbambi@sfpci.com");
             listeEnCopie.add("arnaud.koffi@sfpci.com");
             listeEnCopie.add("koneyibrahima@gmail.com");
@@ -248,11 +250,11 @@ public class MesTaches {
             smsService.sendMessage(listeUsers, idUser);
             // Send email to AGENT ASSERMENTE :
             String emailAssermente = holdAction.getUtilisateur().getEmail();
-            String[] listeMails = new String[3];
+            String[] listeMails = new String[2];
             // Add more addresses :
-            listeMails[0] = "lancidiomande@gmail.com";
-            listeMails[1] = "mbambi@sfpci.com";
-            listeMails[2] = "arnaud.koffi@sfpci.com";
+            //listeMails[0] = "lancidiomande@gmail.com";
+            listeMails[0] = "mbambi@sfpci.com";
+            listeMails[1] = "arnaud.koffi@sfpci.com";
             mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails,
                     emailAssermente);
             // Update FLAG :
