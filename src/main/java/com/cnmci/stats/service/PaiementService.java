@@ -34,6 +34,7 @@ public class PaiementService {
     private final CompagnonRepository compagnonRepository;
     private final EntrepriseRepository entrepriseRepository;
     private final PaymentRequestRepository paymentRequestRepository;
+    private final PaymentRequestCopieRepository paymentRequestCopieRepository;
     private final PaiementEnrolementRepository paiementEnrolementRepository;
     @Value("${client.wave.token}")
     private String waveToken;
@@ -210,8 +211,22 @@ public class PaiementService {
                             .waveId(wavePaymentResponse.getId())
                             .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
                             .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .paymentType(0)
                             .build();
                     paymentRequestRepository.save(prt);
+                    // track this too :
+                    PaymentRequestCopie paymentRequestCopie = PaymentRequestCopie.builder()
+                            .requesterId(Long.parseLong(dataIdType.get("id")))
+                            .requesterType(dataIdType.get("type"))
+                            .montant(Integer.parseInt(dataIdType.get("sommeAPayer")))
+                            .etat(0)
+                            .waveId(wavePaymentResponse.getId())
+                            .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
+                            .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .paymentType(0)
+                            .utilisateur(null)
+                            .build();
+                    paymentRequestCopieRepository.save(paymentRequestCopie);
                     return wavePaymentResponse;
                 }
                 else {
