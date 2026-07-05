@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.lang.Math.round;
 
@@ -575,5 +577,50 @@ public class StatistiqueService {
                                 PaiementEnrolement::getMontant).sum()))
                         .build()
         ).toList();
+    }
+
+    private List<BeanMonthData> fillMonthForData(List<Tuple> donnee, int... choice){
+        List<BeanMonthData> retour = new ArrayList<>();
+        List.of(1, 2, 3, 4, 5, 6, 7, 8, 9 , 10, 11, 12).forEach(
+                mois -> {
+                    Optional<BeanMonthData> optionalMois = donnee.stream().map(
+                            tuple -> new BeanMonthData(
+                                    (tuple.get("mois", BigDecimal.class)).intValue(),
+                                    choice.length == 0 ?
+                                            (tuple.get("tot", BigDecimal.class)).longValue() :
+                                            tuple.get("tot", Long.class)
+                            )
+                    )
+                    .filter(beanMonthData -> beanMonthData.mois() == mois)
+                            .findFirst();
+                    if(optionalMois.isEmpty()){
+                        retour.add(
+                                new BeanMonthData(mois, 0)
+                        );
+                    }
+                    else {
+                        retour.add(optionalMois.get());
+                    }
+                }
+        );
+        return retour;
+    }
+
+    // GLOBAL :
+    public List<BeanMonthData> getGlobalTotalEnroleByMonth(){
+        return fillMonthForData(artisanRepository.getGlobalTotalEnroleByMonth());
+    }
+
+    public List<BeanMonthData> getGlobalTotalPaymentByMonth(){
+        return fillMonthForData(artisanRepository.getGlobalTotalPaymentByMonth(), 0);
+    }
+
+    // CRM :
+    public List<BeanMonthData> getCrmTotalEnorleByMonth(long idCrm){
+        return fillMonthForData(artisanRepository.getCrmTotalEnroleByMonth(idCrm));
+    }
+
+    public List<BeanMonthData> getCrmTotalPaymentByMonth(long idCrm){
+        return fillMonthForData(artisanRepository.getCrmTotalPaymentByMonth(idCrm));
     }
 }

@@ -213,4 +213,115 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "where a.crm_id = :idCRm and a.actif = true group by a.id,concat(a.nom,' ',a.prenom)",
             nativeQuery = true)
     List<Tuple> getArtisanCreatedDailyByUserAndFromCrm(long idCRm);
+
+    // GLOBAL
+    @Query(value = "select mois, sum(total) as tot from (" +
+            "select EXTRACT(month FROM a.created_at) mois, count(id) total from artisan a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(id) total from apprenti a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(id) total from compagnon a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(id) total from entreprise a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            ") a group by mois order by mois asc",
+            nativeQuery = true)
+    List<Tuple> getGlobalTotalEnroleByMonth();
+
+    @Query(value = "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) group by EXTRACT(month FROM a.created_at)",
+            nativeQuery = true)
+    List<Tuple> getGlobalTotalPaymentByMonth();
+
+    // BY CRM
+    @Query(value = "select mois, sum(total) as tot from (" +
+            "select EXTRACT(month FROM a.created_at) mois, count(id) total from artisan a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "and a.crm_id = :idCrm " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(a.id) total from apprenti a " +
+            "inner join artisan_apprenti b on a.id = b.apprenti_id " +
+            "inner join artisan c on c.id = b.artisan_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "and c.crm_id = :idCrm " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(a.id) total from apprenti a " +
+            "inner join entreprise_apprenti b on a.id = b.apprenti_id " +
+            "inner join entreprise c on c.id = b.entreprise_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "and c.crm_id = :idCrm " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(a.id) total from compagnon a " +
+            "inner join artisan_compagnon b on a.id = b.compagnon_id " +
+            "inner join artisan c on c.id = b.artisan_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "and c.crm_id = :idCrm " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(a.id) total from compagnon a " +
+            "inner join entreprise_compagnon b on a.id = b.compagnon_id " +
+            "inner join entreprise c on c.id = b.entreprise_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "and c.crm_id = :idCrm " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, count(id) total from entreprise a " +
+            "where EXTRACT(YEAR FROM a.created_at) = EXTRACT(YEAR FROM now()) " +
+            "and a.crm_id = :idCrm " +
+            "group by EXTRACT(month FROM a.created_at) " +
+            ") a group by mois " +
+            "order by mois asc",
+            nativeQuery = true)
+    List<Tuple> getCrmTotalEnroleByMonth(long idCrm);
+
+    @Query(value = "select mois, sum(tot) as tot from (" +
+            "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "inner join artisan b on a.artisan_id = b.id where EXTRACT(YEAR FROM a.created_at) = " +
+            "EXTRACT(YEAR FROM now()) and b.crm_id = :idCrm group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "inner join apprenti b on a.apprenti_id = b.id " +
+            "inner join artisan_apprenti c on c.apprenti_id = b.id " +
+            "inner join artisan d on d.id = c.artisan_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = " +
+            "EXTRACT(YEAR FROM now()) and d.crm_id = :idCrm group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "inner join apprenti b on a.apprenti_id = b.id " +
+            "inner join entreprise_apprenti c on c.apprenti_id = b.id " +
+            "inner join entreprise d on d.id = c.entreprise_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = " +
+            "EXTRACT(YEAR FROM now()) and d.crm_id = :idCrm group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "inner join compagnon b on a.compagnon_id = b.id " +
+            "inner join artisan_compagnon c on c.compagnon_id = b.id " +
+            "inner join artisan d on d.id = c.artisan_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = " +
+            "EXTRACT(YEAR FROM now()) and d.crm_id = :idCrm group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "inner join compagnon b on a.compagnon_id = b.id " +
+            "inner join entreprise_compagnon c on c.compagnon_id = b.id " +
+            "inner join entreprise d on d.id = c.entreprise_id " +
+            "where EXTRACT(YEAR FROM a.created_at) = " +
+            "EXTRACT(YEAR FROM now()) and d.crm_id = :idCrm group by EXTRACT(month FROM a.created_at) " +
+            "union all " +
+            "select EXTRACT(month FROM a.created_at) mois, sum(montant) tot from paiement_enrolement a " +
+            "inner join entreprise b on a.entreprise_id = b.id where EXTRACT(YEAR FROM a.created_at) = " +
+            "EXTRACT(YEAR FROM now()) and b.crm_id = :idCrm group by EXTRACT(month FROM a.created_at) " +
+            ") a group by mois " +
+            "order by mois asc",
+            nativeQuery = true)
+    List<Tuple> getCrmTotalPaymentByMonth(long idCrm);
 }

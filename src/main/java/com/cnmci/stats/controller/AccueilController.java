@@ -182,4 +182,29 @@ public class AccueilController {
         return statistiqueService.getArtisanTrackedListFromAgentAssermente(httpServletRequest);
     }
 
+    // GLOBAL STATS for MONTH - TOTAL
+    @Operation(summary = "Récupérer le nombre GLOBAL d'enrôlés par mois")
+    @GetMapping(value="/get-global-entite-enrolement")
+    private List<BeanMonthData> getGlobalTotalEnroleByMonth() {
+        return statistiqueService.getGlobalTotalEnroleByMonth();
+    }
+
+    @Operation(summary = "Récupérer le nombre GLOBAL de paiement par mois")
+    @GetMapping(value="/get-global-entite-payment")
+    private List<BeanMonthData> getGlobalTotalPaymentByMonth() {
+        return statistiqueService.getGlobalTotalPaymentByMonth();
+    }
+
+    // CRM STATS for MONTH - TOTAL
+    @Operation(summary = "Récupérer le nombre d'enrôlés d'une CRM par mois")
+    @GetMapping(value="/get-crm-entite-enrolement/{idCrm}")
+    private List<BeanMonthData> getCrmTotalEnorleByMonth(@PathVariable long idCrm) {
+        return statistiqueService.getCrmTotalEnorleByMonth(idCrm);
+    }
+
+    @Operation(summary = "Récupérer le nombre de paiement d'une CRM par mois")
+    @GetMapping(value="/get-crm-entite-payment/{idCrm}")
+    private List<BeanMonthData> getCrmTotalPaymentByMonth(@PathVariable long idCrm) {
+        return statistiqueService.getCrmTotalPaymentByMonth(idCrm);
+    }
 }
