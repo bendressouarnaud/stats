@@ -623,4 +623,9 @@ public class StatistiqueService {
     public List<BeanMonthData> getCrmTotalPaymentByMonth(long idCrm){
         return fillMonthForData(artisanRepository.getCrmTotalPaymentByMonth(idCrm));
     }
+
+    // CONTROLE :
+    public List<BeanMonthData> getGlobalTotalRecouvrementByMonth(){
+        return fillMonthForData(artisanRepository.getGlobalTotalRecouvrementByMonth());
+    }
 }

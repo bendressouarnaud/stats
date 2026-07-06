@@ -207,4 +207,10 @@ public class AccueilController {
     private List<BeanMonthData> getCrmTotalPaymentByMonth(@PathVariable long idCrm) {
         return statistiqueService.getCrmTotalPaymentByMonth(idCrm);
     }
+
+    @Operation(summary = "Récupérer le montant GLOBAL des 'RECOUVREMENTS effectués' par les AGENTS ASSERMENTés")
+    @GetMapping(value="/get-global-recouvrement-assermente")
+    private List<BeanMonthData> getGlobalTotalRecouvrementByMonth() {
+        return statistiqueService.getGlobalTotalRecouvrementByMonth();
+    }
 }
