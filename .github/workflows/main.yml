@@ -43,7 +43,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v7
       with:
         image: ngbandama/stats-back
-        tags: 1.0.7
+        tags: 1.0.8
         registry: docker.io
         #dockerfile: Dockerfile.ci
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -55,5 +55,5 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE }}
         script: |
-          docker pull ngbandama/stats-back:1.0.7
-          docker service update --image ngbandama/stats-back:1.0.7 --force cnmci_stats
+          docker pull ngbandama/stats-back:1.0.8
+          docker service update --image ngbandama/stats-back:1.0.8 --force cnmci_stats

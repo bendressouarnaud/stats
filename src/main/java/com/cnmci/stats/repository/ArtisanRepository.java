@@ -346,4 +346,24 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
         nativeQuery = true)
     List<Tuple> getGlobalTotalRecouvrementByMonth();
 
+    @Query(value = "select mois, sum(tot) as tot from (" +
+            "select extract (MONTH from b.created_at) mois, sum(b.montant) tot from artisan a inner join paiement_enrolement b on (a.id = " +
+            "b.artisan_id and a.utilisateur_id = b.utilisateur_id) inner join utilisateur c on c.id = b.utilisateur_id where c.profil_id = " +
+            "11 and extract (YEAR from b.created_at) = extract (YEAR from now()) group by extract (MONTH from b.created_at) " +
+            "union all " +
+            "select extract (MONTH from b.created_at) mois, sum(b.montant) tot from apprenti a inner join paiement_enrolement b on (a.id = " +
+            "b.apprenti_id and a.utilisateur_id = b.utilisateur_id) inner join utilisateur c on c.id = b.utilisateur_id where c.profil_id = " +
+            "11 and extract (YEAR from b.created_at) = extract (YEAR from now()) group by extract (MONTH from b.created_at) " +
+            "union all " +
+            "select extract (MONTH from b.created_at) mois, sum(b.montant) tot from compagnon a inner join paiement_enrolement b on (a.id = " +
+            "b.compagnon_id and a.utilisateur_id = b.utilisateur_id) inner join utilisateur c on c.id = b.utilisateur_id where c.profil_id = " +
+            "11 and extract (YEAR from b.created_at) = extract (YEAR from now()) group by extract (MONTH from b.created_at) " +
+            "union all " +
+            "select extract (MONTH from b.created_at) mois, sum(b.montant) tot from entreprise a inner join paiement_enrolement b on (a.id = " +
+            "b.entreprise_id and a.utilisateur_id = b.utilisateur_id) inner join utilisateur c on c.id = b.utilisateur_id where c.profil_id = " +
+            "11 and extract (YEAR from b.created_at) = extract (YEAR from now()) group by extract (MONTH from b.created_at) " +
+            ") a group by mois order by mois asc",
+            nativeQuery = true)
+    List<Tuple> getGlobalTotalEnrolementEquipeControleByMonth();
+
 }

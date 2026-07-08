@@ -213,4 +213,10 @@ public class AccueilController {
     private List<BeanMonthData> getGlobalTotalRecouvrementByMonth() {
         return statistiqueService.getGlobalTotalRecouvrementByMonth();
     }
+
+    @Operation(summary = "Récupérer le montant GLOBAL des 'RECOUVREMENTS' et des 'ENRÔLEMENTS' effectués par les AGENTS ASSERMENTés")
+    @GetMapping(value="/get-global-recouvrement-enrolement-assermente")
+    private List<BeanMonthDataDuo> getGlobalTotalEquipeControleByMonth() {
+        return statistiqueService.getGlobalTotalEquipeControleByMonth();
+    }
 }

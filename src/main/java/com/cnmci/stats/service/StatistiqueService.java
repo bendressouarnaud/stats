@@ -628,4 +628,13 @@ public class StatistiqueService {
     public List<BeanMonthData> getGlobalTotalRecouvrementByMonth(){
         return fillMonthForData(artisanRepository.getGlobalTotalRecouvrementByMonth());
     }
+
+    public List<BeanMonthDataDuo> getGlobalTotalEquipeControleByMonth(){
+        List<BeanMonthDataDuo> retour = new ArrayList<>();
+        // Donnée de controle
+        retour.add(new BeanMonthDataDuo(0, fillMonthForData(artisanRepository.getGlobalTotalRecouvrementByMonth())));
+        // DOnnée d'enrôlement
+        retour.add(new BeanMonthDataDuo(1, fillMonthForData(artisanRepository.getGlobalTotalEnrolementEquipeControleByMonth())));
+        return retour;
+    }
 }
