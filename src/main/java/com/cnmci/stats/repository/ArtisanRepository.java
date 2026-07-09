@@ -167,7 +167,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
 
     @Query(value = "select distinct a.* from artisan a inner join activite b on a.activite_id = b.id " +
             "where b.quartier_siege_id = :quartierSiegeId and a.statut_paiement in (0,1) and " +
-            "a.utilisateur_agent_assermente_id is null",
+            "a.utilisateur_agent_assermente_id is null and a.utilisateur_call_center_id is null",
             nativeQuery = true)
     List<Artisan> findAllByQuartierSiege(long quartierSiegeId);
 
