@@ -29,6 +29,10 @@ import static java.lang.Math.round;
 public class StatistiqueService {
 
     // A T T R I B U T E S :
+    private static final int MONTANT_ARTISAN = 15000;
+    private static final int MONTANT_ARTISAN_RENOUVELLEMENT = 5000;
+    private static final int MONTANT_APPRENTI_COMPAGNON = 5000;
+    private static final int MONTANT_ENTREPRISE = 25000;
     private final ArtisanRepository artisanRepository;
     private final ApprentiRepository apprentiRepository;
     private final CompagnonRepository compagnonRepository;
@@ -380,9 +384,11 @@ public class StatistiqueService {
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
-            .montant((a.getStatutType() == StatutType.ENROLE ? 15000 : 5000) -
+            .montant((a.getStatutType() == StatutType.ENROLE ? MONTANT_ARTISAN : MONTANT_ARTISAN_RENOUVELLEMENT) -
                     (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
                         PaiementEnrolement::getMontant).sum()))
+            .statutLivraison(a.getStatutLivraison())
+            .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
             .build()
         ).toList());
 
@@ -406,8 +412,10 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
-                        .montant(5000 - (paiementEnrolementRepository.findAllByApprenti(a).stream().mapToInt(
+                        .montant(MONTANT_APPRENTI_COMPAGNON - (paiementEnrolementRepository.findAllByApprenti(a).stream().mapToInt(
                                 PaiementEnrolement::getMontant).sum()))
+                        .statutLivraison(a.getStatutLivraison())
+                        .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
                         .build()
         ).toList());
 
@@ -430,8 +438,10 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
-                        .montant(5000 - (paiementEnrolementRepository.findAllByCompagnon(a).stream().mapToInt(
+                        .montant(MONTANT_APPRENTI_COMPAGNON - (paiementEnrolementRepository.findAllByCompagnon(a).stream().mapToInt(
                                 PaiementEnrolement::getMontant).sum()))
+                        .statutLivraison(a.getStatutLivraison())
+                        .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
                         .build()
         ).toList());
 
@@ -455,8 +465,10 @@ public class StatistiqueService {
                                 .amende(a.getAmendes().size())
                                 .latitude(processGeoData(a.getLatitude()))
                                 .longitude(processGeoData(a.getLongitude()))
-                                .montant(25000 - (paiementEnrolementRepository.findAllByEntreprise(a).stream().mapToInt(
+                                .montant(MONTANT_ENTREPRISE - (paiementEnrolementRepository.findAllByEntreprise(a).stream().mapToInt(
                                         PaiementEnrolement::getMontant).sum()))
+                                .statutLivraison(a.getStatutLivraison())
+                                .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
                                 .build()
                 ).toList());
         return retour;

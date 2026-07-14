@@ -1,5 +1,6 @@
 package com.cnmci.stats.beans;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +24,8 @@ public class EntitySearchResponse {
     private double latitude;
     private double longitude;
     private long montant;
+    @JsonProperty("statut_livraison")
+    private int statutLivraison;
+    @JsonProperty("confirmation_livraison")
+    private int confirmationLivraison;
 }
