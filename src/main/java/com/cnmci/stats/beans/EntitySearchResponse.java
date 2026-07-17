@@ -28,4 +28,11 @@ public class EntitySearchResponse {
     private int statutLivraison;
     @JsonProperty("confirmation_livraison")
     private int confirmationLivraison;
+    @JsonProperty("livraison_carte")
+    private int livraisonCarte;
+
+    @JsonProperty("total_apprenti")
+    private int totalApprenti;
+    @JsonProperty("total_compagnon")
+    private int totalCompagnon;
 }

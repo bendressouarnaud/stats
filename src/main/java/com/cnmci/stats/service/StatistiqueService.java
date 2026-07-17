@@ -389,6 +389,9 @@ public class StatistiqueService {
                         PaiementEnrolement::getMontant).sum()))
             .statutLivraison(a.getStatutLivraison())
             .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
+                .totalApprenti(a.getArtisanApprentis().size())
+                .totalCompagnon(a.getArtisanCompagnons().size())
             .build()
         ).toList());
 
@@ -416,6 +419,9 @@ public class StatistiqueService {
                                 PaiementEnrolement::getMontant).sum()))
                         .statutLivraison(a.getStatutLivraison())
                         .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                        .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
+                        .totalApprenti(0)
+                        .totalCompagnon(0)
                         .build()
         ).toList());
 
@@ -442,6 +448,9 @@ public class StatistiqueService {
                                 PaiementEnrolement::getMontant).sum()))
                         .statutLivraison(a.getStatutLivraison())
                         .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                        .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
+                        .totalApprenti(0)
+                        .totalCompagnon(0)
                         .build()
         ).toList());
 
@@ -469,6 +478,9 @@ public class StatistiqueService {
                                         PaiementEnrolement::getMontant).sum()))
                                 .statutLivraison(a.getStatutLivraison())
                                 .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                                .livraisonCarte(a.isLivraisonDocument() ? 1 : 0)
+                                .totalApprenti(a.getEntrepriseApprentis().size())
+                                .totalCompagnon(a.getEntrepriseCompagnons().size())
                                 .build()
                 ).toList());
         return retour;
