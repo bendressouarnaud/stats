@@ -145,7 +145,7 @@ public class MailService {
                     contenu.append("<div> Bonjour Mr <span style='font-weight: bold'>Coulibaly</span>. Nous vous prions de trouver ci-dessous la </div>");
                     contenu.append("<div> liste des Artisans revus par les AGENTS ASSERMENTES </div>");
                     contenu.append("<table style='border: 1px solid black; border-collapse: collapse;'>");
-                    contenu.append("<tr><th style='border: 1px solid black; border-collapse: collapse'>AGENT</th><th style='border: 1px solid black; border-collapse: collapse'>ARTISAN</th>");
+                    contenu.append("<tr><th style='border: 1px solid black; border-collapse: collapse'>AGENT</th><th style='border: 1px solid black; border-collapse: collapse'>ENTIT&Eacute;S</th>");
                     contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>SOMME ENCAISSEE</th></tr>");
                     for(AssermenteAction dt : listeDonne){
                         contenu.append("<tr><td style='border: 1px solid black; border-collapse: collapse'>");

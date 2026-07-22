@@ -202,6 +202,27 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "from paiement_enrolement a inner join utilisateur b on " +
             "(a.utilisateur_id = b.id and date(a.created_at) = date(now())) " +
             "inner join artisan c on c.id = a.artisan_id " +
+            "where b.id in (select distinct utilisateur_id from action_terrain d) " +
+            "union " +
+            "select b.id, concat(b.nom,' ',b.prenom) agent_assermentes," +
+            "concat(c.nom,' ',c.prenom) as artisans, a.montant as somme_encaisse " +
+            "from paiement_enrolement a inner join utilisateur b on " +
+            "(a.utilisateur_id = b.id and date(a.created_at) = date(now())) " +
+            "inner join apprenti c on c.id = a.apprenti_id " +
+            "where b.id in (select distinct utilisateur_id from action_terrain d) " +
+            "union " +
+            "select b.id, concat(b.nom,' ',b.prenom) agent_assermentes," +
+            "concat(c.nom,' ',c.prenom) as artisans, a.montant as somme_encaisse " +
+            "from paiement_enrolement a inner join utilisateur b on " +
+            "(a.utilisateur_id = b.id and date(a.created_at) = date(now())) " +
+            "inner join compagnon c on c.id = a.compagnon_id " +
+            "where b.id in (select distinct utilisateur_id from action_terrain d) " +
+            "union " +
+            "select b.id, concat(b.nom,' ',b.prenom) agent_assermentes," +
+            "c.raison_sociale as artisans, a.montant as somme_encaisse " +
+            "from paiement_enrolement a inner join utilisateur b on " +
+            "(a.utilisateur_id = b.id and date(a.created_at) = date(now())) " +
+            "inner join entreprise c on c.id = a.entreprise_id " +
             "where b.id in (select distinct utilisateur_id from action_terrain d)",
             nativeQuery = true)
     List<Tuple> getArtisanListAssignedToAgentAssermente();
