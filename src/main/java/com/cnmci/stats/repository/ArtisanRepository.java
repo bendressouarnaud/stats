@@ -387,4 +387,12 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             nativeQuery = true)
     List<Tuple> getGlobalTotalEnrolementEquipeControleByMonth();
 
+    @Query(value = "select distinct a.* from artisan a inner join utilisateur b on b.id = " +
+            "a.utilisateur_call_center_id inner join metier c on c.id = a.metier_id " +
+            "inner join activite d on d.id = a.activite_id inner join commune e on " +
+            "e.id = d.commune_id " +
+            "where paiement_non_reverse = true " +
+            "and date(suivi_call_center_date) = date(now())",
+            nativeQuery = true)
+    List<Artisan> getArtisanWhoPaidAndNotReceivingDocument();
 }

@@ -4,6 +4,7 @@ import com.cnmci.core.model.NotificationControle;
 import com.cnmci.core.model.Utilisateur;
 import com.cnmci.stats.LibelleTotal;
 import com.cnmci.stats.beans.AssermenteAction;
+import com.cnmci.stats.beans.EntitePaidNotReceivingDocument;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
 import com.cnmci.stats.repository.NotificationControleRepository;
 import com.cnmci.stats.repository.ParametresRepository;
@@ -163,6 +164,54 @@ public class MailService {
                 helper.setTo(mailTo);
                 helper.setCc(mails);
                 helper.setSubject("Bilan des ACTIONS TERRAINS - AGENTS ASSERMENTES");
+                helper.setFrom(emailSenderAddress);
+                emailSender.send(mimeMessage);
+            } catch (Exception exc) {
+                System.out.println("mailCreation(...) : " + exc.toString());
+                //log.error("mailCreation(...) : {}", exc.toString());
+            }
+        }
+    }
+
+    public void mailAboutThosePayingAndNotGivingBackDocument(
+            List<EntitePaidNotReceivingDocument> listeDonne, String mailTo, String[] mails){
+        if(checkSendingParameter()) {
+            try {
+                MimeMessage mimeMessage = emailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
+                        "utf-8");
+                StringBuilder contenu = new StringBuilder();
+                contenu.append("<h2> Liste des artisans objet d'irr&eacute;gularit&eacute;s </h2>");
+                contenu.append("<div> Bonjour <span style='font-weight: bold'>Mr</span>. Nous vous prions de trouver ci-dessous la </div>");
+                contenu.append("<div> liste des Artisans qui d&eacute;clarent s'&ecirc;tre acquitt&eacute;s des frais d'enr&ocirc;lement et n'ayant pas encore re&ccedil;u leurs documents. </div>");
+                contenu.append("<table style='border: 1px solid black; border-collapse: collapse;'>");
+                contenu.append("<tr><th style='border: 1px solid black; border-collapse: collapse'>ARTISAN</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>CONTACT</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>NOTE SUIVI</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>DATE PRISE DOSSIER</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>METIER</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>COMMUNE D'ACTIVITE</th></tr>");
+                for(EntitePaidNotReceivingDocument dt : listeDonne){
+                    contenu.append("<tr><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(dt.nom());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(dt.contact());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(dt.note());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(dt.datePriseDossier());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(dt.metier());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(dt.commune());
+                    contenu.append("</td></tr>");
+                }
+                contenu.append("</table>");
+                // Envoi du MAIL :
+                helper.setText(String.valueOf(contenu), true);
+                helper.setTo(mailTo);
+                helper.setCc(mails);
+                helper.setSubject("Liste des Artisans n'ayant toujours pas reçu leurs documents après avoir soldé");
                 helper.setFrom(emailSenderAddress);
                 emailSender.send(mimeMessage);
             } catch (Exception exc) {

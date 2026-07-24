@@ -3,6 +3,7 @@ package com.cnmci.stats.parametrage;
 import com.cnmci.core.model.*;
 import com.cnmci.stats.LibelleTotal;
 import com.cnmci.stats.beans.AssermenteAction;
+import com.cnmci.stats.beans.EntitePaidNotReceivingDocument;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
 import com.cnmci.stats.beans.UtilisateurNotifcationTaille;
 import com.cnmci.stats.repository.*;
@@ -260,6 +261,43 @@ public class MesTaches {
             // Update FLAG :
             holdAction.setSent(true);
             actionTerrainRepository.save(holdAction);
+        }
+    }
+
+    @Scheduled(cron="0 50 15 * * MON-FRI", zone="Africa/Nouakchott")
+    @Transactional
+    public void sendReportForThoseWhoPaidAndNotReceivingDocument(){
+        try{
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            List<Artisan> listeArtisan = artisanRepository.getArtisanWhoPaidAndNotReceivingDocument();
+            List<EntitePaidNotReceivingDocument> listeDonnee = listeArtisan.stream()
+                    .map(a -> new EntitePaidNotReceivingDocument(
+                            a.getNom() + " " + a.getPrenom(),
+                            a.getContact1(),
+                            a.getNoteSuiviCallCenter(),
+                            a.getSuiviCallCenterDate().format(dateTimeFormatter),
+                            a.getMetier().getLibelle(),
+                            a.getActivite().getCommune().getLibelle()
+                    )
+                    ).toList();
+
+            // Send the MAIL if NEEDED :
+            List<Utilisateur> listeAgentCallCenter =
+                    utilisateurRepository.findAllByProfil(profilRepository.findById(16L).get());
+            List<String> listeEnCopie = new ArrayList<>();
+            listeEnCopie.addAll(listeAgentCallCenter.stream()
+                    .map(l -> l.getEmail().trim())
+                    .toList());
+            listeEnCopie.add("mbambi@sfpci.com");
+            listeEnCopie.add("arnaud.koffi@sfpci.com");
+            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("yfulgence10@gmail.com");
+            String[] tabEmail = listeEnCopie.toArray(new String[0]);
+            if(!listeDonnee.isEmpty()) {
+                mailService.mailAboutThosePayingAndNotGivingBackDocument(listeDonnee, "gvamaracoulibaly@gmail.com", tabEmail);
+            }
+        } catch (Exception e) {
+            System.out.println("sendReportForThoseWhoPaidAndNotReceivingDocument(...) : " + e.toString());
         }
     }
 }
