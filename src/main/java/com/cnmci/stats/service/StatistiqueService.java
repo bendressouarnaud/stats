@@ -256,7 +256,6 @@ public class StatistiqueService {
         return retour;
     }
 
-
     public List<EntitySearchResponse> processAgentAssermenteRequest(ControleAgentSermenteRequest request){
         List<EntitySearchResponse> retour = new ArrayList<>();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -279,6 +278,16 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
+
+                        .montant((a.getStatutType() == StatutType.ENROLE ? MONTANT_ARTISAN : MONTANT_ARTISAN_RENOUVELLEMENT) -
+                                (paiementEnrolementRepository.findAllByArtisan(a).stream().mapToInt(
+                                        PaiementEnrolement::getMontant).sum()))
+                        .statutLivraison(a.getStatutLivraison())
+                        .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                        .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
+                        .totalApprenti(a.getArtisanApprentis().size())
+                        .totalCompagnon(a.getArtisanCompagnons().size())
+
                         .build()
         ).toList());
 
@@ -305,6 +314,14 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
+                        .montant(MONTANT_APPRENTI_COMPAGNON -
+                                (paiementEnrolementRepository.findAllByApprenti(a).stream().mapToInt(
+                                        PaiementEnrolement::getMontant).sum()))
+                        .statutLivraison(a.getStatutLivraison())
+                        .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                        .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
+                        .totalApprenti(0)
+                        .totalCompagnon(0)
                         .build()
         ).toList());
 
@@ -331,6 +348,15 @@ public class StatistiqueService {
                         .amende(a.getAmendes().size())
                         .latitude(processGeoData(a.getLatitude()))
                         .longitude(processGeoData(a.getLongitude()))
+                        .montant(MONTANT_APPRENTI_COMPAGNON -
+                                (paiementEnrolementRepository.findAllByCompagnon(a).stream().mapToInt(
+                                        PaiementEnrolement::getMontant).sum()))
+                        .statutLivraison(a.getStatutLivraison())
+                        .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+                        .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
+                        .totalApprenti(0)
+                        .totalCompagnon(0)
+
                         .build()
         ).toList());
 
@@ -353,6 +379,16 @@ public class StatistiqueService {
             .amende(a.getAmendes().size())
             .latitude(processGeoData(a.getLatitude()))
             .longitude(processGeoData(a.getLongitude()))
+
+            .montant(MONTANT_ENTREPRISE -
+                    (paiementEnrolementRepository.findAllByEntreprise(a).stream().mapToInt(
+                            PaiementEnrolement::getMontant).sum()))
+            .statutLivraison(a.getStatutLivraison())
+            .confirmationLivraison(a.isConfirmationLivraison() ? 1 : 0)
+            .livraisonCarte(a.isLivraisonDocument() ? 1 : 0)
+            .totalApprenti(a.getEntrepriseApprentis().size())
+            .totalCompagnon(a.getEntrepriseCompagnons().size())
+
             .build()
         ).toList());
         return retour;
