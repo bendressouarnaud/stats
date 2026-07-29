@@ -2,6 +2,7 @@ package com.cnmci.stats.controller;
 
 import com.cnmci.core.model.Parametres;
 import com.cnmci.stats.beans.*;
+import com.cnmci.stats.beans.chart.bubble.BubbleChartData;
 import com.cnmci.stats.repository.ParametresRepository;
 import com.cnmci.stats.service.ActionService;
 import com.cnmci.stats.service.PaiementService;
@@ -218,5 +219,11 @@ public class AccueilController {
     @GetMapping(value="/get-global-recouvrement-enrolement-assermente")
     private List<BeanMonthDataDuo> getGlobalTotalEquipeControleByMonth() {
         return statistiqueService.getGlobalTotalEquipeControleByMonth();
+    }
+
+    @Operation(summary = "Récupérer le montant GLOBAL des 'RECOUVREMENTS' et des 'ENRÔLEMENTS' effectués par les AGENTS ASSERMENTés")
+    @GetMapping(value="/get-bubble-chart-data")
+    private BubbleChartData getBubbleChartData() {
+        return statistiqueService.getStatsForBubbleChart();
     }
 }

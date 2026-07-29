@@ -3,6 +3,9 @@ package com.cnmci.stats.service;
 import com.cnmci.core.enums.StatutType;
 import com.cnmci.core.model.*;
 import com.cnmci.stats.beans.*;
+import com.cnmci.stats.beans.chart.bubble.BubbleChartData;
+import com.cnmci.stats.beans.chart.bubble.DataSet;
+import com.cnmci.stats.beans.chart.bubble.Point;
 import com.cnmci.stats.repository.*;
 import jakarta.persistence.Tuple;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,13 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.*;
 
 import static java.lang.Math.round;
 
@@ -40,6 +39,8 @@ public class StatistiqueService {
     private final PaiementEnrolementRepository paiementEnrolementRepository;
     private final OutilService outilService;
     private final UtilisateurRepository utilisateurRepository;
+    private List<String> colorList = List.of("#213AA6", "#21A683", "#C25F9D", "#C2AB5F", "#C27B5F", "#82C25F"
+            , "#5FC2BA", "#5FABC2", "#C25F71", "#827444", "#44827F", "#454482");
 
 
     // M E T H O D S :
@@ -696,5 +697,99 @@ public class StatistiqueService {
         // DOnnée d'enrôlement
         retour.add(new BeanMonthDataDuo(1, fillMonthForData(artisanRepository.getGlobalTotalEnrolementEquipeControleByMonth())));
         return retour;
+    }
+
+    private String getColor(int index){
+        return colorList.get(index);
+    }
+
+    public BubbleChartData getStatsForBubbleChart(){
+        List<Tuple> listeTuple = artisanRepository.getBubbleChartData(OffsetDateTime.now().getYear());
+        BubbleChartData bubbleChartData = BubbleChartData.builder()
+                .dataSet(new ArrayList<>())
+                .build();
+        List<Integer> lesMois = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+        int indexColor = 0;
+        for(Tuple tuple : listeTuple){
+            if(bubbleChartData.getDataSet().stream()
+                    .filter(dataSet -> dataSet.getLabel().equals(tuple.get("label", String.class)))
+                    .findFirst().isEmpty()){
+                // Add new
+                Point point = new Point((tuple.get("mois", BigDecimal.class)).intValue(), tuple.get("total_enrole", Long.class),
+                        tuple.get("total_paiement", Long.class));
+                List<Point> liste = new ArrayList<>();
+                // Try to FEED if NEEDED :
+                //liste = populateIfNeeded((tuple.get("mois", BigDecimal.class)).intValue(), lesMois, liste);
+                // Order
+                /*if(liste.size() > 1){
+                    liste = new ArrayList<>(liste.stream()
+                            .sorted(
+                                    Comparator.comparing(Point::x)
+                            ).toList());
+                }*/
+                // Add the new ONE :
+                liste.add(point);
+                DataSet dataSet = DataSet.builder()
+                        .label(tuple.get("label", String.class))
+                        .backgroundColor(getColor(indexColor++))
+                        .data(liste)
+                        .build();
+                bubbleChartData.getDataSet().add(dataSet);
+                // Add the month :
+                //lesMois.add((tuple.get("mois", BigDecimal.class)).intValue());
+            }
+            else{
+                // Add new POINTs :
+                DataSet currentDataSet = bubbleChartData.getDataSet().stream()
+                        .filter(dataSet -> dataSet.getLabel().equals(tuple.get("label", String.class)))
+                        .findFirst().get();
+                List<Point> newListe = new ArrayList<>(currentDataSet.getData());
+                newListe.add(
+                        new Point((tuple.get("mois", BigDecimal.class)).intValue(), tuple.get("total_enrole", Long.class),
+                                tuple.get("total_paiement", Long.class))
+                );
+                // Find and replace :
+                bubbleChartData.getDataSet().stream()
+                        .filter(dataSet -> dataSet.getLabel().equals(tuple.get("label", String.class)))
+                        .findFirst().get().setData(newListe);
+                // Add the month :
+                //lesMois.add((tuple.get("mois", BigDecimal.class)).intValue());
+            }
+        }
+
+        // Try to ADD the MONTHS that are not part of the DATA
+        for(DataSet dataSet : bubbleChartData.getDataSet()){
+            List<Point> liste = dataSet.getData();
+            boolean updatedList = false;
+            for(Integer mois : lesMois){
+                if(liste.stream()
+                        .noneMatch(point -> point.x() == mois)
+                ){
+                    liste.add(new Point(mois, 0, 0));
+                    updatedList = true;
+                }
+            }
+            // Order the LIST :
+            if(updatedList) {
+                liste = new ArrayList<>(liste.stream()
+                        .sorted(
+                                Comparator.comparing(Point::x)
+                        ).toList());
+            }
+        }
+
+        //System.out.println("Les mois : " + lesMois);
+        // From there, browse
+        return bubbleChartData;
+    }
+
+    private List<Point> populateIfNeeded(int moisCourant, Set<Integer> lesMois, List<Point> liste){
+        if(lesMois.contains(moisCourant - 1)){
+            liste.add(new Point(moisCourant -1, 0, 0));
+            return populateIfNeeded(moisCourant - 1, lesMois, liste);
+        }
+        else{
+            return liste;
+        }
     }
 }

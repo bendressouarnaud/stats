@@ -395,4 +395,14 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "and date(suivi_call_center_date) = date(now())",
             nativeQuery = true)
     List<Artisan> getArtisanWhoPaidAndNotReceivingDocument();
+
+    @Query(value = "select b.id, b.label, extract(month from a.created_at) mois, count(a.id) total_enrole," +
+            "case when sum(montant) is not null then sum(montant) else 0 end as total_paiement " +
+            "from artisan a inner join crm b on b.id = a.crm_id " +
+            "left join paiement_enrolement c on c.artisan_id = a.id " +
+            "where extract(year from a.created_at) = :year " +
+            "group by b.id, b.label, extract(month from a.created_at) " +
+            "order by b.id asc, extract(month from a.created_at) asc",
+            nativeQuery = true)
+    List<Tuple> getBubbleChartData(int year);
 }
