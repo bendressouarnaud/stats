@@ -162,7 +162,7 @@ public class PaiementService {
             headers.add("Content-Type", "application/json");
 
             // Get DATA :
-            Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone());
+            Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone().trim());
             if(dataIdType != null){
                 if(checkIfAlreadyPaid(dataIdType.get("type"), Long.parseLong(dataIdType.get("id")))){
                     log.info("Le client {} avec Id {} a déjà soldé !", dataIdType.get("type"),
@@ -171,8 +171,6 @@ public class PaiementService {
                 }
                 // Call WEB Services :
                 RestTemplate restTemplate = new RestTemplate();
-                //String userMail = outilService.getBackUserConnectedName(httpServletRequest);
-                //Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail).get();
 
                 String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
                         + "/" + dataIdType.get("sommeAPayer") + "/0/" +
@@ -253,7 +251,7 @@ public class PaiementService {
             headers.add("Content-Type", "application/json");
 
             // Get DATA :
-            Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone());
+            Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone().trim());
             if(dataIdType != null){
                 if(checkIfAlreadyPaid(dataIdType.get("type"), Long.parseLong(dataIdType.get("id")))){
                     log.info("Le client {} avec Id {} a déjà soldé !", dataIdType.get("type"),
