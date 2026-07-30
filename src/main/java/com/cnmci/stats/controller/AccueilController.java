@@ -231,9 +231,15 @@ public class AccueilController {
         return statistiqueService.getGlobalTotalEquipeControleByMonth();
     }
 
-    @Operation(summary = "Récupérer le montant GLOBAL des 'RECOUVREMENTS' et des 'ENRÔLEMENTS' effectués par les AGENTS ASSERMENTés")
+    @Operation(summary = "Récupérer le nombre de personnes enrolées et ayant payé par mois et par CRM")
     @GetMapping(value="/get-bubble-chart-data")
     private BubbleChartData getBubbleChartData() {
         return statistiqueService.getStatsForBubbleChart();
+    }
+
+    @Operation(summary = "Récupérer le nombre de personnes enrolées par mois et devant s'acquiter des frais d'enrôlement par mois et par CRM")
+    @GetMapping(value="/get-bubble-data-artisan-to-pay")
+    private BubbleChartData getBubbleChartDataForArtisanToPay() {
+        return statistiqueService.getBubbleChartDataForArtisanToPay();
     }
 }
