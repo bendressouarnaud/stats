@@ -412,7 +412,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "(case when sum(c.montant) is not null then sum(c.montant) else 0 end) " +
             "else (count(a.id) * 5000) - (case when sum(c.montant) is not null then sum(c.montant) else 0 end) end as somme_a_encaisser " +
             "from artisan a inner join crm b on (b.id = a.crm_id and a.statut_paiement in (0,1)) " +
-            "left join paiement_enrolement c on c.artisan_id = a.id " +
+            "left join paiement_enrolement c on (c.artisan_id = a.id and extract(month from a.created_at) = extract(month from c.created_at)) " +
             "where extract(year from a.created_at) = :year " +
             "group by b.id, b.label, extract(month from a.created_at), a.statut_type " +
             ") a group by id, label, mois " +
