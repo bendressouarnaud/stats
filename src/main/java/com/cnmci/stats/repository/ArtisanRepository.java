@@ -405,4 +405,18 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "order by b.id asc, extract(month from a.created_at) asc",
             nativeQuery = true)
     List<Tuple> getBubbleChartData(int year);
+
+    @Query(value = "select id, label, mois, sum(total_enrole) total_enrole, sum(somme_a_encaisser) somme_a_encaisser from (" +
+            "select b.id, b.label, extract(month from a.created_at) mois, count(a.id) total_enrole, " +
+            "case when a.statut_type = 0 then (count(a.id) * 15000) - " +
+            "(case when sum(c.montant) is not null then sum(c.montant) else 0 end) " +
+            "else (count(a.id) * 5000) - (case when sum(c.montant) is not null then sum(c.montant) else 0 end) end as somme_a_encaisser " +
+            "from artisan a inner join crm b on (b.id = a.crm_id and a.statut_paiement in (0,1)) " +
+            "left join paiement_enrolement c on c.artisan_id = a.id " +
+            "where extract(year from a.created_at) = :year " +
+            "group by b.id, b.label, extract(month from a.created_at), a.statut_type " +
+            ") a group by id, label, mois " +
+            "order by id asc, mois asc",
+            nativeQuery = true)
+    List<Tuple> getBubbleDataForArtisanAmountToRecover(int year);
 }

@@ -137,10 +137,20 @@ public class AccueilController {
     }
 
     @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
+    @PostMapping("/generate-user-payment-with-amount-link")
+    @Parameter(name = "telephone", description = "Contact de l'entité")
+    @Parameter(name = "montant", description = "Montant fixé par l'entité")
+    public WavePaymentResponse generateWavePaymentWithAmountRequestedLink(
+            @RequestBody PaymentWaveContactAmountRequest data,
+                                        HttpServletRequest httpServletRequest){
+        return paiementService.generateWavePaymentWithAmountRequestedLink(data, httpServletRequest);
+    }
+
+    @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
     @PostMapping("/generate-user-payment-link")
     @Parameter(name = "telephone", description = "Contact de l'entité")
     public WavePaymentResponse generateWavePaymentLink(@RequestBody PaymentWaveContactRequest data,
-                                        HttpServletRequest httpServletRequest){
+                                                       HttpServletRequest httpServletRequest){
         return paiementService.generateWavePaymentLink(data, httpServletRequest);
     }
 
@@ -221,9 +231,15 @@ public class AccueilController {
         return statistiqueService.getGlobalTotalEquipeControleByMonth();
     }
 
-    @Operation(summary = "Récupérer le montant GLOBAL des 'RECOUVREMENTS' et des 'ENRÔLEMENTS' effectués par les AGENTS ASSERMENTés")
+    @Operation(summary = "Récupérer le nombre de personnes enrolées et ayant payé par mois et par CRM")
     @GetMapping(value="/get-bubble-chart-data")
     private BubbleChartData getBubbleChartData() {
         return statistiqueService.getStatsForBubbleChart();
+    }
+
+    @Operation(summary = "Récupérer le nombre de personnes enrolées par mois et devant s'acquiter des frais d'enrôlement par mois et par CRM")
+    @GetMapping(value="/get-bubble-data-artisan-to-pay")
+    private BubbleChartData getBubbleChartDataForArtisanToPay() {
+        return statistiqueService.getBubbleChartDataForArtisanToPay();
     }
 }
