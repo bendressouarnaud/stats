@@ -399,7 +399,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     @Query(value = "select b.id, b.label, extract(month from a.created_at) mois, count(a.id) total_enrole," +
             "case when sum(montant) is not null then sum(montant) else 0 end as total_paiement " +
             "from artisan a inner join crm b on b.id = a.crm_id " +
-            "left join paiement_enrolement c on c.artisan_id = a.id " +
+            "left join paiement_enrolement c on (c.artisan_id = a.id and extract(month from a.created_at) = extract(month from c.created_at)) " +
             "where extract(year from a.created_at) = :year " +
             "group by b.id, b.label, extract(month from a.created_at) " +
             "order by b.id asc, extract(month from a.created_at) asc",
