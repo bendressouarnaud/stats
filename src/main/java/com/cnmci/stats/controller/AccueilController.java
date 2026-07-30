@@ -137,10 +137,20 @@ public class AccueilController {
     }
 
     @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
+    @PostMapping("/generate-user-payment-with-amount-link")
+    @Parameter(name = "telephone", description = "Contact de l'entité")
+    @Parameter(name = "montant", description = "Montant fixé par l'entité")
+    public WavePaymentResponse generateWavePaymentWithAmountRequestedLink(
+            @RequestBody PaymentWaveContactAmountRequest data,
+                                        HttpServletRequest httpServletRequest){
+        return paiementService.generateWavePaymentWithAmountRequestedLink(data, httpServletRequest);
+    }
+
+    @Operation(summary = "Pour générer le lien de paiement souhaité par tout utilisateur")
     @PostMapping("/generate-user-payment-link")
     @Parameter(name = "telephone", description = "Contact de l'entité")
     public WavePaymentResponse generateWavePaymentLink(@RequestBody PaymentWaveContactRequest data,
-                                        HttpServletRequest httpServletRequest){
+                                                       HttpServletRequest httpServletRequest){
         return paiementService.generateWavePaymentLink(data, httpServletRequest);
     }
 

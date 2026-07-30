@@ -154,6 +154,96 @@ public class PaiementService {
     }
 
     @Transactional
+    public WavePaymentResponse generateWavePaymentWithAmountRequestedLink(
+            PaymentWaveContactAmountRequest paymentWaveRequest,
+                                                       HttpServletRequest httpServletRequest){
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + waveToken);
+            headers.add("Content-Type", "application/json");
+
+            // Get DATA :
+            Map<String, String> dataIdType = getEntityData(paymentWaveRequest.telephone().trim());
+            if(dataIdType != null){
+                if(checkIfAlreadyPaid(dataIdType.get("type"), Long.parseLong(dataIdType.get("id")))){
+                    log.info("Le client {} avec Id {} a déjà soldé !", dataIdType.get("type"),
+                            dataIdType.get("id"));
+                    return null;
+                }
+                // Call WEB Services :
+                RestTemplate restTemplate = new RestTemplate();
+
+                String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
+                        + "/" + String.valueOf(paymentWaveRequest.montant()) + "/0/" +
+                        String.valueOf(dataIdType.get("utilisateurId"));
+                log.info("Encodage : {}", idToKeep);
+                String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
+
+                WavePaymentOriginalRequest objectRequest = new WavePaymentOriginalRequest();
+                objectRequest.setAmount(paymentWaveRequest.montant());
+                objectRequest.setCurrency("XOF");
+                objectRequest.setErrorUrl(
+                        backendWebUrl + "invalidation/" + encodedString);
+                objectRequest.setSuccessUrl(
+                        backendWebUrl + "validation/" + encodedString);
+
+                HttpEntity<WavePaymentOriginalRequest> entity = new HttpEntity<>(objectRequest, headers);
+                ResponseEntity<WavePaymentResponse> responseEntity = restTemplate.postForEntity(waveUrl,
+                        entity, WavePaymentResponse.class);
+                if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                    // Delete previous request not completed :
+                    PaymentRequest paymentRequest = paymentRequestRepository.
+                            findByRequesterTypeAndRequesterIdAndEtat(
+                                    dataIdType.get("type"), Long.parseLong(dataIdType.get("id")), 0);
+                    if(paymentRequest != null){
+                        paymentRequestRepository.delete(paymentRequest);
+                    }
+
+                    // Persist :
+                    WavePaymentResponse wavePaymentResponse = responseEntity.getBody();
+                    // Track this :
+                    PaymentRequest prt = PaymentRequest.builder()
+                            .requesterId(Long.parseLong(dataIdType.get("id")))
+                            .requesterType(dataIdType.get("type"))
+                            .montant(paymentWaveRequest.montant())
+                            .etat(0)
+                            .waveId(wavePaymentResponse.getId())
+                            .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
+                            .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .paymentType(0)
+                            .build();
+                    paymentRequestRepository.save(prt);
+                    // track this too :
+                    PaymentRequestCopie paymentRequestCopie = PaymentRequestCopie.builder()
+                            .requesterId(Long.parseLong(dataIdType.get("id")))
+                            .requesterType(dataIdType.get("type"))
+                            .montant(paymentWaveRequest.montant())
+                            .etat(0)
+                            .waveId(wavePaymentResponse.getId())
+                            .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
+                            .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .paymentType(0)
+                            .utilisateur(null)
+                            .build();
+                    paymentRequestCopieRepository.save(paymentRequestCopie);
+                    return wavePaymentResponse;
+                }
+                else {
+                    throw new OurGenericException("Impossible de poursuivre, une erreur est survenue !");
+                }
+            }
+            else {
+                // Raise EXCEPTION :
+                throw new OurGenericException("Le numéro de téléphone renseigné est soit inexistant " +
+                        "soit est un doublon !");
+            }
+        } catch (Exception exc) {
+            log.error("generateWavePaymentLink(...) : ", exc.toString());
+            throw new OurGenericException(exc.toString());
+        }
+    }
+
+    @Transactional
     public WavePaymentResponse generateWavePaymentLink(PaymentWaveContactRequest paymentWaveRequest,
                                                        HttpServletRequest httpServletRequest){
         try {
