@@ -861,4 +861,103 @@ public class StatistiqueService {
             return liste;
         }
     }
+
+    public BubbleChartData getBubbleDataEnrolementAndPaymentForLastSevenDays(){
+        List<Tuple> listeTuple = artisanRepository.getBubbleDataEnrolementAndPaymentForLastSevenDays();
+        BubbleChartData bubbleChartData = BubbleChartData.builder()
+                .dataSet(new ArrayList<>())
+                .build();
+        Set<Integer> lesJours = new HashSet<>();
+        int indexColor = 0;
+        for(Tuple tuple : listeTuple){
+            if(bubbleChartData.getDataSet().stream()
+                    .filter(dataSet -> dataSet.getLabel().equals(tuple.get("label", String.class)))
+                    .findFirst().isEmpty()){
+                // Pick the DAY :
+                lesJours.add((tuple.get("jour", BigDecimal.class)).intValue());
+                // Add new
+                Point point = new Point(
+                        (tuple.get("jour", BigDecimal.class)).intValue(),
+                        (tuple.get("nombre_enrole", BigDecimal.class)).longValue(),
+                        (tuple.get("total_encaisse", BigDecimal.class)).longValue()
+                );
+                List<Point> liste = new ArrayList<>();
+                // Add the new ONE :
+                liste.add(point);
+                DataSet dataSet = DataSet.builder()
+                        .label(tuple.get("label", String.class))
+                        .backgroundColor(getColor(indexColor++))
+                        .data(liste)
+                        .build();
+                bubbleChartData.getDataSet().add(dataSet);
+            }
+            else{
+                // Add new POINTs :
+                DataSet currentDataSet = bubbleChartData.getDataSet().stream()
+                        .filter(dataSet -> dataSet.getLabel().equals(tuple.get("label", String.class)))
+                        .findFirst().get();
+                List<Point> newListe = new ArrayList<>(currentDataSet.getData());
+                // Pick the DAY :
+                lesJours.add((tuple.get("jour", BigDecimal.class)).intValue());
+                newListe.add(
+                        new Point(
+                                (tuple.get("jour", BigDecimal.class)).intValue(),
+                                (tuple.get("nombre_enrole", BigDecimal.class)).longValue(),
+                                (tuple.get("total_encaisse", BigDecimal.class)).longValue()
+                        )
+                );
+                // Find and replace :
+                bubbleChartData.getDataSet().stream()
+                        .filter(dataSet -> dataSet.getLabel().equals(tuple.get("label", String.class)))
+                        .findFirst().get().setData(newListe);
+            }
+        }
+
+        // Try to ADD the MONTHS that are not part of the DATA
+        for(DataSet dataSet : bubbleChartData.getDataSet()){
+            List<Point> liste = dataSet.getData();
+            boolean updatedList = false;
+            for(Integer jour : lesJours){
+                if(liste.stream()
+                        .noneMatch(point -> point.x() == jour)
+                ){
+                    liste.add(new Point(jour, 0, 0));
+                    updatedList = true;
+                }
+            }
+            // Order the LIST :
+            if(updatedList) {
+                liste = new ArrayList<>(liste.stream()
+                        .sorted(
+                                Comparator.comparing(Point::x)
+                        ).toList());
+            }
+        }
+        return bubbleChartData;
+    }
+
+    public List<AgentMonthlyStatistics> getAgentEnroleurMonthlyStatistics(int month, int year){
+        List<Tuple> listeTuple = artisanRepository.getAgentEnroleurMonthlyStatistics(month, year);
+        return listeTuple.stream()
+                .map(tuple -> new AgentMonthlyStatistics(
+                        tuple.get("id", Long.class),
+                        tuple.get("nom", String.class),
+                        tuple.get("prenom", String.class),
+                        tuple.get("contact", String.class),
+                        tuple.get("profil", String.class),
+                        tuple.get("crm", String.class),
+                        tuple.get("artisan_identifie", Long.class),
+                        tuple.get("entreprise_identifie", Long.class),
+                        tuple.get("compagnon_identifie", Long.class),
+                        tuple.get("apprenti_identifie", Long.class),
+                        tuple.get("artisan_renouvellement", Long.class),
+                        tuple.get("artisan_15000", Long.class),
+                        tuple.get("artisan_10000", Long.class),
+                        tuple.get("artisan_5000", Long.class),
+                        tuple.get("artisan_3000", Long.class),
+                        tuple.get("entreprise_25000", Long.class),
+                        tuple.get("compagnon_5000", Long.class),
+                        tuple.get("apprenti_5000", Long.class)
+                )).toList();
+    }
 }

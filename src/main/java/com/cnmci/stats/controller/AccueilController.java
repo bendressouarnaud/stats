@@ -242,4 +242,16 @@ public class AccueilController {
     private BubbleChartData getBubbleChartDataForArtisanToPay() {
         return statistiqueService.getBubbleChartDataForArtisanToPay();
     }
+
+    @Operation(summary = "Récupérer le nombre journalier d'enrôlement et de paiement associé sur les 7 derniers jours par CRM")
+    @GetMapping(value="/get-bubble-data-payment-last-seven-days")
+    private BubbleChartData getBubbleDataEnrolementAndPaymentForLastSevenDays() {
+        return statistiqueService.getBubbleDataEnrolementAndPaymentForLastSevenDays();
+    }
+
+    @Operation(summary = "Récupérer les statistiques d'enrôlement et de paiement pour un mois donné de l'année")
+    @GetMapping(value="/get-statistics-enrolement-paiement-agent/{month}/{year}")
+    private List<AgentMonthlyStatistics> getAgentEnroleurMonthlyStatistics(@PathVariable int month, @PathVariable int year) {
+        return statistiqueService.getAgentEnroleurMonthlyStatistics(month, year);
+    }
 }

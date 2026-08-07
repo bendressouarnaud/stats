@@ -419,4 +419,151 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "order by id asc, mois asc",
             nativeQuery = true)
     List<Tuple> getBubbleDataForArtisanAmountToRecover(int year);
+
+    @Query(value = "select label,mois,jour,sum(nombre_enrole) as nombre_enrole, sum(total_encaisse) as total_encaisse from ( " +
+            "select a.label,extract(month from b.created_at) mois," +
+            "extract(day from b.created_at) jour, count(b.id) as nombre_enrole," +
+            "case when sum(c.montant) is null then 0 else sum(c.montant) end as total_encaisse " +
+            "from crm a inner join artisan b on a.id = b.crm_id " +
+            "left join paiement_enrolement c on b.id = c.artisan_id " +
+            "where date(b.created_at) >= date(now()) - 7 " +
+            "group by a.label,extract(month from b.created_at), extract(day from b.created_at) " +
+            "union all " +
+            "select d.label,extract(month from a.created_at) mois," +
+            "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
+            "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
+            "apprenti a inner join artisan_apprenti b on b.apprenti_id = a.id " +
+            "inner join artisan c on c.id = b.artisan_id " +
+            "inner join crm d on d.id = c.crm_id " +
+            "left join paiement_enrolement e on a.id = e.apprenti_id " +
+            "where date(a.created_at) >= date(now()) - 7 " +
+            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "union all " +
+            "select d.label,extract(month from a.created_at) mois," +
+            "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
+            "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
+            "apprenti a inner join entreprise_apprenti b on b.apprenti_id = a.id " +
+            "inner join entreprise c on c.id = b.entreprise_id " +
+            "inner join crm d on d.id = c.crm_id " +
+            "left join paiement_enrolement e on a.id = e.apprenti_id " +
+            "where date(a.created_at) >= date(now()) - 7 " +
+            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "union all " +
+            "select d.label,extract(month from a.created_at) mois," +
+            "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
+            "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
+            "compagnon a inner join artisan_compagnon b on b.compagnon_id = a.id " +
+            "inner join artisan c on c.id = b.artisan_id " +
+            "inner join crm d on d.id = c.crm_id " +
+            "left join paiement_enrolement e on a.id = e.compagnon_id " +
+            "where date(a.created_at) >= date(now()) - 7 " +
+            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "union all " +
+            "select d.label,extract(month from a.created_at) mois," +
+            "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
+            "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
+            "compagnon a inner join entreprise_compagnon b on b.compagnon_id = a.id " +
+            "inner join entreprise c on c.id = b.entreprise_id " +
+            "inner join crm d on d.id = c.crm_id " +
+            "left join paiement_enrolement e on a.id = e.compagnon_id " +
+            "where date(a.created_at) >= date(now()) - 7 " +
+            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "union all " +
+            "select a.label,extract(month from b.created_at) mois," +
+            "extract(day from b.created_at) jour, count(b.id) as nombre_enrole," +
+            "case when sum(c.montant) is null then 0 else sum(c.montant) end as total_encaisse " +
+            "from crm a inner join entreprise b on a.id = b.crm_id " +
+            "left join paiement_enrolement c on b.id = c.entreprise_id " +
+            "where date(b.created_at) >= date(now()) - 7 " +
+            "group by a.label,extract(month from b.created_at), extract(day from b.created_at) " +
+            ") a group by label,mois,jour " +
+            "order by mois desc, jour desc",
+            nativeQuery = true)
+    List<Tuple> getBubbleDataEnrolementAndPaymentForLastSevenDays();
+
+    @Query(value = "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000,artisan_5000, artisan_3000, entreprise_25000," +
+            "compagnon_5000, count(j.id) apprenti_5000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000,artisan_5000, artisan_3000, entreprise_25000," +
+            "count(j.id) compagnon_5000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000,artisan_5000, artisan_3000, count(j.id) entreprise_25000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000,artisan_5000, count(j.id) artisan_3000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000,count(j.id) artisan_5000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, count(j.id) artisan_10000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, count(j.id) artisan_15000 from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, count(h.id) artisan_renouvellement from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "count(g.id) apprenti_identifie from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie," +
+            "count(f.id) compagnon_identifie from (" +
+            "select a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie," +
+            "count(e.id) entreprise_identifie from (" +
+            "select a.id,a.nom,a.prenom,a.contact,b.libelle as profil,c.label as crm," +
+            "count(d.id) artisan_identifie " +
+            "from utilisateur a inner join profil b on a.profil_id = b.id " +
+            "inner join crm c on c.id = a.crm_id " +
+            "left join artisan d on (a.id = d.utilisateur_id and extract(month from d.created_at) = :month and extract(year from d.created_at) = :year) " +
+            "group by a.id,a.nom,a.prenom,a.contact,b.libelle,c.label " +
+            ") a " +
+            "left join entreprise e on (a.id = e.utilisateur_id and extract(month from e.created_at) = :month and extract(year from e.created_at) = :year) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie " +
+            ") a " +
+            "left join compagnon f on (a.id = f.utilisateur_id and extract(month from f.created_at) = :month and extract(year from f.created_at) = :year) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie " +
+            ") a " +
+            "left join apprenti g on (a.id = g.utilisateur_id and extract(month from g.created_at) = :month and extract(year from g.created_at) = :year) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie, compagnon_identifie " +
+            ") a " +
+            "left join artisan h on (a.id = h.utilisateur_id and extract(month from h.created_at) = :month and extract(year from h.created_at) = :year and h.statut_type = 3 ) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie " +
+            ") a " +
+            "left join artisan i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.artisan_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 15000) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement " +
+            ") a " +
+            "left join artisan i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.artisan_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 10000) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000 " +
+            ") a " +
+            "left join artisan i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.artisan_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 5000) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000 " +
+            ") a " +
+            "left join artisan i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.artisan_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 3000) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000, artisan_5000 " +
+            ") a " +
+            "left join entreprise i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.entreprise_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 25000) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000, artisan_5000, artisan_3000 " +
+            ") a " +
+            "left join compagnon i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.compagnon_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 5000) " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000, artisan_5000, artisan_3000, entreprise_25000 " +
+            ") a " +
+            "left join apprenti i on a.id = i.utilisateur_id " +
+            "left join paiement_enrolement j on (i.id = j.apprenti_id and extract(month from j.created_at) = :month and extract(year from j.created_at) = :year and j.montant = 5000) " +
+            "where (artisan_identifie > 0 or entreprise_identifie > 0 or compagnon_identifie > 0 or apprenti_identifie > 0 or " +
+            "artisan_renouvellement > 0 or artisan_15000 > 0 or artisan_10000 > 0 or artisan_5000 > 0 or artisan_3000 > 0 or " +
+            "entreprise_25000 > 0 or compagnon_5000 > 0) and a.id <> 33 " +
+            "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie,entreprise_identifie,compagnon_identifie," +
+            "apprenti_identifie, artisan_renouvellement, artisan_15000, artisan_10000, artisan_5000, artisan_3000, entreprise_25000," +
+            "compagnon_5000 " +
+            "order by crm asc, a.nom asc ,a.prenom asc",
+            nativeQuery = true)
+    List<Tuple> getAgentEnroleurMonthlyStatistics(int month, int year);
 }
