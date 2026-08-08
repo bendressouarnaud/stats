@@ -420,16 +420,16 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             nativeQuery = true)
     List<Tuple> getBubbleDataForArtisanAmountToRecover(int year);
 
-    @Query(value = "select label,mois,jour,sum(nombre_enrole) as nombre_enrole, sum(total_encaisse) as total_encaisse from ( " +
-            "select a.label,extract(month from b.created_at) mois," +
+    @Query(value = "select id, label,mois,jour,sum(nombre_enrole) as nombre_enrole, sum(total_encaisse) as total_encaisse from ( " +
+            "select a.id,a.label,extract(month from b.created_at) mois," +
             "extract(day from b.created_at) jour, count(b.id) as nombre_enrole," +
             "case when sum(c.montant) is null then 0 else sum(c.montant) end as total_encaisse " +
             "from crm a inner join artisan b on a.id = b.crm_id " +
             "left join paiement_enrolement c on b.id = c.artisan_id " +
             "where date(b.created_at) >= date(now()) - 7 " +
-            "group by a.label,extract(month from b.created_at), extract(day from b.created_at) " +
+            "group by a.id,a.label,extract(month from b.created_at), extract(day from b.created_at) " +
             "union all " +
-            "select d.label,extract(month from a.created_at) mois," +
+            "select d.id,d.label,extract(month from a.created_at) mois," +
             "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
             "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
             "apprenti a inner join artisan_apprenti b on b.apprenti_id = a.id " +
@@ -437,9 +437,9 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "inner join crm d on d.id = c.crm_id " +
             "left join paiement_enrolement e on a.id = e.apprenti_id " +
             "where date(a.created_at) >= date(now()) - 7 " +
-            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "group by d.id,d.label,extract(month from a.created_at), extract(day from a.created_at) " +
             "union all " +
-            "select d.label,extract(month from a.created_at) mois," +
+            "select d.id,d.label,extract(month from a.created_at) mois," +
             "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
             "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
             "apprenti a inner join entreprise_apprenti b on b.apprenti_id = a.id " +
@@ -447,9 +447,9 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "inner join crm d on d.id = c.crm_id " +
             "left join paiement_enrolement e on a.id = e.apprenti_id " +
             "where date(a.created_at) >= date(now()) - 7 " +
-            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "group by d.id,d.label,extract(month from a.created_at), extract(day from a.created_at) " +
             "union all " +
-            "select d.label,extract(month from a.created_at) mois," +
+            "select d.id,d.label,extract(month from a.created_at) mois," +
             "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
             "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
             "compagnon a inner join artisan_compagnon b on b.compagnon_id = a.id " +
@@ -457,9 +457,9 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "inner join crm d on d.id = c.crm_id " +
             "left join paiement_enrolement e on a.id = e.compagnon_id " +
             "where date(a.created_at) >= date(now()) - 7 " +
-            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "group by d.id,d.label,extract(month from a.created_at), extract(day from a.created_at) " +
             "union all " +
-            "select d.label,extract(month from a.created_at) mois," +
+            "select d.id,d.label,extract(month from a.created_at) mois," +
             "extract(day from a.created_at) jour, count(a.id) as nombre_enrole," +
             "case when sum(e.montant) is null then 0 else sum(e.montant) end as total_encaisse from " +
             "compagnon a inner join entreprise_compagnon b on b.compagnon_id = a.id " +
@@ -467,17 +467,17 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "inner join crm d on d.id = c.crm_id " +
             "left join paiement_enrolement e on a.id = e.compagnon_id " +
             "where date(a.created_at) >= date(now()) - 7 " +
-            "group by d.label,extract(month from a.created_at), extract(day from a.created_at) " +
+            "group by d.id,d.label,extract(month from a.created_at), extract(day from a.created_at) " +
             "union all " +
-            "select a.label,extract(month from b.created_at) mois," +
+            "select a.id,a.label,extract(month from b.created_at) mois," +
             "extract(day from b.created_at) jour, count(b.id) as nombre_enrole," +
             "case when sum(c.montant) is null then 0 else sum(c.montant) end as total_encaisse " +
             "from crm a inner join entreprise b on a.id = b.crm_id " +
             "left join paiement_enrolement c on b.id = c.entreprise_id " +
             "where date(b.created_at) >= date(now()) - 7 " +
-            "group by a.label,extract(month from b.created_at), extract(day from b.created_at) " +
+            "group by a.id,a.label,extract(month from b.created_at), extract(day from b.created_at) " +
             ") a group by label,mois,jour " +
-            "order by mois desc, jour desc",
+            "order by id asc, mois desc, jour desc",
             nativeQuery = true)
     List<Tuple> getBubbleDataEnrolementAndPaymentForLastSevenDays();
 
