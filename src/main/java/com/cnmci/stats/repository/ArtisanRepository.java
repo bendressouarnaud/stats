@@ -476,7 +476,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "left join paiement_enrolement c on b.id = c.entreprise_id " +
             "where date(b.created_at) >= date(now()) - 7 " +
             "group by a.id,a.label,extract(month from b.created_at), extract(day from b.created_at) " +
-            ") a group by label,mois,jour " +
+            ") a group by id,label,mois,jour " +
             "order by id asc, mois desc, jour desc",
             nativeQuery = true)
     List<Tuple> getBubbleDataEnrolementAndPaymentForLastSevenDays();
