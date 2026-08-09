@@ -39,6 +39,7 @@ public class StatistiqueService {
     private final PaiementEnrolementRepository paiementEnrolementRepository;
     private final OutilService outilService;
     private final UtilisateurRepository utilisateurRepository;
+    private final ProcesVerbalRepository procesVerbalRepository;
     private List<String> colorList = List.of("#213AA6", "#21A683", "#C25F9D", "#C2AB5F", "#C27B5F", "#82C25F"
             , "#5FC2BA", "#5FABC2", "#C25F71", "#827444", "#44827F", "#454482");
 
@@ -429,6 +430,7 @@ public class StatistiqueService {
                 .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
                 .totalApprenti(a.getArtisanApprentis().size())
                 .totalCompagnon(a.getArtisanCompagnons().size())
+                .totalProcesVerbal(procesVerbalRepository.findAllByArtisanAndActif(a, true).size())
             .build()
         ).toList());
 
@@ -459,6 +461,7 @@ public class StatistiqueService {
                         .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
                         .totalApprenti(0)
                         .totalCompagnon(0)
+                        .totalProcesVerbal(procesVerbalRepository.findAllByApprentiAndActif(a, true).size())
                         .build()
         ).toList());
 
@@ -488,6 +491,7 @@ public class StatistiqueService {
                         .livraisonCarte(a.isLivraisonCarte() ? 1 : 0)
                         .totalApprenti(0)
                         .totalCompagnon(0)
+                        .totalProcesVerbal(procesVerbalRepository.findAllByCompagnonAndActif(a, true).size())
                         .build()
         ).toList());
 
@@ -518,6 +522,7 @@ public class StatistiqueService {
                                 .livraisonCarte(a.isLivraisonDocument() ? 1 : 0)
                                 .totalApprenti(a.getEntrepriseApprentis().size())
                                 .totalCompagnon(a.getEntrepriseCompagnons().size())
+                                .totalProcesVerbal(procesVerbalRepository.findAllByEntrepriseAndActif(a, true).size())
                                 .build()
                 ).toList());
         return retour;

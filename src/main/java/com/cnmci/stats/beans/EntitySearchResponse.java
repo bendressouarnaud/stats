@@ -35,4 +35,6 @@ public class EntitySearchResponse {
     private int totalApprenti;
     @JsonProperty("total_compagnon")
     private int totalCompagnon;
+    @JsonProperty("total_proces_verbal")
+    private int totalProcesVerbal;
 }
