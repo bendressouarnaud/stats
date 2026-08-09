@@ -1,6 +1,7 @@
 package com.cnmci.stats.repository;
 
 import com.cnmci.core.model.*;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,8 @@ public interface ProcesVerbalRepository extends CrudRepository<ProcesVerbal, Lon
     List<ProcesVerbal> findAllByEntreprise(Entreprise entreprise);
     List<ProcesVerbal> findAllByEntrepriseAndActif(Entreprise entreprise, boolean actif);
     ProcesVerbal findByNumeroPvAndCodeValidation(String numeroPv, String codeValidation);
+
+    @Query(value = "select * from proces_verbal a where date(a.date_reglement) = date(now()) + 1 and actif = true",
+            nativeQuery = true)
+    List<ProcesVerbal> findAllToSendReminder();
 }

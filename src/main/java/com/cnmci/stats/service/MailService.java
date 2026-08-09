@@ -6,6 +6,7 @@ import com.cnmci.stats.LibelleTotal;
 import com.cnmci.stats.beans.AssermenteAction;
 import com.cnmci.stats.beans.EntitePaidNotReceivingDocument;
 import com.cnmci.stats.beans.PeopleToSendSmsTo;
+import com.cnmci.stats.beans.ReminderProcesVerbal;
 import com.cnmci.stats.repository.NotificationControleRepository;
 import com.cnmci.stats.repository.ParametresRepository;
 import com.cnmci.stats.repository.UtilisateurRepository;
@@ -212,6 +213,60 @@ public class MailService {
                 helper.setTo(mailTo);
                 helper.setCc(mails);
                 helper.setSubject("Liste des Artisans n'ayant toujours pas reçu leurs documents après avoir soldé");
+                helper.setFrom(emailSenderAddress);
+                emailSender.send(mimeMessage);
+            } catch (Exception exc) {
+                System.out.println("mailCreation(...) : " + exc.toString());
+                //log.error("mailCreation(...) : {}", exc.toString());
+            }
+        }
+    }
+
+
+    public void mailReminderProcesVerbalTimeOver(List<ReminderProcesVerbal> listeDonne, String[] mails){
+        if(checkSendingParameter()) {
+            try {
+                MimeMessage mimeMessage = emailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
+                        "utf-8");
+                StringBuilder contenu = new StringBuilder();
+                contenu.append("<h2> RAPPEL DES PVs bient&ocirc;t &agrave; &eacute;ch&eacute;ance </h2>");
+                contenu.append("<div> Bonjour. Nous vous prions de trouver ci-dessous la </div>");
+                contenu.append("<div> liste des entités dont la date de règlement arrive à echéance.</div>");
+                contenu.append("<table style='border: 1px solid black; border-collapse: collapse;'>");
+                contenu.append("<tr><th style='border: 1px solid black; border-collapse: collapse'>ENTIT&Eacute;S</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>CONTACT</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>COMMUNE</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>QUARTIER</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>METIER</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>AGENT</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>DATE REGLEMENT</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>NUMERO PV</th></tr>");
+                for(ReminderProcesVerbal reminderProcesVerbal : listeDonne){
+                    contenu.append("<tr><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.client());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.contact());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.commune());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.quartier());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.metier());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.agent());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.dateReglement());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(reminderProcesVerbal.numeroPv());
+                    contenu.append("</td></tr>");
+                }
+                contenu.append("</table>");
+                // Envoi du MAIL :
+                helper.setText(String.valueOf(contenu), true);
+                helper.setTo("lancidiomande@gmail.com");
+                helper.setCc(mails);
+                helper.setSubject("Liste des PV arrivant à échéance");
                 helper.setFrom(emailSenderAddress);
                 emailSender.send(mimeMessage);
             } catch (Exception exc) {

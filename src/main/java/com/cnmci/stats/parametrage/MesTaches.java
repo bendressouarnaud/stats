@@ -2,10 +2,7 @@ package com.cnmci.stats.parametrage;
 
 import com.cnmci.core.model.*;
 import com.cnmci.stats.LibelleTotal;
-import com.cnmci.stats.beans.AssermenteAction;
-import com.cnmci.stats.beans.EntitePaidNotReceivingDocument;
-import com.cnmci.stats.beans.PeopleToSendSmsTo;
-import com.cnmci.stats.beans.UtilisateurNotifcationTaille;
+import com.cnmci.stats.beans.*;
 import com.cnmci.stats.repository.*;
 import com.cnmci.stats.service.MailService;
 import com.cnmci.stats.service.SmsService;
@@ -42,6 +39,8 @@ public class MesTaches {
     CommuneRepository communeRepository;
     @Autowired
     ProfilRepository profilRepository;
+    @Autowired
+    ProcesVerbalRepository procesVerbalRepository;
     @Autowired
     SmsService smsService;
     @Autowired
@@ -300,4 +299,109 @@ public class MesTaches {
             System.out.println("sendReportForThoseWhoPaidAndNotReceivingDocument(...) : " + e.toString());
         }
     }
+
+    @Scheduled(cron="0 45 8 * * *", zone="Africa/Nouakchott")
+    @Transactional
+    public void sendReminderToTeamThatCreatedPv() {
+        try {
+            List<ProcesVerbal> liste = procesVerbalRepository.findAllToSendReminder();
+            List<ReminderProcesVerbal> listeData = new ArrayList<>();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            // Filter on ARTISAN :
+            listeData.addAll(liste.stream()
+                    .filter(procesVerbal -> procesVerbal.getArtisan() != null)
+                    .map(procesVerbal -> new ReminderProcesVerbal(
+                            procesVerbal.getArtisan().getNom() + " " + procesVerbal.getArtisan().getPrenom(),
+                            procesVerbal.getArtisan().getContact1(),
+                            procesVerbal.getArtisan().getActivite().getCommune().getLibelle(),
+                            procesVerbal.getArtisan().getActivite().getQuartierSiegeId().getLibelle(),
+                            procesVerbal.getArtisan().getMetier().getLibelle(),
+                            procesVerbal.getUtilisateur().getNom() + " " + procesVerbal.getUtilisateur().getPrenom(),
+                            procesVerbal.getNumeroPv(),
+                            procesVerbal.getDateReglement().format(dateTimeFormatter)
+                    )).toList());
+            // Filter on APPRENTI
+            listeData.addAll(liste.stream()
+                    .filter(procesVerbal -> procesVerbal.getApprenti() != null)
+                    .map(procesVerbal -> new ReminderProcesVerbal(
+                            procesVerbal.getApprenti().getNom() + " " + procesVerbal.getApprenti().getPrenom(),
+                            procesVerbal.getApprenti().getContact1(),
+
+                            procesVerbal.getApprenti().getArtisanApprentis().isEmpty() ?
+                                    procesVerbal.getApprenti().getEntrepriseApprentis().stream()
+                                            .findFirst().get().getEntreprise().getCommune().getLibelle() :
+                                    procesVerbal.getApprenti().getArtisanApprentis().stream()
+                                            .findFirst().get().getArtisan().getActivite().getCommune().getLibelle(),
+
+                            procesVerbal.getApprenti().getArtisanApprentis().isEmpty() ?
+                                    procesVerbal.getApprenti().getEntrepriseApprentis().stream()
+                                            .findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
+                                    procesVerbal.getApprenti().getArtisanApprentis().stream()
+                                            .findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle(),
+
+                            procesVerbal.getApprenti().getMetier().getLibelle(),
+                            procesVerbal.getUtilisateur().getNom() + " " + procesVerbal.getUtilisateur().getPrenom(),
+                            procesVerbal.getNumeroPv(),
+                            procesVerbal.getDateReglement().format(dateTimeFormatter)
+                    )).toList());
+
+            // Filter on COMPAGNON
+            listeData.addAll(liste.stream()
+                    .filter(procesVerbal -> procesVerbal.getCompagnon() != null)
+                    .map(procesVerbal -> new ReminderProcesVerbal(
+                            procesVerbal.getCompagnon().getNom() + " " + procesVerbal.getCompagnon().getPrenom(),
+                            procesVerbal.getCompagnon().getContact1(),
+
+                            procesVerbal.getCompagnon().getArtisanCompagnons().isEmpty() ?
+                                    procesVerbal.getCompagnon().getEntrepriseCompagnons().stream()
+                                            .findFirst().get().getEntreprise().getCommune().getLibelle() :
+                                    procesVerbal.getCompagnon().getArtisanCompagnons().stream()
+                                            .findFirst().get().getArtisan().getActivite().getCommune().getLibelle(),
+
+                            procesVerbal.getCompagnon().getArtisanCompagnons().isEmpty() ?
+                                    procesVerbal.getCompagnon().getEntrepriseCompagnons().stream()
+                                            .findFirst().get().getEntreprise().getQuartierSiegeId().getLibelle() :
+                                    procesVerbal.getCompagnon().getArtisanCompagnons().stream()
+                                            .findFirst().get().getArtisan().getActivite().getQuartierSiegeId().getLibelle(),
+
+                            procesVerbal.getCompagnon().getMetier().getLibelle(),
+                            procesVerbal.getUtilisateur().getNom() + " " + procesVerbal.getUtilisateur().getPrenom(),
+                            procesVerbal.getNumeroPv(),
+                            procesVerbal.getDateReglement().format(dateTimeFormatter)
+                    )).toList());
+            // Filter on ENTREPRISE :
+            listeData.addAll(liste.stream()
+                    .filter(procesVerbal -> procesVerbal.getEntreprise() != null)
+                    .map(procesVerbal -> new ReminderProcesVerbal(
+                            procesVerbal.getEntreprise().getRaisonSociale(),
+                            procesVerbal.getEntreprise().getContact(),
+                            procesVerbal.getEntreprise().getCommune().getLibelle(),
+                            procesVerbal.getEntreprise().getQuartierSiegeId().getLibelle(),
+                            procesVerbal.getEntreprise().getActivitePrincipale().getLibelle(),
+                            procesVerbal.getUtilisateur().getNom() + " " + procesVerbal.getUtilisateur().getPrenom(),
+                            procesVerbal.getNumeroPv(),
+                            procesVerbal.getDateReglement().format(dateTimeFormatter)
+                    )).toList());
+
+            // Send :
+            if (!listeData.isEmpty()) {
+                // Send the MAIL if NEEDED :
+                List<Utilisateur> listeAgentAssermente =
+                        utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get());
+                List<String> listeEnCopie = new ArrayList<>(listeAgentAssermente.stream()
+                        .map(l -> l.getEmail().trim())
+                        .toList());
+                // Add more addresses :
+                listeEnCopie.add("mbambi@sfpci.com");
+                listeEnCopie.add("arnaud.koffi@sfpci.com");
+                listeEnCopie.add("koneyibrahima@gmail.com");
+                listeEnCopie.add("yfulgence10@gmail.com");
+                mailService.mailReminderProcesVerbalTimeOver(listeData, listeEnCopie.toArray(new String[0]));
+            }
+        } catch (Exception e) {
+            System.out.println("sendReminderToTeamThatCreatedPv(...)" + e.getMessage());
+        }
+    }
+
 }
