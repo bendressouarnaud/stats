@@ -3,10 +3,7 @@ package com.cnmci.stats.service;
 import com.cnmci.core.model.NotificationControle;
 import com.cnmci.core.model.Utilisateur;
 import com.cnmci.stats.LibelleTotal;
-import com.cnmci.stats.beans.AssermenteAction;
-import com.cnmci.stats.beans.EntitePaidNotReceivingDocument;
-import com.cnmci.stats.beans.PeopleToSendSmsTo;
-import com.cnmci.stats.beans.ReminderProcesVerbal;
+import com.cnmci.stats.beans.*;
 import com.cnmci.stats.repository.NotificationControleRepository;
 import com.cnmci.stats.repository.ParametresRepository;
 import com.cnmci.stats.repository.UtilisateurRepository;
@@ -276,4 +273,52 @@ public class MailService {
         }
     }
 
+
+    public void mailAboutArtisanWhoPaidAndPaymentNeverSet(List<ArtisanPaymentNeverSet> listeDonne, String responsableAssermente, String[] mails){
+        if(checkSendingParameter()) {
+            try {
+                MimeMessage mimeMessage = emailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
+                        "utf-8");
+                StringBuilder contenu = new StringBuilder();
+                contenu.append("<h2> Nombre des Artisans / CRM </h2>");
+                contenu.append("<div> Bonjour Mr <span style='font-weight: bold'>Coulibaly</span>. Nous vous prions de trouver ci-dessous les </div>");
+                contenu.append("<div> Artisans qui disent avoir soldé auprès de personne et pour lesquels, aucune trace de paiement n'existe. </div>");
+                contenu.append("<table style='border: 1px solid black; border-collapse: collapse;'>");
+                contenu.append("<tr><th style='border: 1px solid black; border-collapse: collapse'>CRM</th><th style='border: 1px solid black; border-collapse: collapse'>Nom</th>" +
+                        "<th style='border: 1px solid black; border-collapse: collapse'>Contact</th>" +
+                        "<th style='border: 1px solid black; border-collapse: collapse'>Date enrôlement</th>" +
+                        "<th style='border: 1px solid black; border-collapse: collapse'>Reste à payer</th>" +
+                        "<th style='border: 1px solid black; border-collapse: collapse'>Commentaire</th>" +
+                        "</tr>");
+                for(ArtisanPaymentNeverSet donnee : listeDonne){
+                    contenu.append("<tr><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(donnee.crm());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(donnee.nom());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(donnee.contact1());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(donnee.dateEnrolement());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(donnee.montantAPayer());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(donnee.commentaire());
+                    contenu.append("</td></tr>");
+                }
+                contenu.append("</table>");
+
+                // Envoi du MAIL :
+                helper.setText(String.valueOf(contenu), true);
+                helper.setTo(responsableAssermente);
+                helper.setCc(mails);
+                helper.setSubject("Artisan(s) déclarant avoir payé dont il n'existe aucune trace");
+                helper.setFrom(emailSenderAddress);
+                emailSender.send(mimeMessage);
+            } catch (Exception exc) {
+                System.out.println("mailAboutArtisanWhoPaidAndPaymentNeverSet(...) : " + exc.toString());
+                //log.error("mailCreation(...) : {}", exc.toString());
+            }
+        }
+    }
 }
