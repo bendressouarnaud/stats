@@ -99,7 +99,7 @@ public class MesTaches {
             //listeEnCopie.add("lancidiomande@gmail.com");
             listeEnCopie.add("mbambi@sfpci.com");
             listeEnCopie.add("arnaud.koffi@sfpci.com");
-            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("kone.ibrahima@cnmci.ci");
             listeEnCopie.add("yfulgence10@gmail.com");
             String[] tabEmail = listeEnCopie.toArray(new String[0]);
             if(!listeAction.isEmpty()) {
@@ -130,7 +130,7 @@ public class MesTaches {
             //listeEnCopie.add("lancidiomande@gmail.com");
             listeEnCopie.add("mbambi@sfpci.com");
             listeEnCopie.add("arnaud.koffi@sfpci.com");
-            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("kone.ibrahima@cnmci.ci");
             listeEnCopie.add("yfulgence10@gmail.com");
             listeEnCopie.add("princedesirekoffi@gmail.com");
             String[] tabEmail = listeEnCopie.toArray(new String[0]);
@@ -289,7 +289,7 @@ public class MesTaches {
                     .toList());
             listeEnCopie.add("mbambi@sfpci.com");
             listeEnCopie.add("arnaud.koffi@sfpci.com");
-            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("kone.ibrahima@cnmci.ci");
             listeEnCopie.add("yfulgence10@gmail.com");
             String[] tabEmail = listeEnCopie.toArray(new String[0]);
             if(!listeDonnee.isEmpty()) {
@@ -395,7 +395,7 @@ public class MesTaches {
                 // Add more addresses :
                 listeEnCopie.add("mbambi@sfpci.com");
                 listeEnCopie.add("arnaud.koffi@sfpci.com");
-                listeEnCopie.add("koneyibrahima@gmail.com");
+                listeEnCopie.add("kone.ibrahima@cnmci.ci");
                 listeEnCopie.add("yfulgence10@gmail.com");
                 mailService.mailReminderProcesVerbalTimeOver(listeData, listeEnCopie.toArray(new String[0]));
             }
@@ -435,7 +435,7 @@ public class MesTaches {
             // Add others
             listeEnCopie.add("mbambi@sfpci.com");
             listeEnCopie.add("arnaud.koffi@sfpci.com");
-            listeEnCopie.add("koneyibrahima@gmail.com");
+            listeEnCopie.add("kone.ibrahima@cnmci.ci");
             listeEnCopie.add("yfulgence10@gmail.com");
             String[] tabEmail = listeEnCopie.toArray(new String[0]);
             mailService.mailAboutArtisanWhoPaidAndPaymentNeverSet(lesDonnees, "gvamaracoulibaly@gmail.com", tabEmail);

@@ -273,7 +273,6 @@ public class MailService {
         }
     }
 
-
     public void mailAboutArtisanWhoPaidAndPaymentNeverSet(List<ArtisanPaymentNeverSet> listeDonne, String responsableAssermente, String[] mails){
         if(checkSendingParameter()) {
             try {
@@ -281,7 +280,7 @@ public class MailService {
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
                         "utf-8");
                 StringBuilder contenu = new StringBuilder();
-                contenu.append("<h2> Nombre des Artisans / CRM </h2>");
+                contenu.append("<h2> Liste des artisans avec irrégularités concernant le règlement des frais</h2>");
                 contenu.append("<div> Bonjour Mr <span style='font-weight: bold'>Coulibaly</span>. Nous vous prions de trouver ci-dessous les </div>");
                 contenu.append("<div> Artisans qui disent avoir soldé auprès de personne et pour lesquels, aucune trace de paiement n'existe. </div>");
                 contenu.append("<table style='border: 1px solid black; border-collapse: collapse;'>");
