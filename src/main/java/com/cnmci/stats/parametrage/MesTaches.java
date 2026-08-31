@@ -404,7 +404,7 @@ public class MesTaches {
         }
     }
 
-    @Scheduled(cron="0 57 14 * * MON-FRI", zone="Africa/Nouakchott")
+    @Scheduled(cron="0 0 16 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void sendArtisansListWhoPaidAndPaymentNeverSet(){
         try{
@@ -421,26 +421,70 @@ public class MesTaches {
                                     .sum(),
                             artisan.getNoteSuiviCallCenter()
                     )).toList();
-            // Pick all 'ROLE_FORMALITE_CRM' and 'ROLE_AGENT_CONTROLE_ASSERMENTE':
-            List<Utilisateur> listeAgentAssermente =
-                    utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get());
-            List<String> listeEnCopie = new ArrayList<>();
-            listeEnCopie.addAll(listeAgentAssermente.stream()
-                    .map(l -> l.getEmail().trim())
-                    .toList());
-            List<Utilisateur> listeSG = utilisateurRepository.findAllByProfil(profilRepository.findById(5L).get());// Sécrétaire Généraux
-            listeEnCopie.addAll(listeSG.stream()
-                    .map(l -> l.getEmail().trim())
-                    .toList());
-            // Add others
-            listeEnCopie.add("mbambi@sfpci.com");
-            listeEnCopie.add("arnaud.koffi@sfpci.com");
-            listeEnCopie.add("kone.ibrahima@cnmci.ci");
-            listeEnCopie.add("yfulgence10@gmail.com");
-            String[] tabEmail = listeEnCopie.toArray(new String[0]);
-            mailService.mailAboutArtisanWhoPaidAndPaymentNeverSet(lesDonnees, "gvamaracoulibaly@gmail.com", tabEmail);
+            if(!lesDonnees.isEmpty()) {
+                // Pick all 'ROLE_FORMALITE_CRM' and 'ROLE_AGENT_CONTROLE_ASSERMENTE':
+                List<Utilisateur> listeAgentAssermente =
+                        utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get());
+                List<String> listeEnCopie = new ArrayList<>();
+                listeEnCopie.addAll(listeAgentAssermente.stream()
+                        .map(l -> l.getEmail().trim())
+                        .toList());
+                List<Utilisateur> listeSG = utilisateurRepository.findAllByProfil(profilRepository.findById(5L).get());// Sécrétaire Généraux
+                listeEnCopie.addAll(listeSG.stream()
+                        .map(l -> l.getEmail().trim())
+                        .toList());
+                // Add others
+                listeEnCopie.add("mbambi@sfpci.com");
+                listeEnCopie.add("arnaud.koffi@sfpci.com");
+                listeEnCopie.add("kone.ibrahima@cnmci.ci");
+                listeEnCopie.add("yfulgence10@gmail.com");
+                String[] tabEmail = listeEnCopie.toArray(new String[0]);
+                mailService.mailAboutArtisanWhoPaidAndPaymentNeverSet(lesDonnees, "gvamaracoulibaly@gmail.com", tabEmail);
+            }
         } catch (Exception e) {
             System.out.println("sendArtisansListWhoPaidAndPaymentNeverSet(...) : " + e.toString());
+        }
+    }
+
+    @Scheduled(cron="0 30 9 * * MON-FRI", zone="Africa/Nouakchott")
+    @Transactional
+    public void sendArtisansGlobalBilanWhoPaidAndPaymentNeverSet(){
+        try{
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            List<Artisan> listeArtisans = artisanRepository.getArtisansGlobalHistoryWhoPaidAndPaymentNeverSet();
+            List<ArtisanPaymentNeverSet> lesDonnees = listeArtisans.stream()
+                    .map(artisan -> new ArtisanPaymentNeverSet(
+                            artisan.getNom() + " " + artisan.getPrenom(),
+                            artisan.getContact1(),
+                            artisan.getCrm().getLabel(),
+                            artisan.getCreatedAt().format(dateTimeFormatter),
+                            artisan.getPaiementEnrolements().stream()
+                                    .mapToInt(paiement -> paiement.getMontant())
+                                    .sum(),
+                            artisan.getNoteSuiviCallCenter()
+                    )).toList();
+            if(!lesDonnees.isEmpty()) {
+                // Pick all 'ROLE_FORMALITE_CRM' and 'ROLE_AGENT_CONTROLE_ASSERMENTE':
+                List<Utilisateur> listeAgentAssermente =
+                        utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get());
+                List<String> listeEnCopie = new ArrayList<>();
+                listeEnCopie.addAll(listeAgentAssermente.stream()
+                        .map(l -> l.getEmail().trim())
+                        .toList());
+                List<Utilisateur> listeSG = utilisateurRepository.findAllByProfil(profilRepository.findById(5L).get());// Sécrétaire Généraux
+                listeEnCopie.addAll(listeSG.stream()
+                        .map(l -> l.getEmail().trim())
+                        .toList());
+                // Add others
+                listeEnCopie.add("mbambi@sfpci.com");
+                listeEnCopie.add("arnaud.koffi@sfpci.com");
+                listeEnCopie.add("kone.ibrahima@cnmci.ci");
+                listeEnCopie.add("yfulgence10@gmail.com");
+                String[] tabEmail = listeEnCopie.toArray(new String[0]);
+                mailService.mailAboutArtisanHistoryWhoPaidAndPaymentNeverSet(lesDonnees, "gvamaracoulibaly@gmail.com", tabEmail);
+            }
+        } catch (Exception e) {
+            System.out.println("sendArtisansGlobalBilanWhoPaidAndPaymentNeverSet(...) : " + e.toString());
         }
     }
 

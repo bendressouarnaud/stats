@@ -187,10 +187,14 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             nativeQuery = true)
     List<Tuple> getArtisanByCrmNotSoldOutYet();
 
-    @Query(value = "select a.* from artisan a where a.paiement_non_reverse = true and " +
+    @Query(value = "select distinct a.* from artisan a where a.paiement_non_reverse = true and " +
             "date(a.updated_at) = date(now()) and a.statut_paiement in (0,1)",
             nativeQuery = true)
     List<Artisan> getArtisansWhoPaidAndPaymentNeverSet();
+
+    @Query(value = "select distinct a.* from artisan a where a.paiement_non_reverse = true and a.statut_paiement in (0,1)",
+            nativeQuery = true)
+    List<Artisan> getArtisansGlobalHistoryWhoPaidAndPaymentNeverSet();
 
     @Query(value = "select a.id, concat(a.nom,' ',a.prenom) as agent_assermentes," +
             "concat(b.nom,' ',b.prenom) as artisans," +
