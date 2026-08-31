@@ -404,6 +404,7 @@ public class MesTaches {
         }
     }
 
+    /*
     @Scheduled(cron="0 0 16 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void sendArtisansListWhoPaidAndPaymentNeverSet(){
@@ -444,8 +445,9 @@ public class MesTaches {
         } catch (Exception e) {
             System.out.println("sendArtisansListWhoPaidAndPaymentNeverSet(...) : " + e.toString());
         }
-    }
+    }*/
 
+    /*
     @Scheduled(cron="0 30 9 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void sendArtisansGlobalBilanWhoPaidAndPaymentNeverSet(){
@@ -486,6 +488,6 @@ public class MesTaches {
         } catch (Exception e) {
             System.out.println("sendArtisansGlobalBilanWhoPaidAndPaymentNeverSet(...) : " + e.toString());
         }
-    }
+    }*/
 
 }
