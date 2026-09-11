@@ -356,6 +356,13 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Tuple> getCrmTotalPaymentByMonth(long idCrm);
 
     // CONTROLE :
+    @Query(value = "select extract(month from a.created_at) mois, sum(a.montant) tot " +
+            "from paiement_enrolement a inner join utilisateur b on a.utilisateur_id = b.id " +
+            "where b.id in (2002,2003,3552,3603) group by extract(month from a.created_at) " +
+            "order by extract(month from a.created_at) asc",
+            nativeQuery = true)
+    List<Tuple> getGlobalTotalRecouvrementFromCallCenterTeamByMonth();
+
     @Query(value = "select mois, sum(tot) as tot from (" +
         "select extract (MONTH from b.created_at) mois, sum(b.montant) tot from artisan a inner join paiement_enrolement b on (a.id = " +
         "b.artisan_id and a.utilisateur_id != b.utilisateur_id) inner join utilisateur c on c.id = b.utilisateur_id where c.profil_id = " +

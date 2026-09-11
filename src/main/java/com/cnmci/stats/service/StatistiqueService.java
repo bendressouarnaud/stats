@@ -701,6 +701,8 @@ public class StatistiqueService {
         retour.add(new BeanMonthDataDuo(0, fillMonthForData(artisanRepository.getGlobalTotalRecouvrementByMonth())));
         // DOnnée d'enrôlement
         retour.add(new BeanMonthDataDuo(1, fillMonthForData(artisanRepository.getGlobalTotalEnrolementEquipeControleByMonth())));
+        // DOnnée de RECOUVREMENT | Equipe CALL CENTER
+        retour.add(new BeanMonthDataDuo(2, fillMonthForData(artisanRepository.getGlobalTotalRecouvrementFromCallCenterTeamByMonth())));
         return retour;
     }
 
