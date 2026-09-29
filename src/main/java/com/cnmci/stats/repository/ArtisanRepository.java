@@ -165,9 +165,11 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     // those who have not paid yet or have paid a part :
     List<Artisan> findAllByRappelSmsAndStatutPaiementIn(int rappelSms, List<Integer> statutPaiement);
 
+    //  and a.utilisateur_call_center_id is null
     @Query(value = "select distinct a.* from artisan a inner join activite b on a.activite_id = b.id " +
             "where b.quartier_siege_id = :quartierSiegeId and a.statut_paiement in (0,1) and " +
-            "a.utilisateur_agent_assermente_id is null and a.utilisateur_call_center_id is null",
+            "a.utilisateur_agent_assermente_id is null and extract(month from a.created_at) <= " +
+            "(extract(month from now()) - 3)",
             nativeQuery = true)
     List<Artisan> findAllByQuartierSiege(long quartierSiegeId);
 
@@ -183,7 +185,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Tuple> getArtisanByCommuneIdAndArtisanId(long communeId, long artisanId);
 
     @Query(value = "select b.label, count(a.id) as tot from artisan a inner join crm b on a.crm_id = b.id " +
-            "where a.statut_paiement in (0,1) group by b.label",
+            "where a.statut_paiement in (0,1) group by b.label order by count(a.id) desc",
             nativeQuery = true)
     List<Tuple> getArtisanByCrmNotSoldOutYet();
 

@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class MesTaches {
@@ -133,6 +134,7 @@ public class MesTaches {
             listeEnCopie.add("kone.ibrahima@cnmci.ci");
             listeEnCopie.add("yfulgence10@gmail.com");
             listeEnCopie.add("princedesirekoffi@gmail.com");
+            listeEnCopie.add("coulibalyyahmawa@cnmci.ci");
             String[] tabEmail = listeEnCopie.toArray(new String[0]);
             mailService.mailArtisansNotSoldOutYet(listeDonne, "gvamaracoulibaly@gmail.com", tabEmail);
         } catch (Exception e) {
@@ -140,7 +142,7 @@ public class MesTaches {
         }
     }
 
-    @Scheduled(cron="0 */20 9-11 * * MON-FRI", zone="Africa/Nouakchott")
+    @Scheduled(cron="0 */5 9-12 * * MON-FRI", zone="Africa/Nouakchott")
     @Transactional
     public void checkEnrolmentDelay(){
         List<PeopleToSendSmsTo> listeUsers = new ArrayList<>();
@@ -165,19 +167,25 @@ public class MesTaches {
                                             a.getPaiementEnrolements().stream().
                                                     mapToInt(PaiementEnrolement::getMontant).sum(),
                                     "Artisan")
-                    ).toList());
+                    ).toList()
+            );
             // PICK ONLY ID's
-            /*listeTransmission.forEach(
+            listeUsers.forEach(
                 a -> {
-                    a.setUtilisateurAgentAssermente(act.getUtilisateur());
-                    a.setDateAssignationAssermente(OffsetDateTime.now());
-                    artisanRepository.save(a);
+                    var pickArtisan = listeTransmission.stream()
+                                    .filter(artisan -> artisan.getId() == a.id())
+                            .findFirst().get();
+                    pickArtisan.setUtilisateurAgentAssermente(act.getUtilisateur());
+                    pickArtisan.setDateAssignationAssermente(OffsetDateTime.now());
+                    artisanRepository.save(pickArtisan);
                 }
-            );*/
+            );
             // Hold USER's
             holdAction = act;
             // Stop :
-            break;
+            if(!listeUsers.isEmpty()){
+                break;
+            }
         }
 
         // Pick
@@ -246,15 +254,18 @@ public class MesTaches {
 
         // Send :
         if(!listeUsers.isEmpty()){
-            long idUser = holdAction.getUtilisateur().getId();
-            smsService.sendMessage(listeUsers, idUser);
+            //long idUser = holdAction.getUtilisateur().getId();
+            //smsService.sendMessage(listeUsers, idUser);
             // Send email to AGENT ASSERMENTE :
             String emailAssermente = holdAction.getUtilisateur().getEmail();
-            String[] listeMails = new String[2];
+            String[] listeMails = new String[4];
             // Add more addresses :
             //listeMails[0] = "lancidiomande@gmail.com";
             listeMails[0] = "mbambi@sfpci.com";
             listeMails[1] = "arnaud.koffi@sfpci.com";
+            listeMails[2] = "kone.ibrahima@cnmci.ci";
+            listeMails[3] = "yfulgence10@gmail.com";
+
             mailService.entitiesInLateToAgentAssermente(listeUsers, listeMails,
                     emailAssermente);
             // Update FLAG :
