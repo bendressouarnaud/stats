@@ -6,6 +6,8 @@ import com.cnmci.stats.beans.*;
 import com.cnmci.stats.beans.chart.bubble.BubbleChartData;
 import com.cnmci.stats.beans.chart.bubble.DataSet;
 import com.cnmci.stats.beans.chart.bubble.Point;
+import com.cnmci.stats.beans.chart.polar.DataSetPolar;
+import com.cnmci.stats.beans.chart.polar.PolarChartData;
 import com.cnmci.stats.repository.*;
 import jakarta.persistence.Tuple;
 import jakarta.servlet.http.HttpServletRequest;
@@ -788,6 +790,31 @@ public class StatistiqueService {
         //System.out.println("Les mois : " + lesMois);
         // From there, browse
         return bubbleChartData;
+    }
+
+    public PolarChartData getPolarAreaForArtisanFromCrmTaggedByCnps(int taggedByCnps, int statutKyc){
+        List<Tuple> listeTuple = artisanRepository.getPolarAreaForArtisanTaggedByCnpsOrNot(taggedByCnps == 1,
+                statutKyc);
+        List<String> labels = new ArrayList<>();
+        List<Long> data = new ArrayList<>();
+        List<String> backgroundColor = new ArrayList<>();
+        int indexColor = 0;
+        for(Tuple tuple : listeTuple){
+            labels.add(tuple.get("label", String.class));
+            data.add(tuple.get("total", Long.class));
+            backgroundColor.add(getColor(indexColor++));
+        }
+        return PolarChartData.builder()
+            .labels(labels)
+            .dataSetPolars(
+                List.of(DataSetPolar.builder()
+                    .label(taggedByCnps == 1 ? "Artisans des CRMs ayant obtenu leur numéro CNPS" :
+                            "Artisans des CRMs en attente d'attribution de numéro CNPS")
+                    .data(data)
+                    .backgroundColor(backgroundColor)
+                    .build()
+                )
+            ).build();
     }
 
     public BubbleChartData getBubbleChartDataForArtisanToPay(){

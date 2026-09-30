@@ -3,6 +3,7 @@ package com.cnmci.stats.controller;
 import com.cnmci.core.model.Parametres;
 import com.cnmci.stats.beans.*;
 import com.cnmci.stats.beans.chart.bubble.BubbleChartData;
+import com.cnmci.stats.beans.chart.polar.PolarChartData;
 import com.cnmci.stats.repository.ParametresRepository;
 import com.cnmci.stats.service.ActionService;
 import com.cnmci.stats.service.PaiementService;
@@ -229,6 +230,14 @@ public class AccueilController {
     @GetMapping(value="/get-global-recouvrement-enrolement-assermente")
     private List<BeanMonthDataDuo> getGlobalTotalEquipeControleByMonth() {
         return statistiqueService.getGlobalTotalEquipeControleByMonth();
+    }
+
+    @Operation(summary = "Récupérer le total d'artisans/CRM ayant reçu ou non leur numéro CNPS")
+    @GetMapping(value="/get-polar-chart-artisan-cnps/{tag}")
+    @Parameter(name = "tag", description = "1 : Artisans immatriculés par la CNPS, 0 : Artisans en attente d'immatriculation")
+    private PolarChartData getPolarAreaForArtisanFromCrmTaggedByCnps(
+            @PathVariable int tag) {
+        return statistiqueService.getPolarAreaForArtisanFromCrmTaggedByCnps(tag, 1);
     }
 
     @Operation(summary = "Récupérer le nombre de personnes enrolées et ayant payé par mois et par CRM")

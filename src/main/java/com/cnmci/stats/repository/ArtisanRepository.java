@@ -414,6 +414,12 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             nativeQuery = true)
     List<Artisan> getArtisanWhoPaidAndNotReceivingDocument();
 
+    @Query(value = "select b.id, b.label, count(a.id) total from artisan a inner join crm b on b.id = a.crm_id " +
+            "where a.tagged_by_cnps_api = :taggedByCnps and a.statut_kyc = :statutKyc " +
+            "group by b.id, b.label order by b.id asc",
+            nativeQuery = true)
+    List<Tuple> getPolarAreaForArtisanTaggedByCnpsOrNot(boolean taggedByCnps, int statutKyc);
+
     @Query(value = "select b.id, b.label, extract(month from a.created_at) mois, count(a.id) total_enrole," +
             "case when sum(montant) is not null then sum(montant) else 0 end as total_paiement " +
             "from artisan a inner join crm b on b.id = a.crm_id " +
