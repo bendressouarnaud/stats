@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Service
@@ -175,7 +176,8 @@ public class PaiementService {
 
                 String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
                         + "/" + String.valueOf(paymentWaveRequest.montant()) + "/0/" +
-                        String.valueOf(dataIdType.get("utilisateurId"));
+                        String.valueOf(dataIdType.get("utilisateurId"))
+                        + "/" + OffsetDateTime.now().toString();
                 log.info("Encodage : {}", idToKeep);
                 String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
 
@@ -211,6 +213,7 @@ public class PaiementService {
                             .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
                             .categorieEnrolement(getCategorie(dataIdType.get("type")))
                             .paymentType(0)
+                            .encodedData(encodedString)
                             .build();
                     paymentRequestRepository.save(prt);
                     // track this too :
@@ -264,7 +267,8 @@ public class PaiementService {
 
                 String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
                         + "/" + dataIdType.get("sommeAPayer") + "/0/" +
-                        String.valueOf(dataIdType.get("utilisateurId"));
+                        String.valueOf(dataIdType.get("utilisateurId"))
+                        + "/" + OffsetDateTime.now().toString();
                 log.info("Encodage : {}", idToKeep);
                 String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
 
@@ -300,6 +304,7 @@ public class PaiementService {
                             .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
                             .categorieEnrolement(getCategorie(dataIdType.get("type")))
                             .paymentType(0)
+                            .encodedData(encodedString)
                             .build();
                     paymentRequestRepository.save(prt);
                     // track this too :
@@ -355,7 +360,8 @@ public class PaiementService {
 
                 String idToKeep = dataIdType.get("id") + "/" + dataIdType.get("type")
                         + "/" + dataIdType.get("sommeAPayer") + "/0/" +
-                        String.valueOf(utilisateur.getId());
+                        String.valueOf(utilisateur.getId())
+                        + "/" + OffsetDateTime.now().toString();
                 log.info("Encodage CALL CENTER : {}", idToKeep);
                 String encodedString = Base64.getEncoder().encodeToString(idToKeep.getBytes());
 
@@ -390,8 +396,22 @@ public class PaiementService {
                             .waveId(wavePaymentResponse.getId())
                             .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
                             .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .encodedData(encodedString)
                             .build();
                     paymentRequestRepository.save(prt);
+                    // track this too :
+                    PaymentRequestCopie paymentRequestCopie = PaymentRequestCopie.builder()
+                            .requesterId(Long.parseLong(dataIdType.get("id")))
+                            .requesterType(dataIdType.get("type"))
+                            .montant(Integer.parseInt(dataIdType.get("sommeAPayer")))
+                            .etat(0)
+                            .waveId(wavePaymentResponse.getId())
+                            .launchUrl(wavePaymentResponse.getWaveLaunchUrl())
+                            .categorieEnrolement(getCategorie(dataIdType.get("type")))
+                            .paymentType(0)
+                            .utilisateur(utilisateur)
+                            .build();
+                    paymentRequestCopieRepository.save(paymentRequestCopie);
                     return wavePaymentResponse;
                 }
                 else {
