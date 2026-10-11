@@ -321,7 +321,8 @@ public class MesTaches {
 
             // Filter on ARTISAN :
             listeData.addAll(liste.stream()
-                    .filter(procesVerbal -> procesVerbal.getArtisan() != null)
+                    .filter(procesVerbal -> (procesVerbal.getArtisan() != null &&
+                            procesVerbal.getArtisan().getStatutPaiement() != 2))
                     .map(procesVerbal -> new ReminderProcesVerbal(
                             procesVerbal.getArtisan().getNom() + " " + procesVerbal.getArtisan().getPrenom(),
                             procesVerbal.getArtisan().getContact1(),
@@ -334,7 +335,8 @@ public class MesTaches {
                     )).toList());
             // Filter on APPRENTI
             listeData.addAll(liste.stream()
-                    .filter(procesVerbal -> procesVerbal.getApprenti() != null)
+                    .filter(procesVerbal -> (procesVerbal.getApprenti() != null &&
+                            procesVerbal.getApprenti().getStatutPaiement() != 2))
                     .map(procesVerbal -> new ReminderProcesVerbal(
                             procesVerbal.getApprenti().getNom() + " " + procesVerbal.getApprenti().getPrenom(),
                             procesVerbal.getApprenti().getContact1(),
@@ -359,7 +361,8 @@ public class MesTaches {
 
             // Filter on COMPAGNON
             listeData.addAll(liste.stream()
-                    .filter(procesVerbal -> procesVerbal.getCompagnon() != null)
+                    .filter(procesVerbal -> (procesVerbal.getCompagnon() != null &&
+                            procesVerbal.getCompagnon().getStatutPaiement() != 2))
                     .map(procesVerbal -> new ReminderProcesVerbal(
                             procesVerbal.getCompagnon().getNom() + " " + procesVerbal.getCompagnon().getPrenom(),
                             procesVerbal.getCompagnon().getContact1(),
@@ -383,7 +386,8 @@ public class MesTaches {
                     )).toList());
             // Filter on ENTREPRISE :
             listeData.addAll(liste.stream()
-                    .filter(procesVerbal -> procesVerbal.getEntreprise() != null)
+                    .filter(procesVerbal -> (procesVerbal.getEntreprise() != null &&
+                            procesVerbal.getEntreprise().getStatutPaiement() != 2))
                     .map(procesVerbal -> new ReminderProcesVerbal(
                             procesVerbal.getEntreprise().getRaisonSociale(),
                             procesVerbal.getEntreprise().getContact(),
