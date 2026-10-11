@@ -260,7 +260,8 @@ public class AccueilController {
 
     @Operation(summary = "Récupérer les statistiques d'enrôlement et de paiement pour un mois donné de l'année")
     @GetMapping(value="/get-statistics-enrolement-paiement-agent/{month}/{year}")
-    private List<AgentMonthlyStatistics> getAgentEnroleurMonthlyStatistics(@PathVariable int month, @PathVariable int year) {
-        return statistiqueService.getAgentEnroleurMonthlyStatistics(month, year);
+    private List<AgentMonthlyStatistics> getAgentEnroleurMonthlyStatistics(
+            @PathVariable int month, @PathVariable int year, HttpServletRequest httpServletRequest) {
+        return statistiqueService.getAgentEnroleurMonthlyStatistics(month, year, httpServletRequest);
     }
 }

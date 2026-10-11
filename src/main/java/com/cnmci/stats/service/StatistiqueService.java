@@ -970,8 +970,15 @@ public class StatistiqueService {
         return bubbleChartData;
     }
 
-    public List<AgentMonthlyStatistics> getAgentEnroleurMonthlyStatistics(int month, int year){
-        List<Tuple> listeTuple = artisanRepository.getAgentEnroleurMonthlyStatistics(month, year);
+    public List<AgentMonthlyStatistics> getAgentEnroleurMonthlyStatistics(int month, int year,
+                                                                          HttpServletRequest httpServletRequest) {
+
+        String userMail = outilService.getBackUserConnectedName(httpServletRequest);
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(userMail.trim()).get();
+
+        List<Tuple> listeTuple = utilisateur.getPartenaire().getId() == 3 ?
+                artisanRepository.getAgentEnroleurMonthlyStatisticsFromDlek(month, year) :
+                artisanRepository.getAgentEnroleurMonthlyStatistics(month, year);
         return listeTuple.stream()
                 .map(tuple -> new AgentMonthlyStatistics(
                         tuple.get("id", Long.class),
