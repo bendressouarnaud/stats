@@ -620,7 +620,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "from utilisateur a inner join profil b on a.profil_id = b.id " +
             "inner join crm c on c.id = a.crm_id " +
             "left join artisan d on (a.id = d.utilisateur_id and extract(month from d.created_at) = :month and extract(year from d.created_at) = :year) " +
-            "where a.partenaire_id = 3 group by a.id,a.nom,a.prenom,a.contact,b.libelle,c.label " +
+            "where a.partenaire_id = 3 and a.profil_id in (10, 11) group by a.id,a.nom,a.prenom,a.contact,b.libelle,c.label " +
             ") a " +
             "left join entreprise e on (a.id = e.utilisateur_id and extract(month from e.created_at) = :month and extract(year from e.created_at) = :year) " +
             "group by a.id,a.nom,a.prenom,a.contact,profil,crm, artisan_identifie " +
