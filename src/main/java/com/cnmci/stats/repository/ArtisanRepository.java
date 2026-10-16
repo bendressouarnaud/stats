@@ -676,4 +676,21 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
             "order by crm asc, a.nom asc ,a.prenom asc",
             nativeQuery = true)
     List<Tuple> getAgentEnroleurMonthlyStatisticsFromDlek(int month, int year);
+
+    @Query(value = "select a.*, round(((1.0 * montant_deja_recouvrer/montant_total_a_recouvrer)*100), 2) taux_recouvrement from (" +
+            "select concat(a.nom,' ',a.prenom) agent, e.libelle commune_activite, f.libelle quartier_activite," +
+            "count(c.id) as total_artisan, case when c.statut_type = 3 then 'Renouvellement' " +
+            "else 'Nouvel enrolement' end as type_enrolement," +
+            "case when c.statut_type = 3 then (5000 * count(c.id)) else (15000 * count(c.id)) end as montant_total_a_recouvrer," +
+            "case when sum(g.montant) is not null then sum(g.montant) else 0 end as montant_deja_recouvrer " +
+            "from utilisateur a inner join action_terrain b on a.id = b.utilisateur_id " +
+            "inner join artisan c on c.utilisateur_agent_assermente_id = a.id " +
+            "inner join activite d on d.id = c.activite_id " +
+            "inner join commune e on e.id = d.commune_id " +
+            "inner join quartier f on f.id = d.quartier_siege_id " +
+            "left join paiement_enrolement g on c.id = g.artisan_id " +
+            "group by concat(a.nom,' ',a.prenom), e.libelle, f.libelle, c.statut_type) " +
+            "a where montant_total_a_recouvrer <> montant_deja_recouvrer",
+            nativeQuery = true)
+    List<Tuple> getStatisticsAboutAmountToRecover();
 }

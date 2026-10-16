@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -505,4 +506,38 @@ public class MesTaches {
         }
     }*/
 
+    @Scheduled(cron="0 0 17 * * MON-FRI", zone="Africa/Nouakchott")
+    @Transactional
+    public void sendResumeAboutAmountRecovery(){
+        try{
+            List<Tuple> listeStats = artisanRepository.getStatisticsAboutAmountToRecover();
+            List<StaticticsForRecovery> listeDonne = listeStats.stream()
+                    .map(s -> new StaticticsForRecovery(
+                            s.get("agent", String.class),
+                            s.get("commune_activite", String.class),
+                            s.get("quartier_activite", String.class),
+                            s.get("total_artisan", Long.class),
+                            s.get("type_enrolement", String.class),
+                            s.get("montant_total_a_recouvrer", Long.class),
+                            s.get("montant_deja_recouvrer", Long.class),
+                            (s.get("taux_recouvrement", BigDecimal.class)).doubleValue()
+                    ))
+                    .toList();
+            // Pick all 'AGENT_ASSERMENTE' :
+            List<Utilisateur> listeAgentAssermente = utilisateurRepository.findAllByProfil(profilRepository.findById(11L).get());
+            List<String> listeEnCopie = new ArrayList<>();
+            listeEnCopie.addAll(listeAgentAssermente.stream()
+                    .map(l -> l.getEmail().trim())
+                    .toList());
+            listeEnCopie.add("mbambi@sfpci.com");
+            listeEnCopie.add("kone.ibrahima@cnmci.ci");
+            listeEnCopie.add("yfulgence10@gmail.com");
+            listeEnCopie.add("coulibalyyahmawa@cnmci.ci");
+            listeEnCopie.add("arnaud.koffi@sfpci.com");
+            String[] tabEmail = listeEnCopie.toArray(new String[0]);
+            mailService.mailStatisticForRecovery(listeDonne, "gvamaracoulibaly@gmail.com", tabEmail);
+        } catch (Exception e) {
+            System.out.println("sendTotalNotPaidArtisanByCrm(...) : " + e.toString());
+        }
+    }
 }

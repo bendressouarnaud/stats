@@ -368,4 +368,60 @@ public class MailService {
             }
         }
     }
+
+    public void mailStatisticForRecovery(List<StaticticsForRecovery> listeDonne,
+                                         String responsableAssermente, String[] mails){
+        if(checkSendingParameter()) {
+            try {
+                MimeMessage mimeMessage = emailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
+                        "utf-8");
+                StringBuilder contenu = new StringBuilder();
+                contenu.append("<h2> Statistiques de l'équipe de contrôle </h2>");
+                contenu.append("<div> Bonjour Mr/Mme. Nous vous prions de trouver ci-dessous le </div>");
+                contenu.append("<div> résumé des statistiques liées à l'opération de contrôle suite aux actions terrains.</div>");
+                contenu.append("<br>");
+                contenu.append("<table style='border: 1px solid black; border-collapse: collapse;'>");
+                contenu.append("<tr><th style='border: 1px solid black; border-collapse: collapse'>Agent</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Commune activité</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Quartier activité</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Total Artisan</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Type enrôlement</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Montant à recouvrer</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Montant déjà recouvré</th>");
+                contenu.append("<th style='border: 1px solid black; border-collapse: collapse'>Taux recouvrement (%)</th>");
+                contenu.append("</tr>");
+                for(StaticticsForRecovery stat : listeDonne){
+                    contenu.append("<tr><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.agent());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.commune());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.quartier());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.totalArtisan());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.typeEnrolement());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.montantARecouvrer());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.montantDejaRecouvrer());
+                    contenu.append("</td><td style='border: 1px solid black; border-collapse: collapse'>");
+                    contenu.append(stat.tauxRecouvrement());
+                    contenu.append("</td></tr>");
+                }
+                contenu.append("</table>");
+
+                // Envoi du MAIL :
+                helper.setText(String.valueOf(contenu), true);
+                helper.setTo(responsableAssermente);
+                helper.setCc(mails);
+                helper.setSubject("Bilan journalier des statistiques de contrôle");
+                helper.setFrom(emailSenderAddress);
+                emailSender.send(mimeMessage);
+            } catch (Exception exc) {
+                System.out.println("mailStatisticForRecovery(...) : " + exc.toString());
+            }
+        }
+    }
 }
