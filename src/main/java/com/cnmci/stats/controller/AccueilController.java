@@ -1,10 +1,13 @@
 package com.cnmci.stats.controller;
 
+import com.cnmci.core.model.FraisDossier;
+import com.cnmci.core.model.FraisTransaction;
 import com.cnmci.core.model.Parametres;
+import com.cnmci.core.model.Partenaire;
 import com.cnmci.stats.beans.*;
 import com.cnmci.stats.beans.chart.bubble.BubbleChartData;
 import com.cnmci.stats.beans.chart.polar.PolarChartData;
-import com.cnmci.stats.repository.ParametresRepository;
+import com.cnmci.stats.repository.*;
 import com.cnmci.stats.service.ActionService;
 import com.cnmci.stats.service.PaiementService;
 import com.cnmci.stats.service.StatistiqueService;
@@ -29,6 +32,13 @@ public class AccueilController {
     // Attributes :
     public static Key SECRET_KEY;
     private final ParametresRepository parametresRepository;
+    private final ArtisanRepository artisanRepository;
+    private final ApprentiRepository apprentiRepository;
+    private final CompagnonRepository compagnonRepository;
+    private final EntrepriseRepository entrepriseRepository;
+    private final PartenaireRepository partenaireRepository;
+    private final FraisDossierRepository fraisDossierRepository;
+    private final FraisTransactionRepository fraisTransactionRepository;
     private final StatistiqueService statistiqueService;
     private final ActionService actionService;
     private final PaiementService paiementService;
@@ -67,6 +77,83 @@ public class AccueilController {
                         Parametres::getByteArray
                 ).orElse(null))
         );
+
+        // From there
+        Partenaire partenaire = partenaireRepository.findById(1L).get();
+        artisanRepository.findAllByStatutPaiement(1)
+                .forEach(artisan -> {
+                // Hit FRAIS TABLES :
+                fraisDossierRepository.save(
+                        FraisDossier.builder()
+                                .partenaire(partenaire)
+                                .montant(200)
+                                .build()
+                );
+
+                fraisTransactionRepository.save(
+                        FraisTransaction.builder()
+                                .partenaire(partenaire)
+                                .montant(150)
+                                .build()
+                );
+            });
+
+        // Apprenti
+        apprentiRepository.findAllByStatutPaiement(1)
+                .forEach(artisan -> {
+                    // Hit FRAIS TABLES :
+                    fraisDossierRepository.save(
+                            FraisDossier.builder()
+                                    .partenaire(partenaire)
+                                    .montant(200)
+                                    .build()
+                    );
+
+                    fraisTransactionRepository.save(
+                            FraisTransaction.builder()
+                                    .partenaire(partenaire)
+                                    .montant(150)
+                                    .build()
+                    );
+                });
+
+        // Compagnon
+        compagnonRepository.findAllByStatutPaiement(1)
+                .forEach(artisan -> {
+                    // Hit FRAIS TABLES :
+                    fraisDossierRepository.save(
+                            FraisDossier.builder()
+                                    .partenaire(partenaire)
+                                    .montant(200)
+                                    .build()
+                    );
+
+                    fraisTransactionRepository.save(
+                            FraisTransaction.builder()
+                                    .partenaire(partenaire)
+                                    .montant(150)
+                                    .build()
+                    );
+                });
+
+        // Entreprise
+        entrepriseRepository.findAllByStatutPaiement(1)
+                .forEach(artisan -> {
+                    // Hit FRAIS TABLES :
+                    fraisDossierRepository.save(
+                            FraisDossier.builder()
+                                    .partenaire(partenaire)
+                                    .montant(200)
+                                    .build()
+                    );
+
+                    fraisTransactionRepository.save(
+                            FraisTransaction.builder()
+                                    .partenaire(partenaire)
+                                    .montant(150)
+                                    .build()
+                    );
+                });
     }
 
     @Operation(summary = "Récupérer les agrégats de paiement des derniers jours")

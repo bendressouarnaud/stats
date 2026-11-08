@@ -16,6 +16,7 @@ public interface CompagnonRepository extends CrudRepository<Compagnon, Long> {
     List<Compagnon> findAll(Pageable pageable);
     List<Compagnon> findAllByStatutKycAndStatutPaiement(int kyc, int paiement, Pageable pageable);
     List<Compagnon> findAllByStatutPaiement(int paiement, Pageable pageable);
+    List<Compagnon> findAllByStatutPaiement(int paiement);
     List<Compagnon> findAllByStatutKyc(int kyc, Pageable pageable);
     List<Compagnon> findAllByOrderByNomAsc();
     List<Compagnon> findAllByUtilisateur(Utilisateur user);

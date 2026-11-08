@@ -17,6 +17,7 @@ public interface ArtisanRepository extends CrudRepository<Artisan, Long> {
     List<Artisan> findAllByStatutKycAndStatutPaiement(int kyc, int paiement, Pageable pageable);
     List<Artisan> findAllByStatutKycOrStatutPaiement(int kyc, int paiement, Pageable pageable);
     List<Artisan> findAllByStatutPaiement(int paiement, Pageable pageable);
+    List<Artisan> findAllByStatutPaiement(int paiement);
     List<Artisan> findAllByStatutKyc(int kyc, Pageable pageable);
     List<Artisan> findAllByStatutKycAndStatutPaiement(int kyc, int paiement);
     List<Artisan> findAllByUtilisateur(Utilisateur user);

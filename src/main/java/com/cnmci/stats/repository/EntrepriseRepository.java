@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface EntrepriseRepository extends CrudRepository<Entreprise, Long> {
     List<Entreprise> findAllByStatutKycOrStatutPaiement(int kyc, int paiement, Pageable pageable);
     List<Entreprise> findAllByStatutPaiement(int paiement, Pageable pageable);
+    List<Entreprise> findAllByStatutPaiement(int paiement);
     List<Entreprise> findAllByStatutKyc(int kyc, Pageable pageable);
     List<Entreprise> findAllByOrderByRaisonSocialeAsc();
     List<Entreprise> findAllByUtilisateur(Utilisateur user);

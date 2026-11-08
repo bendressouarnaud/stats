@@ -16,6 +16,7 @@ public interface ApprentiRepository extends CrudRepository<Apprenti, Long> {
     List<Apprenti> findAllByStatutKycAndStatutPaiement(int kyc, int paiement, Pageable pageable);
     List<Apprenti> findAllByStatutKycOrStatutPaiement(int kyc, int paiement, Pageable pageable);
     List<Apprenti> findAllByStatutPaiement(int paiement, Pageable pageable);
+    List<Apprenti> findAllByStatutPaiement(int paiement);
     List<Apprenti> findAllByStatutKyc(int kyc, Pageable pageable);
     List<Apprenti> findAll(Pageable pageable);
     List<Apprenti> findAllByUtilisateur(Utilisateur user);
