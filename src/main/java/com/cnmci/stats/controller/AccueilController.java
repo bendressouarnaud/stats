@@ -79,7 +79,7 @@ public class AccueilController {
         );
 
         // From there
-        Partenaire partenaire = partenaireRepository.findById(1L).get();
+        /*Partenaire partenaire = partenaireRepository.findById(1L).get();
         artisanRepository.findAllByStatutPaiement(1)
                 .forEach(artisan -> {
                 // Hit FRAIS TABLES :
@@ -154,6 +154,7 @@ public class AccueilController {
                                     .build()
                     );
                 });
+        */
     }
 
     @Operation(summary = "Récupérer les agrégats de paiement des derniers jours")
