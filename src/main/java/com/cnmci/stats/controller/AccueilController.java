@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Key;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,8 +80,11 @@ public class AccueilController {
         );
 
         // From there
-        /*Partenaire partenaire = partenaireRepository.findById(1L).get();
+        Partenaire partenaire = partenaireRepository.findById(1L).get();
         artisanRepository.findAllByStatutPaiement(1)
+                .stream()
+                .filter(artisan -> artisan.getCreatedAt().toLocalDate().isAfter(
+                        OffsetDateTime.now().minusDays(3).toLocalDate()))
                 .forEach(artisan -> {
                 // Hit FRAIS TABLES :
                 fraisDossierRepository.save(
@@ -100,6 +104,9 @@ public class AccueilController {
 
         // Apprenti
         apprentiRepository.findAllByStatutPaiement(1)
+                .stream()
+                .filter(artisan -> artisan.getCreatedAt().toLocalDate().isAfter(
+                        OffsetDateTime.now().minusDays(3).toLocalDate()))
                 .forEach(artisan -> {
                     // Hit FRAIS TABLES :
                     fraisDossierRepository.save(
@@ -119,6 +126,9 @@ public class AccueilController {
 
         // Compagnon
         compagnonRepository.findAllByStatutPaiement(1)
+                .stream()
+                .filter(artisan -> artisan.getCreatedAt().toLocalDate().isAfter(
+                        OffsetDateTime.now().minusDays(3).toLocalDate()))
                 .forEach(artisan -> {
                     // Hit FRAIS TABLES :
                     fraisDossierRepository.save(
@@ -138,6 +148,9 @@ public class AccueilController {
 
         // Entreprise
         entrepriseRepository.findAllByStatutPaiement(1)
+                .stream()
+                .filter(artisan -> artisan.getCreatedAt().toLocalDate().isAfter(
+                        OffsetDateTime.now().minusDays(3).toLocalDate()))
                 .forEach(artisan -> {
                     // Hit FRAIS TABLES :
                     fraisDossierRepository.save(
@@ -154,7 +167,7 @@ public class AccueilController {
                                     .build()
                     );
                 });
-        */
+
     }
 
     @Operation(summary = "Récupérer les agrégats de paiement des derniers jours")
